@@ -103,6 +103,12 @@ class FindMeRoomTester:
                 "name": "Jane Smith",
                 "phone": "+91-9876543211",
                 "password": "mypassword456"
+            },
+            {
+                "email": f"alice.johnson.{timestamp}@example.com",
+                "name": "Alice Johnson", 
+                "phone": "+91-9876543212",
+                "password": "alicepass789"
             }
         ]
         
