@@ -405,14 +405,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Enhanced Chat System with Real-time Updates"
-    - "Chat History and Conversations Management"
-    - "Notification System for Unread Messages"
-    - "Auto-refresh and Message Status Tracking"
-    - "Enhanced Chat Interface with Real-time Updates"
-    - "Chat Notifications and Unread Indicators"
-    - "Conversation History Management"
-  stuck_tasks: []
+    - "User Authentication System"
+  stuck_tasks:
+    - "User Authentication System"
   test_all: false
   test_priority: "high_first"
 
