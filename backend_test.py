@@ -647,7 +647,15 @@ class FindMeRoomTester:
         # First, get some message IDs to mark as read
         if self.test_properties:
             property_id = self.test_properties[0]["id"]
-            response, error = self.make_request("GET", f"/chat/{property_id}", auth_token=receiver_token)
+            
+            # Get sender user ID to use in the query
+            sender_email = list(self.auth_tokens.keys())[0]
+            sender_token = self.auth_tokens[sender_email]
+            sender_response, _ = self.make_request("GET", "/auth/me", auth_token=sender_token)
+            
+            if sender_response.status_code == 200:
+                sender_user = sender_response.json()
+                response, error = self.make_request("GET", f"/chat/{property_id}?other_user_id={sender_user['id']}", auth_token=receiver_token)
             
             if response and response.status_code == 200:
                 try:
