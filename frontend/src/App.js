@@ -591,6 +591,13 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
     }
   }, [user]); // Remove selectedConversation from dependencies to prevent reload loops
 
+  // Load messages when conversation selection changes
+  useEffect(() => {
+    if (selectedConversation && selectedConversation.property_id && selectedConversation.other_user_id) {
+      loadChatMessages(selectedConversation.property_id, selectedConversation.other_user_id);
+    }
+  }, [selectedConversation?.property_id, selectedConversation?.other_user_id]);
+
   // Handle initial property selection
   useEffect(() => {
     if (selectedProperty) {
