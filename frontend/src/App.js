@@ -1160,6 +1160,12 @@ const PropertyDetails = ({ property, onClose, setCurrentView, setChatProperty })
       return;
     }
     
+    // Check if user is the owner of this property
+    if (user.id === property.user_id) {
+      alert('You cannot contact yourself on your own property!');
+      return;
+    }
+    
     // Open chat interface with this property
     setChatProperty(property);
     setCurrentView('chat');
@@ -1172,6 +1178,12 @@ const PropertyDetails = ({ property, onClose, setCurrentView, setChatProperty })
       return;
     }
     
+    // Check if user is the owner of this property
+    if (user.id === property.user_id) {
+      alert('You cannot schedule a visit to your own property!');
+      return;
+    }
+    
     // Open chat interface with prefilled message
     setChatProperty({
       ...property,
@@ -1181,12 +1193,22 @@ const PropertyDetails = ({ property, onClose, setCurrentView, setChatProperty })
     onClose(); // Close the modal
   };
 
+  // Check if current user is the owner of this property
+  const isOwner = user && user.id === property.user_id;
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg max-w-4xl max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-start mb-6">
-            <h2 className="text-2xl font-bold">{property.title}</h2>
+            <div>
+              <h2 className="text-2xl font-bold">{property.title}</h2>
+              {isOwner && (
+                <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mt-2">
+                  Your Property
+                </span>
+              )}
+            </div>
             <button 
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700"
@@ -1265,18 +1287,39 @@ const PropertyDetails = ({ property, onClose, setCurrentView, setChatProperty })
           </div>
           
           <div className="flex space-x-4">
-            <button 
-              onClick={handleContactOwner}
-              className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition-colors"
-            >
-              Contact Owner
-            </button>
-            <button 
-              onClick={handleScheduleVisit}
-              className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
-            >
-              Schedule Visit
-            </button>
+            {isOwner ? (
+              <div className="flex space-x-4 w-full">
+                <button 
+                  className="flex-1 bg-gray-400 text-white px-6 py-2 rounded-md cursor-not-allowed"
+                  disabled
+                  title="You cannot contact yourself on your own property"
+                >
+                  Your Property - Cannot Contact
+                </button>
+                <button 
+                  className="flex-1 bg-gray-400 text-white px-6 py-2 rounded-md cursor-not-allowed"
+                  disabled
+                  title="You cannot schedule a visit to your own property"
+                >
+                  Your Property - Cannot Schedule Visit
+                </button>
+              </div>
+            ) : (
+              <>
+                <button 
+                  onClick={handleContactOwner}
+                  className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition-colors"
+                >
+                  Contact Owner
+                </button>
+                <button 
+                  onClick={handleScheduleVisit}
+                  className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
+                >
+                  Schedule Visit
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
