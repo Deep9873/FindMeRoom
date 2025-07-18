@@ -589,7 +589,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       
       return () => clearInterval(interval);
     }
-  }, [user, selectedConversation]);
+  }, [user]); // Remove selectedConversation from dependencies to prevent reload loops
 
   // Handle initial property selection
   useEffect(() => {
