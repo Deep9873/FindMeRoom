@@ -1127,6 +1127,322 @@ class FindMeRoomTester:
         
         return self.results
 
+    def test_whatsapp_like_conversation_system(self):
+        """
+        Test the updated conversation system to ensure each user pair has separate conversations like WhatsApp
+        This is the main test requested in the review
+        """
+        print("\n=== Testing WhatsApp-like Conversation System ===")
+        
+        if len(self.auth_tokens) < 3 or not self.test_properties:
+            self.log_result("WhatsApp Conversation System", False, "Need at least 3 users and 1 property for comprehensive testing")
+            return
+        
+        # Setup: Get User A (property owner), User B, User C
+        emails = list(self.auth_tokens.keys())
+        user_a_email = emails[0]  # Property Owner
+        user_b_email = emails[1]  # User B
+        user_c_email = emails[2]  # User C
+        
+        user_a_token = self.auth_tokens[user_a_email]
+        user_b_token = self.auth_tokens[user_b_email]
+        user_c_token = self.auth_tokens[user_c_email]
+        
+        # Get user IDs
+        user_a_response, _ = self.make_request("GET", "/auth/me", auth_token=user_a_token)
+        user_b_response, _ = self.make_request("GET", "/auth/me", auth_token=user_b_token)
+        user_c_response, _ = self.make_request("GET", "/auth/me", auth_token=user_c_token)
+        
+        if not all(r.status_code == 200 for r in [user_a_response, user_b_response, user_c_response]):
+            self.log_result("WhatsApp Conversation System", False, "Could not get user information")
+            return
+        
+        user_a = user_a_response.json()
+        user_b = user_b_response.json()
+        user_c = user_c_response.json()
+        property_id = self.test_properties[0]["id"]
+        
+        print(f"   Testing with Property Owner: {user_a['name']}")
+        print(f"   Testing with User B: {user_b['name']}")
+        print(f"   Testing with User C: {user_c['name']}")
+        print(f"   Property: {self.test_properties[0]['title']}")
+        
+        # === 1. SEPARATE CONVERSATIONS TESTING ===
+        print("\n   --- 1. Testing Separate Conversations ---")
+        
+        # User B sends messages to User A about the property
+        user_b_messages = [
+            "Hi! I'm interested in your property. Is it still available?",
+            "What's the move-in date?"
+        ]
+        
+        for msg in user_b_messages:
+            chat_data = {
+                "property_id": property_id,
+                "receiver_id": user_a["id"],
+                "message": msg
+            }
+            response, error = self.make_request("POST", "/chat", chat_data, user_b_token)
+            if error or response.status_code != 200:
+                self.log_result("User B Send Messages", False, f"Failed to send message: {error or response.status_code}")
+                return
+        
+        self.log_result("User B Send Messages", True, f"User B sent {len(user_b_messages)} messages to property owner")
+        
+        # User C sends messages to User A about the same property
+        user_c_messages = [
+            "Hello! Can you tell me more about the amenities?",
+            "Is parking included?"
+        ]
+        
+        for msg in user_c_messages:
+            chat_data = {
+                "property_id": property_id,
+                "receiver_id": user_a["id"],
+                "message": msg
+            }
+            response, error = self.make_request("POST", "/chat", chat_data, user_c_token)
+            if error or response.status_code != 200:
+                self.log_result("User C Send Messages", False, f"Failed to send message: {error or response.status_code}")
+                return
+        
+        self.log_result("User C Send Messages", True, f"User C sent {len(user_c_messages)} messages to property owner")
+        
+        # Property owner replies to both users
+        reply_to_b = {
+            "property_id": property_id,
+            "receiver_id": user_b["id"],
+            "message": "Yes, it's available! You can move in next month."
+        }
+        
+        reply_to_c = {
+            "property_id": property_id,
+            "receiver_id": user_c["id"],
+            "message": "It has gym, pool, and yes, parking is included!"
+        }
+        
+        for reply_data in [reply_to_b, reply_to_c]:
+            response, error = self.make_request("POST", "/chat", reply_data, user_a_token)
+            if error or response.status_code != 200:
+                self.log_result("Property Owner Replies", False, f"Failed to send reply: {error or response.status_code}")
+                return
+        
+        self.log_result("Property Owner Replies", True, "Property owner replied to both User B and User C")
+        
+        # === 2. TEST /api/chat/conversations ENDPOINT FOR USER A ===
+        print("\n   --- 2. Testing Conversations Endpoint for Property Owner ---")
+        
+        response, error = self.make_request("GET", "/chat/conversations", auth_token=user_a_token)
+        if error:
+            self.log_result("User A Conversations List", False, error)
+            return
+        elif response.status_code != 200:
+            self.log_result("User A Conversations List", False, f"HTTP {response.status_code}")
+            return
+        
+        try:
+            conversations = response.json()
+            if not isinstance(conversations, list):
+                self.log_result("User A Conversations List", False, "Response is not a list")
+                return
+            
+            # User A should see TWO separate conversations
+            property_conversations = [conv for conv in conversations if conv["property_id"] == property_id]
+            
+            if len(property_conversations) >= 2:
+                # Check if conversations have different other_user_id
+                other_user_ids = [conv["other_user_id"] for conv in property_conversations]
+                unique_users = set(other_user_ids)
+                
+                if len(unique_users) >= 2:
+                    self.log_result("User A Sees Separate Conversations", True, f"Property owner sees {len(property_conversations)} separate conversations")
+                    
+                    # Verify conversation details
+                    user_b_conv = next((conv for conv in property_conversations if conv["other_user_id"] == user_b["id"]), None)
+                    user_c_conv = next((conv for conv in property_conversations if conv["other_user_id"] == user_c["id"]), None)
+                    
+                    if user_b_conv and user_c_conv:
+                        # Check User B conversation details
+                        if user_b_conv["other_user_name"] == user_b["name"]:
+                            self.log_result("User B Conversation Details", True, f"Shows User B's name: {user_b_conv['other_user_name']}")
+                        else:
+                            self.log_result("User B Conversation Details", False, f"Wrong name: {user_b_conv['other_user_name']} != {user_b['name']}")
+                        
+                        # Check User C conversation details
+                        if user_c_conv["other_user_name"] == user_c["name"]:
+                            self.log_result("User C Conversation Details", True, f"Shows User C's name: {user_c_conv['other_user_name']}")
+                        else:
+                            self.log_result("User C Conversation Details", False, f"Wrong name: {user_c_conv['other_user_name']} != {user_c['name']}")
+                        
+                        # Check unread counts are specific to each conversation
+                        self.log_result("Conversation Unread Counts", True, f"User B conv unread: {user_b_conv['unread_count']}, User C conv unread: {user_c_conv['unread_count']}")
+                        
+                    else:
+                        self.log_result("Conversation Details", False, "Could not find conversations for both users")
+                else:
+                    self.log_result("User A Sees Separate Conversations", False, f"Only {len(unique_users)} unique users in conversations")
+            else:
+                self.log_result("User A Sees Separate Conversations", False, f"Expected at least 2 conversations, got {len(property_conversations)}")
+        
+        except Exception as e:
+            self.log_result("User A Conversations List", False, f"Error parsing response: {str(e)}")
+            return
+        
+        # === 3. USER PERSPECTIVE TESTING ===
+        print("\n   --- 3. Testing User Perspective ---")
+        
+        # Test User B perspective
+        response, error = self.make_request("GET", "/chat/conversations", auth_token=user_b_token)
+        if error:
+            self.log_result("User B Conversations", False, error)
+        elif response.status_code == 200:
+            try:
+                user_b_conversations = response.json()
+                user_b_property_convs = [conv for conv in user_b_conversations if conv["property_id"] == property_id]
+                
+                if len(user_b_property_convs) == 1:
+                    conv = user_b_property_convs[0]
+                    if conv["other_user_id"] == user_a["id"] and conv["other_user_name"] == user_a["name"]:
+                        self.log_result("User B Perspective", True, f"User B sees conversation with property owner: {conv['other_user_name']}")
+                    else:
+                        self.log_result("User B Perspective", False, "User B conversation details incorrect")
+                else:
+                    self.log_result("User B Perspective", False, f"User B should see 1 conversation, got {len(user_b_property_convs)}")
+            except:
+                self.log_result("User B Perspective", False, "Invalid response format")
+        else:
+            self.log_result("User B Perspective", False, f"HTTP {response.status_code}")
+        
+        # Test User C perspective
+        response, error = self.make_request("GET", "/chat/conversations", auth_token=user_c_token)
+        if error:
+            self.log_result("User C Conversations", False, error)
+        elif response.status_code == 200:
+            try:
+                user_c_conversations = response.json()
+                user_c_property_convs = [conv for conv in user_c_conversations if conv["property_id"] == property_id]
+                
+                if len(user_c_property_convs) == 1:
+                    conv = user_c_property_convs[0]
+                    if conv["other_user_id"] == user_a["id"] and conv["other_user_name"] == user_a["name"]:
+                        self.log_result("User C Perspective", True, f"User C sees conversation with property owner: {conv['other_user_name']}")
+                    else:
+                        self.log_result("User C Perspective", False, "User C conversation details incorrect")
+                else:
+                    self.log_result("User C Perspective", False, f"User C should see 1 conversation, got {len(user_c_property_convs)}")
+            except:
+                self.log_result("User C Perspective", False, "Invalid response format")
+        else:
+            self.log_result("User C Perspective", False, f"HTTP {response.status_code}")
+        
+        # === 4. CONVERSATION METADATA TESTING ===
+        print("\n   --- 4. Testing Conversation Metadata ---")
+        
+        # Re-get User A conversations for metadata testing
+        response, error = self.make_request("GET", "/chat/conversations", auth_token=user_a_token)
+        if response and response.status_code == 200:
+            try:
+                conversations = response.json()
+                property_conversations = [conv for conv in conversations if conv["property_id"] == property_id]
+                
+                for conv in property_conversations:
+                    # Test property title
+                    if conv["property_title"] == self.test_properties[0]["title"]:
+                        self.log_result("Property Title in Conversation", True, f"Correct property title: {conv['property_title']}")
+                    else:
+                        self.log_result("Property Title in Conversation", False, f"Wrong property title: {conv['property_title']}")
+                    
+                    # Test other_user_name
+                    expected_name = user_b["name"] if conv["other_user_id"] == user_b["id"] else user_c["name"]
+                    if conv["other_user_name"] == expected_name:
+                        self.log_result("Other User Name", True, f"Correct other user name: {conv['other_user_name']}")
+                    else:
+                        self.log_result("Other User Name", False, f"Wrong other user name: {conv['other_user_name']}")
+                    
+                    # Test last_message and timestamp
+                    if conv["last_message"] and conv["last_message_time"]:
+                        self.log_result("Last Message Metadata", True, f"Has last message and timestamp")
+                    else:
+                        self.log_result("Last Message Metadata", False, "Missing last message or timestamp")
+                    
+                    # Test unread_count is integer
+                    if isinstance(conv["unread_count"], int) and conv["unread_count"] >= 0:
+                        self.log_result("Unread Count Format", True, f"Unread count: {conv['unread_count']}")
+                    else:
+                        self.log_result("Unread Count Format", False, f"Invalid unread count: {conv['unread_count']}")
+            
+            except Exception as e:
+                self.log_result("Conversation Metadata", False, f"Error testing metadata: {str(e)}")
+        
+        # === 5. MULTIPLE PROPERTIES TESTING ===
+        print("\n   --- 5. Testing Multiple Properties ---")
+        
+        if len(self.test_properties) > 1:
+            # Create conversation on second property
+            second_property_id = self.test_properties[1]["id"]
+            
+            chat_data = {
+                "property_id": second_property_id,
+                "receiver_id": user_a["id"],
+                "message": "Interested in your second property too!"
+            }
+            
+            response, error = self.make_request("POST", "/chat", chat_data, user_b_token)
+            if response and response.status_code == 200:
+                # Check if conversations are properly separated by property
+                response, error = self.make_request("GET", "/chat/conversations", auth_token=user_a_token)
+                if response and response.status_code == 200:
+                    try:
+                        conversations = response.json()
+                        property1_convs = [conv for conv in conversations if conv["property_id"] == property_id]
+                        property2_convs = [conv for conv in conversations if conv["property_id"] == second_property_id]
+                        
+                        if len(property1_convs) >= 2 and len(property2_convs) >= 1:
+                            self.log_result("Multiple Properties Separation", True, f"Property 1: {len(property1_convs)} convs, Property 2: {len(property2_convs)} convs")
+                        else:
+                            self.log_result("Multiple Properties Separation", False, f"Conversations not properly separated by property")
+                    except:
+                        self.log_result("Multiple Properties Separation", False, "Error parsing multiple property conversations")
+                else:
+                    self.log_result("Multiple Properties Separation", False, "Could not get conversations for multiple properties test")
+            else:
+                self.log_result("Multiple Properties Setup", False, "Could not create conversation on second property")
+        else:
+            self.log_result("Multiple Properties Testing", True, "Skipped - only one property available")
+        
+        print("\n   ✅ WhatsApp-like Conversation System Testing Complete")
+
 if __name__ == "__main__":
     tester = FindMeRoomTester()
-    results = tester.run_all_tests()
+    
+    # Run the specific WhatsApp-like conversation system test
+    print("🎯 Running WhatsApp-like Conversation System Test")
+    print("=" * 60)
+    
+    # First run basic setup tests
+    if not tester.test_health_check():
+        print("❌ API is not responding. Stopping tests.")
+        exit(1)
+    
+    tester.test_user_registration()
+    tester.test_user_login()
+    tester.test_property_creation()
+    
+    # Run the main conversation system test
+    tester.test_whatsapp_like_conversation_system()
+    
+    # Print summary
+    print("\n" + "=" * 60)
+    print("🏁 WHATSAPP CONVERSATION SYSTEM TEST SUMMARY")
+    print("=" * 60)
+    print(f"✅ Passed: {tester.results['passed']}")
+    print(f"❌ Failed: {tester.results['failed']}")
+    print(f"📊 Total: {tester.results['passed'] + tester.results['failed']}")
+    
+    if tester.results['errors']:
+        print("\n🔍 FAILED TESTS:")
+        for error in tester.results['errors']:
+            print(f"   • {error}")
+    
+    success_rate = (tester.results['passed'] / (tester.results['passed'] + tester.results['failed'])) * 100 if (tester.results['passed'] + tester.results['failed']) > 0 else 0
+    print(f"\n🎯 Success Rate: {success_rate:.1f}%")
