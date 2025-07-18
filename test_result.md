@@ -107,9 +107,9 @@ user_problem_statement: "Create a complete, production-ready cross-platform appl
 backend:
   - task: "User Authentication System"
     implemented: true
-    working: true
+    working: false
     file: "server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -119,6 +119,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ PASSED: All authentication endpoints working correctly. User registration creates accounts with JWT tokens, login validates credentials and returns tokens, /auth/me returns user info with valid tokens. Authentication middleware properly rejects requests (403 for missing auth, 401 for invalid tokens). Tested with realistic user data including duplicate email rejection."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL BUG FOUND: Phone number duplicate detection is broken. Code checks for duplicates using original formatted input but stores cleaned digits, so duplicates are never detected. Users can register multiple accounts with same phone number. Phone validation (10-15 digits) and cleaning works correctly. Self-contact prevention works perfectly. REQUIRES IMMEDIATE FIX in server.py line 169."
 
   - task: "Property CRUD Operations"
     implemented: true
