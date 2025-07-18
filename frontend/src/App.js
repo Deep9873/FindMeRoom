@@ -755,7 +755,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
 
   const handleConversationSelect = (conversation) => {
     setSelectedConversation(conversation);
-    loadChatMessages(conversation.property_id);
+    loadChatMessages(conversation.property_id, conversation.other_user_id);
   };
 
   if (!user) {
