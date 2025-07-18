@@ -457,20 +457,27 @@ The chat system now provides a complete messaging experience with real-time upda
   - agent: "testing"
     message: "✅ **CHAT CONVERSATION ISOLATION TESTING COMPLETE**: Successfully tested the fixed chat system with 93.8% success rate (15/16 tests passed). Created 3 test users and verified perfect conversation isolation - User B sees only their conversation (2 messages), User C sees only their conversation (2 messages), Property owner sees separate conversations with each user. Messages properly filtered between user pairs, privacy confirmed, edge cases handled correctly. Backend chat system isolation is FULLY FUNCTIONAL and ready for frontend integration."
   - agent: "testing"
-    message: "✅ CHAT CONVERSATION ISOLATION TESTING COMPLETE: Successfully tested the fixed chat system to ensure conversations are properly isolated between users with 93.8% success rate (15/16 tests passed).
+    message: "✅ **PHONE VALIDATION & SELF-CONTACT PREVENTION TESTING COMPLETE**: Comprehensive testing of the modified backend endpoints completed with detailed findings:
 
-🔒 **CRITICAL ISOLATION TESTS PASSED**:
-- User B Conversation Isolation: ✅ PASS - User B sees only their conversation (2 messages)
-- User C Conversation Isolation: ✅ PASS - User C sees only their conversation (2 messages) 
-- Owner sees User B Conversation: ✅ PASS - Owner sees conversation with User B (2 messages)
-- Owner sees User C Conversation: ✅ PASS - Owner sees conversation with User C (2 messages)
+🔧 **CRITICAL BUG FOUND - PHONE DUPLICATE DETECTION**:
+- Phone number uniqueness validation has a critical bug in server.py line 169
+- Code checks for duplicates using original formatted input (e.g., '+91-1234567890') 
+- But stores cleaned digits only (e.g., '911234567890')
+- Result: Duplicate phone numbers are NOT being detected and rejected
+- Users can register multiple accounts with same phone number in different formats
+- **REQUIRES IMMEDIATE FIX**: Change line 169 to check against cleaned phone_digits instead of user_data.phone
 
-🎯 **KEY FINDINGS**:
-- The new /api/chat/{property_id}?other_user_id={user_id} endpoint works perfectly for conversation isolation
-- Multiple users (User A, User B, User C) can contact the same property owner about the same property
-- Each user only sees their own conversation with the property owner
-- Property owner can see separate conversations with each user
-- Messages are properly filtered and isolated between different user pairs
-- Edge cases handled correctly: non-existent property_id, non-existent other_user_id, missing parameters
+✅ **WORKING CORRECTLY**:
+- Phone Number Length Validation: 10-15 digits validation works perfectly
+- Phone Number Cleaning: Non-numeric characters properly stripped and stored as digits only
+- Self-Contact Prevention: Both direct self-contact and property owner self-contact properly blocked with appropriate error messages
+- Existing Functionality: All authentication, property CRUD, and chat functionality working correctly
+- Chat Conversation Isolation: WhatsApp-like system working perfectly (96.8% success rate)
 
-🔐 **PRIVACY CONFIRMED**: Chat system maintains perfect conversation privacy and properly separates messages between different user pairs. The critical fix for conversation isolation is working as requested. Only 1 minor authentication edge case failed (not critical for functionality)."
+📊 **TEST RESULTS**:
+- Phone Validation Tests: 15/17 passed (88.2% success rate)
+- Backend Comprehensive Tests: 30/31 passed (96.8% success rate)
+- Self-contact prevention: 100% working
+- Existing functionality: 100% working
+
+🎯 **PRIORITY**: The phone duplicate detection bug is CRITICAL and must be fixed before production deployment as it allows users to create multiple accounts with the same phone number."
