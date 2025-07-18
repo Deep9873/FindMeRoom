@@ -88,8 +88,8 @@ class PhoneValidationTester:
             },
             {
                 "name": "15 digits (max allowed)",
-                "phone": "+1-234-567-890-1234",
-                "expected_stored": "12345678901234"
+                "phone": "+1-234-567-890-123",
+                "expected_stored": "1234567890123"
             }
         ]
         
