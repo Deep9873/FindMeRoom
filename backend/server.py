@@ -297,6 +297,14 @@ async def send_message(chat_data: ChatCreate, current_user: dict = Depends(get_c
     if not property_doc:
         raise HTTPException(status_code=404, detail="Property not found")
     
+    # Check if user is trying to contact themselves (prevent self-contact)
+    if current_user["id"] == chat_data.receiver_id:
+        raise HTTPException(status_code=400, detail="Cannot send message to yourself")
+    
+    # Check if user is the property owner trying to contact themselves
+    if property_doc["user_id"] == current_user["id"] and current_user["id"] == chat_data.receiver_id:
+        raise HTTPException(status_code=400, detail="Cannot contact yourself on your own property")
+    
     chat_dict = chat_data.dict()
     chat_dict["sender_id"] = current_user["id"]
     
