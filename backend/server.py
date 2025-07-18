@@ -387,13 +387,13 @@ async def mark_messages_read(chat_data: ChatMarkRead, current_user: dict = Depen
     return {"message": "Messages marked as read"}
 
 @api_router.get("/chat/{property_id}")
-async def get_chat_messages(property_id: str, current_user: dict = Depends(get_current_user)):
-    # Get all messages for this property where current user is involved
+async def get_chat_messages(property_id: str, other_user_id: str, current_user: dict = Depends(get_current_user)):
+    # Get messages for this property between current user and the other user only
     messages = await db.chats.find({
         "property_id": property_id,
         "$or": [
-            {"sender_id": current_user["id"]},
-            {"receiver_id": current_user["id"]}
+            {"sender_id": current_user["id"], "receiver_id": other_user_id},
+            {"sender_id": other_user_id, "receiver_id": current_user["id"]}
         ]
     }).sort("created_at", 1).to_list(length=100)
     
