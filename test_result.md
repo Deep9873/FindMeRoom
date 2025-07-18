@@ -409,8 +409,7 @@ metadata:
 test_plan:
   current_focus:
     - "User Authentication System"
-  stuck_tasks:
-    - "User Authentication System"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
