@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Create a complete, production-ready cross-platform application named 'FindMeRoom' for Android (Play Store), iOS (App Store), and web browsers. The core features include user authentication, property listings (rooms, houses, PGs), real-time chat, and search functionality. Currently building as a web application with FastAPI + React + MongoDB."
+user_problem_statement: "Create a complete, production-ready cross-platform application named 'FindMeRoom' for Android (Play Store), iOS (App Store), and web browsers. The core features include user authentication, property listings (rooms, houses, PGs), real-time chat, and search functionality. Currently building as a web application with FastAPI + React + MongoDB. CONTINUATION REQUEST: Fix issues with self-contact on own properties, phone number validation (only numbers, uniqueness), and chat reloading problems."
 
 backend:
   - task: "User Authentication System"
