@@ -1389,8 +1389,21 @@ const RegisterForm = ({ setCurrentView }) => {
           <input
             type="tel"
             value={formData.phone}
-            onChange={(e) => setFormData({...formData, phone: e.target.value})}
+            onChange={(e) => {
+              // Only allow digits
+              const value = e.target.value.replace(/\D/g, '');
+              if (value.length <= 15) {
+                setFormData({...formData, phone: value});
+              }
+            }}
+            onInput={(e) => {
+              // Remove any non-digit characters
+              e.target.value = e.target.value.replace(/\D/g, '');
+            }}
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter 10-15 digit phone number"
+            minLength="10"
+            maxLength="15"
             required
           />
         </div>
