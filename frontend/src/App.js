@@ -762,7 +762,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
 
   const handleConversationSelect = (conversation) => {
     setSelectedConversation(conversation);
-    loadChatMessages(conversation.property_id, conversation.other_user_id);
+    // loadChatMessages will be called by useEffect when selectedConversation changes
   };
 
   if (!user) {
