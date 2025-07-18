@@ -160,20 +160,20 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 # Authentication routes
 @api_router.post("/auth/register", response_model=TokenResponse)
 async def register(user_data: UserCreate):
+    # Validate phone number format (only digits, 10+ digits)
+    phone_digits = ''.join(filter(str.isdigit, user_data.phone))
+    if len(phone_digits) < 10 or len(phone_digits) > 15:
+        raise HTTPException(status_code=400, detail="Phone number must be between 10-15 digits")
+    
     # Check if user already exists by email
     existing_user = await db.users.find_one({"email": user_data.email})
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     
-    # Check if phone number already exists
-    existing_phone = await db.users.find_one({"phone": user_data.phone})
+    # Check if phone number already exists (check against cleaned digits)
+    existing_phone = await db.users.find_one({"phone": phone_digits})
     if existing_phone:
         raise HTTPException(status_code=400, detail="Phone number already registered")
-    
-    # Validate phone number format (only digits, 10+ digits)
-    phone_digits = ''.join(filter(str.isdigit, user_data.phone))
-    if len(phone_digits) < 10 or len(phone_digits) > 15:
-        raise HTTPException(status_code=400, detail="Phone number must be between 10-15 digits")
     
     # Create new user
     user_dict = user_data.dict()
