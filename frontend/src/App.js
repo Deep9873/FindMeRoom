@@ -982,10 +982,19 @@ const PropertyCard = ({ property, onViewDetails, setCurrentView, setChatProperty
       return;
     }
     
+    // Check if user is the owner of this property
+    if (user.id === property.user_id) {
+      alert('You cannot contact yourself on your own property!');
+      return;
+    }
+    
     // Open chat interface with this property
     setChatProperty(property);
     setCurrentView('chat');
   };
+  
+  // Check if current user is the owner of this property
+  const isOwner = user && user.id === property.user_id;
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
@@ -1011,6 +1020,14 @@ const PropertyCard = ({ property, onViewDetails, setCurrentView, setChatProperty
             {property.available ? 'Available' : 'Not Available'}
           </span>
         </div>
+        
+        {isOwner && (
+          <div className="absolute top-2 left-2">
+            <span className="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">
+              Your Property
+            </span>
+          </div>
+        )}
       </div>
       
       <div className="p-4">
@@ -1053,12 +1070,22 @@ const PropertyCard = ({ property, onViewDetails, setCurrentView, setChatProperty
           >
             View Details
           </button>
-          <button 
-            onClick={handleContactOwner}
-            className="flex-1 bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition-colors"
-          >
-            Contact Owner
-          </button>
+          {isOwner ? (
+            <button 
+              className="flex-1 bg-gray-400 text-white py-2 rounded-md cursor-not-allowed"
+              disabled
+              title="You cannot contact yourself on your own property"
+            >
+              Your Property
+            </button>
+          ) : (
+            <button 
+              onClick={handleContactOwner}
+              className="flex-1 bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition-colors"
+            >
+              Contact Owner
+            </button>
+          )}
         </div>
       </div>
     </div>
