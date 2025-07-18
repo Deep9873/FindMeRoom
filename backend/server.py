@@ -296,7 +296,7 @@ async def send_message(chat_data: ChatCreate, current_user: dict = Depends(get_c
 
 @api_router.get("/chat/conversations", response_model=List[ConversationSummary])
 async def get_user_conversations(current_user: dict = Depends(get_current_user)):
-    # Get all unique property_ids where user has conversations
+    # Get all unique (property_id, other_user_id) pairs where user has conversations
     pipeline = [
         {
             "$match": {
@@ -307,11 +307,25 @@ async def get_user_conversations(current_user: dict = Depends(get_current_user))
             }
         },
         {
+            "$addFields": {
+                "other_user_id": {
+                    "$cond": {
+                        "if": {"$eq": ["$sender_id", current_user["id"]]},
+                        "then": "$receiver_id",
+                        "else": "$sender_id"
+                    }
+                }
+            }
+        },
+        {
             "$sort": {"created_at": -1}
         },
         {
             "$group": {
-                "_id": "$property_id",
+                "_id": {
+                    "property_id": "$property_id",
+                    "other_user_id": "$other_user_id"
+                },
                 "last_message": {"$first": "$message"},
                 "last_message_time": {"$first": "$created_at"},
                 "sender_id": {"$first": "$sender_id"},
@@ -325,25 +339,24 @@ async def get_user_conversations(current_user: dict = Depends(get_current_user))
     
     result = []
     for conv in conversations:
-        property_id = conv["_id"]
+        property_id = conv["_id"]["property_id"]
+        other_user_id = conv["_id"]["other_user_id"]
         
         # Get property details
         property_doc = await db.properties.find_one({"id": property_id})
         if not property_doc:
             continue
             
-        # Determine other user
-        other_user_id = conv["receiver_id"] if conv["sender_id"] == current_user["id"] else conv["sender_id"]
-        
         # Get other user details
         other_user = await db.users.find_one({"id": other_user_id})
         if not other_user:
             continue
             
-        # Count unread messages
+        # Count unread messages for this specific conversation
         unread_count = await db.chats.count_documents({
             "property_id": property_id,
             "receiver_id": current_user["id"],
+            "sender_id": other_user_id,
             "is_read": False
         })
         
