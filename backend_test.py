@@ -563,7 +563,7 @@ class FindMeRoomTester:
             return
         
         # Test 3: Get chat messages and verify structure
-        response, error = self.make_request("GET", f"/chat/{property_id}", auth_token=sender_token)
+        response, error = self.make_request("GET", f"/chat/{property_id}?other_user_id={receiver_user['id']}", auth_token=sender_token)
         if error:
             self.log_result("Get Chat Messages", False, error)
         elif response.status_code == 200:
