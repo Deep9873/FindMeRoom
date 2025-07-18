@@ -68,7 +68,7 @@ class PhoneUniquenessTest:
         print("\n=== Testing Phone Number Uniqueness Fix ===")
         
         timestamp = str(int(time.time()))
-        base_phone = "9876543210"  # 10 digit number
+        base_phone = f"987654{timestamp[-4:]}"  # Use timestamp to make it unique
         
         # Test data with same phone number in different formats
         test_cases = [
