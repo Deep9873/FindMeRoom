@@ -662,12 +662,12 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
     }
   };
 
-  const loadChatMessages = async (propertyId) => {
-    if (!propertyId || !user) return;
+  const loadChatMessages = async (propertyId, otherUserId) => {
+    if (!propertyId || !otherUserId || !user) return;
     
     setLoading(true);
     try {
-      const response = await fetch(`${BACKEND_URL}/api/chat/${propertyId}`, {
+      const response = await fetch(`${BACKEND_URL}/api/chat/${propertyId}?other_user_id=${otherUserId}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
