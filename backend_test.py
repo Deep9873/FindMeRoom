@@ -9,8 +9,8 @@ import json
 import time
 from typing import Dict, Any, Optional
 
-# Configuration - Use the same URL as frontend
-BASE_URL = "http://localhost:8000/api"
+# Configuration - Backend runs on port 8001 internally
+BASE_URL = "http://localhost:8001/api"
 HEADERS = {"Content-Type": "application/json"}
 
 class FindMeRoomTester:
