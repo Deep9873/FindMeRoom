@@ -583,7 +583,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       const interval = setInterval(() => {
         loadUnreadCount();
         if (selectedConversation) {
-          loadChatMessages(selectedConversation.property_id);
+          loadChatMessages(selectedConversation.property_id, selectedConversation.other_user_id);
         }
       }, 10000); // Poll every 10 seconds
       
