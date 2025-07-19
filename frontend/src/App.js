@@ -254,18 +254,31 @@ const CityProvider = ({ children }) => {
     // Get from localStorage if available
     return localStorage.getItem('selectedCity') || '';
   });
+  const [showCityPopup, setShowCityPopup] = useState(() => {
+    // Show popup if no city is selected
+    return !localStorage.getItem('selectedCity');
+  });
 
   const updateSelectedCity = (city) => {
     setSelectedCity(city);
+    setShowCityPopup(false);
     if (city) {
       localStorage.setItem('selectedCity', city);
     } else {
       localStorage.removeItem('selectedCity');
+      setShowCityPopup(true);
     }
+  };
+
+  const handleCityPopupSelect = (city) => {
+    updateSelectedCity(city);
   };
 
   return (
     <CityContext.Provider value={{ selectedCity, setSelectedCity: updateSelectedCity }}>
+      {showCityPopup && (
+        <CitySelectionPopup onCitySelect={handleCityPopupSelect} />
+      )}
       {children}
     </CityContext.Provider>
   );
