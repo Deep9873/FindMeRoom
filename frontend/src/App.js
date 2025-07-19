@@ -943,6 +943,36 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
     scrollToBottom();
   }, [messages]);
 
+  // Check and update conversations only if there are actual changes
+  const checkAndUpdateConversations = async () => {
+    try {
+      const url = `${BACKEND_URL}/api/chat/conversations`;
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Sort conversations by last message time (newest first) for consistent ordering
+        const sortedData = data.sort((a, b) => 
+          new Date(b.last_message_time) - new Date(a.last_message_time)
+        );
+        
+        // Check if conversations have actually changed
+        const currentUpdate = JSON.stringify(sortedData);
+        if (currentUpdate !== lastConversationsUpdate) {
+          setConversations(sortedData);
+          setLastConversationsUpdate(currentUpdate);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to check conversations:', error);
+    }
+  };
+
   const loadConversations = async () => {
     setConversationsLoading(true);
     try {
@@ -956,7 +986,14 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       
       if (response.ok) {
         const data = await response.json();
-        setConversations(data);
+        
+        // Sort conversations by last message time (newest first) for consistent ordering
+        const sortedData = data.sort((a, b) => 
+          new Date(b.last_message_time) - new Date(a.last_message_time)
+        );
+        
+        setConversations(sortedData);
+        setLastConversationsUpdate(JSON.stringify(sortedData));
       }
     } catch (error) {
       console.error('Failed to load conversations:', error);
