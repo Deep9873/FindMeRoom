@@ -1053,6 +1053,8 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
         // Check if conversations have actually changed using a more reliable comparison
         if (hasConversationsChanged(conversations, sortedData)) {
           setConversations(sortedData);
+          // Preserve selected conversation across updates
+          preserveSelectedConversation(sortedData);
           setLastConversationsUpdate(Date.now().toString());
         }
       }
