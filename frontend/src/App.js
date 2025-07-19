@@ -1042,7 +1042,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
           ) : (
             conversations.map((conversation) => (
               <div
-                key={conversation.property_id}
+                key={`${conversation.property_id}-${conversation.other_user_id}`}
                 onClick={() => handleConversationSelect(conversation)}
                 className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${
                   selectedConversation?.property_id === conversation.property_id ? 'bg-blue-50' : ''
