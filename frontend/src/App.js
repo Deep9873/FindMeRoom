@@ -1485,8 +1485,8 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Message Input - Mobile optimized */}
-            <div className="bg-white border-t border-gray-200 p-4">
+            {/* Message Input - Mobile optimized - Fixed at bottom */}
+            <div className="flex-shrink-0 bg-white border-t border-gray-200 p-4">
               {error && (
                 <div className="mb-3 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
                   {error}
