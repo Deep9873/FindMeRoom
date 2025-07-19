@@ -1328,6 +1328,7 @@ const PropertyCard = ({ property, onViewDetails, setCurrentView, setChatProperty
 };
 
 const SearchFilters = ({ onSearch }) => {
+  const { selectedCity } = useCity();
   const [filters, setFilters] = useState({
     city: '',
     property_type: '',
@@ -1335,10 +1336,12 @@ const SearchFilters = ({ onSearch }) => {
     max_rent: ''
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSearch(filters);
-  };
+  // Update filters when selectedCity changes
+  useEffect(() => {
+    if (selectedCity) {
+      setFilters(prev => ({ ...prev, city: selectedCity }));
+    }
+  }, [selectedCity]);
 
   return (
     <div id="search-section" className="bg-white p-6 rounded-lg shadow-md mb-8">
