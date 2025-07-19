@@ -1137,10 +1137,8 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   const loadChatMessages = async (propertyId, otherUserId, isPolling = false) => {
     if (!propertyId || !otherUserId || !user) return;
     
-    // Use different loading state for polling vs user actions
-    if (isPolling) {
-      setMessagePollingLoading(true);
-    } else {
+    // Only show loading for user-initiated actions, not polling
+    if (!isPolling) {
       setLoading(true);
     }
     
@@ -1154,7 +1152,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       if (response.ok) {
         const data = await response.json();
         
-        // Only update messages if they've actually changed to prevent input disruption
+        // Only update messages if they've actually changed
         const currentMessagesSignature = messages.map(msg => `${msg.id}-${msg.message}-${msg.is_read}`).join('|');
         const newMessagesSignature = data.map(msg => `${msg.id}-${msg.message}-${msg.is_read}`).join('|');
         
@@ -1175,9 +1173,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
         setError('Failed to load messages');
       }
     } finally {
-      if (isPolling) {
-        setMessagePollingLoading(false);
-      } else {
+      if (!isPolling) {
         setLoading(false);
       }
     }
