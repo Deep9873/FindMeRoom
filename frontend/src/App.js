@@ -168,6 +168,36 @@ const AuthContext = createContext();
 // Context for city selection
 const CityContext = createContext();
 
+const CityProvider = ({ children }) => {
+  const [selectedCity, setSelectedCity] = useState(() => {
+    // Get from localStorage if available
+    return localStorage.getItem('selectedCity') || '';
+  });
+
+  const updateSelectedCity = (city) => {
+    setSelectedCity(city);
+    if (city) {
+      localStorage.setItem('selectedCity', city);
+    } else {
+      localStorage.removeItem('selectedCity');
+    }
+  };
+
+  return (
+    <CityContext.Provider value={{ selectedCity, setSelectedCity: updateSelectedCity }}>
+      {children}
+    </CityContext.Provider>
+  );
+};
+
+const useCity = () => {
+  const context = useContext(CityContext);
+  if (!context) {
+    throw new Error('useCity must be used within a CityProvider');
+  }
+  return context;
+};
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
