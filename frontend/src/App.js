@@ -1943,6 +1943,7 @@ const PostPropertyForm = ({ setCurrentView }) => {
 };
 
 const HomePage = ({ setCurrentView, setChatProperty }) => {
+  const { selectedCity } = useCity();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProperty, setSelectedProperty] = useState(null);
@@ -1950,6 +1951,15 @@ const HomePage = ({ setCurrentView, setChatProperty }) => {
   useEffect(() => {
     fetchProperties();
   }, []);
+
+  // Fetch properties when selected city changes
+  useEffect(() => {
+    if (selectedCity) {
+      fetchProperties({ city: selectedCity });
+    } else {
+      fetchProperties();
+    }
+  }, [selectedCity]);
 
   const fetchProperties = async (filters = {}) => {
     setLoading(true);
