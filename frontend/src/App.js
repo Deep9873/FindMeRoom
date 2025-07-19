@@ -1343,6 +1343,11 @@ const SearchFilters = ({ onSearch }) => {
     }
   }, [selectedCity]);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSearch(filters);
+  };
+
   return (
     <div id="search-section" className="bg-white p-6 rounded-lg shadow-md mb-8">
       <h3 className="text-lg font-semibold mb-4">Search Properties</h3>
