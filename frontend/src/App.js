@@ -1857,12 +1857,11 @@ const PostPropertyForm = ({ setCurrentView }) => {
           
           <div>
             <label className="block text-gray-700 text-sm font-bold mb-2">City</label>
-            <input
-              type="text"
+            <CitySelector
               value={formData.city}
-              onChange={(e) => setFormData({...formData, city: e.target.value})}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              onChange={(city) => setFormData({...formData, city})}
+              placeholder="Select City"
+              className="w-full"
             />
           </div>
         </div>
