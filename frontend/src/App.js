@@ -1302,8 +1302,8 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       <div className={`${
         showMobileChat ? 'hidden md:block' : 'block'
       } w-full md:w-1/3 bg-white border-r border-gray-200 flex flex-col`}>
-        {/* Header - Sticky positioned */}
-        <div className="sticky top-0 z-10 bg-white border-b border-gray-200 p-4 shadow-sm">{/* Made sticky */}
+        {/* Header - Fixed positioned */}
+        <div className="flex-shrink-0 bg-white border-b border-gray-200 p-4 shadow-sm">{/* Fixed header outside scroll */}
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Conversations</h2>
             <button
