@@ -553,9 +553,11 @@ const Header = ({ currentView, setCurrentView }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-6">
-            <h1 className="text-2xl font-bold text-blue-600 cursor-pointer" onClick={() => setCurrentView('home')}>
+            {/* <h1 className="text-2xl font-bold text-blue-600 cursor-pointer" onClick={() => setCurrentView('home')}>
               FindMeRoom
-            </h1>
+            </h1> */}
+            <img className="w-30 h-20 -rotate-12" src="/logo.png" alt="FindMeRoom" onClick={() => setCurrentView('home')} />
+            
             
             {/* City Selector */}
             <div className="hidden md:block">
@@ -1049,6 +1051,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
                   selectedConversation?.property_id === conversation.property_id ? 'bg-blue-50' : ''
                 }`}
               >
+                
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 bg-gray-200 rounded-lg flex-shrink-0">
                     {conversation.property_image ? (
@@ -1368,7 +1371,7 @@ const SearchFilters = ({ onSearch }) => {
           <option value="room">Room</option>
           <option value="house">House</option>
           <option value="pg">PG</option>
-        </select>
+        </select >
         <input
           type="number"
           placeholder="Min Rent"
@@ -1755,59 +1758,74 @@ const PostPropertyForm = ({ setCurrentView }) => {
     city: '',
     amenities: ''
   });
-  const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+ const [images, setImages] = useState([]);
+const [loading, setLoading] = useState(false);
+const [success, setSuccess] = useState(false);
+const [imageError, setImageError] = useState(false);
+const handleImageUpload = (e) => {
+  const files = Array.from(e.target.files);
+  const fileReaders = [];
 
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImages(prev => [...prev, event.target.result]);
-      };
-      reader.readAsDataURL(file);
+  files.forEach((file) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setImages((prevImages) => [...prevImages, event.target.result]);
+    };
+    reader.readAsDataURL(file);
+    fileReaders.push(reader);
+  });
+
+  // Clear any previous error
+  setImageError(false);
+};
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  // Validate image presence
+  if (images.length === 0) {
+    setImageError(true);
+    setLoading(false);
+    return;
+  }
+
+  try {
+    const propertyData = {
+      ...formData,
+      rent: parseInt(formData.rent),
+      deposit: parseInt(formData.deposit),
+      amenities: formData.amenities.split(',').map(a => a.trim()).filter(a => a),
+      images: images
+    };
+
+    await axios.post(`${API}/properties`, propertyData);
+    setSuccess(true);
+    setFormData({
+      title: '',
+      description: '',
+      property_type: 'room',
+      rent: '',
+      deposit: '',
+      location: '',
+      city: '',
+      amenities: ''
     });
-  };
+    setImages([]);
+    setImageError(false); // clear error
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    
-    try {
-      const propertyData = {
-        ...formData,
-        rent: parseInt(formData.rent),
-        deposit: parseInt(formData.deposit),
-        amenities: formData.amenities.split(',').map(a => a.trim()).filter(a => a),
-        images: images
-      };
-      
-      await axios.post(`${API}/properties`, propertyData);
-      setSuccess(true);
-      setFormData({
-        title: '',
-        description: '',
-        property_type: 'room',
-        rent: '',
-        deposit: '',
-        location: '',
-        city: '',
-        amenities: ''
-      });
-      setImages([]);
-      
-      // Redirect to home after successful post
-      setTimeout(() => {
-        setCurrentView('home');
-      }, 2000);
-    } catch (error) {
-      console.error('Error creating property:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Redirect to home after successful post
+    setTimeout(() => {
+      setCurrentView('home');
+    }, 2000);
+  } catch (error) {
+    console.error('Error creating property:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
@@ -1824,6 +1842,7 @@ const PostPropertyForm = ({ setCurrentView }) => {
           <label className="block text-gray-700 text-sm font-bold mb-2">Title</label>
           <input
             type="text"
+            placeholder="2 Room Set with Kitchen"
             value={formData.title}
             onChange={(e) => setFormData({...formData, title: e.target.value})}
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -1834,6 +1853,7 @@ const PostPropertyForm = ({ setCurrentView }) => {
         <div>
           <label className="block text-gray-700 text-sm font-bold mb-2">Description</label>
           <textarea
+          placeholder="Well-ventilated room with attached bathroom, kitchen setup, and 24x7 water supply. 5 mins walk to metro."
             value={formData.description}
             onChange={(e) => setFormData({...formData, description: e.target.value})}
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -1870,6 +1890,7 @@ const PostPropertyForm = ({ setCurrentView }) => {
         <div>
           <label className="block text-gray-700 text-sm font-bold mb-2">Location</label>
           <input
+            placeholder="Malviya Nagar, South Delhi"
             type="text"
             value={formData.location}
             onChange={(e) => setFormData({...formData, location: e.target.value})}
@@ -1913,23 +1934,27 @@ const PostPropertyForm = ({ setCurrentView }) => {
           />
         </div>
         
-        <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2">Images</label>
-          <input
-            type="file"
-            onChange={handleImageUpload}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            multiple
-            accept="image/*"
-          />
-          {images.length > 0 && (
-            <div className="mt-2 grid grid-cols-3 gap-2">
-              {images.map((image, index) => (
-                <img key={index} src={image} alt={`Preview ${index}`} className="w-full h-20 object-cover rounded" />
-              ))}
-            </div>
-          )}
-        </div>
+<div>
+  <label className="block text-gray-700 text-sm font-bold mb-2">Images</label>
+  <input
+    type="file"
+    onChange={handleImageUpload}
+    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+    multiple
+    accept="image/*"
+  />
+  {imageError && (
+    <p className="text-red-500 text-sm mt-1">* At least one image is required.</p>
+  )}
+  {images.length > 0 && (
+    <div className="mt-2 grid grid-cols-3 gap-2">
+      {images.map((image, index) => (
+        <img key={index} src={image} alt={`Preview ${index}`} className="w-full h-20 object-cover rounded" />
+      ))}
+    </div>
+  )}
+</div>
+
         
         <button
           type="submit"
@@ -2063,52 +2088,59 @@ const MyPropertiesPage = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.map((property) => (
-              <div key={property.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="h-48 bg-gray-200 relative">
-                  {property.images && property.images.length > 0 ? (
-                    <img 
-                      src={property.images[0].startsWith('data:') ? property.images[0] : `data:image/jpeg;base64,${property.images[0]}`}
-                      alt={property.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gray-300 flex items-center justify-center">
-                      <span className="text-gray-500">No Image</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{property.title}</h3>
-                  <p className="text-gray-600 mb-3">{property.description}</p>
-                  
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <span className="text-2xl font-bold text-green-600">₹{property.rent}</span>
-                      <span className="text-gray-500">/month</span>
-                    </div>
-                    <span className={`px-2 py-1 rounded text-sm ${property.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                      {property.available ? 'Available' : 'Not Available'}
-                    </span>
-                  </div>
-                  
-                  <div className="flex space-x-2">
-                    <button className="flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors">
-                      Edit
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(property.id)}
-                      className="flex-1 bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition-colors"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {properties.map((property) => (
+    <div key={property.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="h-48 bg-gray-200 relative">
+        {property.images && property.images.length > 0 ? (
+          <img 
+            src={
+              property.images[0].startsWith('data:')
+                ? property.images[0]
+                : `data:image/jpeg;base64,${property.images[0]}`
+            }
+            alt={property.title}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+            <span className="text-gray-500">No Image</span>
           </div>
+        )}
+      </div>
+
+      <div className="p-6">
+        <h3 className="text-xl font-semibold mb-2">{property.title}</h3>
+        <p className="text-gray-600 mb-3">{property.description}</p>
+
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <span className="text-2xl font-bold text-green-600">₹{property.rent}</span>
+            <span className="text-gray-500">/month</span>
+          </div>
+          <span
+            className={`px-2 py-1 rounded text-sm ${
+              property.available
+                ? 'bg-green-100 text-green-800'
+                : 'bg-red-100 text-red-800'
+            }`}
+          >
+            {property.available ? 'Available' : 'Not Available'}
+          </span>
+        </div>
+
+        {/* Only Delete Button */}
+        <button
+          onClick={() => handleDelete(property.id)}
+          className="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition-colors"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
         )}
         
         {!loading && properties.length === 0 && (
@@ -2191,5 +2223,6 @@ const MainContent = ({ currentView, setCurrentView }) => {
     </div>
   );
 };
+
 
 export default App;
