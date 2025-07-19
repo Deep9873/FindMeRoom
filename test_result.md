@@ -477,7 +477,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "User Authentication System"
+    - "Chat Interface Auto-scroll Functionality"
+    - "Major Indian Cities Dropdown System"
+    - "Custom City Input Option"
+    - "Navbar City Selector"
+    - "Location-based Property Filtering"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
