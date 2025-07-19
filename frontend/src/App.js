@@ -1209,8 +1209,15 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
         setNewMessage('');
         setError('');
         
-        // Refresh conversations to update last message
-        loadConversations();
+        // Refresh conversations to update last message only when not in active conversation
+        if (!selectedConversation) {
+          checkAndUpdateConversations();
+        } else {
+          // If we're in a conversation, just refresh the conversation list after sending
+          setTimeout(() => {
+            checkAndUpdateConversations();
+          }, 1000); // Delay to ensure message is processed
+        }
       } else {
         setError('Failed to send message');
       }
