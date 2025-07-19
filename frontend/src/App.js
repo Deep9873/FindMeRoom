@@ -572,6 +572,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   const [conversationsLoading, setConversationsLoading] = useState(true);
   const [error, setError] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
+  const messagesEndRef = useRef(null);
 
   // Poll for new messages and unread count
   useEffect(() => {
