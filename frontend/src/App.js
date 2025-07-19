@@ -26,6 +26,142 @@ const MAJOR_INDIAN_CITIES = [
   'Malegaon', 'Gaya', 'Jalgaon', 'Udaipur', 'Maheshtala'
 ].sort();
 
+// Reusable City Selector Component
+const CitySelector = ({ value, onChange, placeholder = "Select City", className = "" }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isCustomCity, setIsCustomCity] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Filter cities based on search term
+  const filteredCities = MAJOR_INDIAN_CITIES.filter(city =>
+    city.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleCitySelect = (city) => {
+    onChange(city);
+    setIsDropdownOpen(false);
+    setSearchTerm('');
+    setIsCustomCity(false);
+  };
+
+  const handleCustomCityToggle = () => {
+    setIsCustomCity(true);
+    setIsDropdownOpen(false);
+    if (!isCustomCity) {
+      onChange(''); // Clear current value when switching to custom
+    }
+  };
+
+  const handleCustomCityChange = (e) => {
+    onChange(e.target.value);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Check if current value is a custom city (not in the major cities list)
+  const isCurrentValueCustom = value && !MAJOR_INDIAN_CITIES.includes(value);
+
+  return (
+    <div className={`relative ${className}`} ref={dropdownRef}>
+      {isCustomCity || isCurrentValueCustom ? (
+        <div className="relative">
+          <input
+            type="text"
+            value={value}
+            onChange={handleCustomCityChange}
+            placeholder="Enter your city"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-20"
+          />
+          <button
+            type="button"
+            onClick={() => {
+              setIsCustomCity(false);
+              onChange('');
+            }}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-blue-600 hover:text-blue-800"
+          >
+            Use List
+          </button>
+        </div>
+      ) : (
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-left flex justify-between items-center"
+          >
+            <span className={value ? 'text-black' : 'text-gray-500'}>
+              {value || placeholder}
+            </span>
+            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {isDropdownOpen && (
+            <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+              {/* Search input */}
+              <div className="p-2 border-b">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  placeholder="Search cities..."
+                  className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Custom city option */}
+              <button
+                type="button"
+                onClick={handleCustomCityToggle}
+                className="w-full px-3 py-2 text-left hover:bg-blue-50 text-blue-600 border-b text-sm font-medium"
+              >
+                + Add Other City
+              </button>
+
+              {/* Cities list */}
+              <div className="max-h-40 overflow-y-auto">
+                {filteredCities.length > 0 ? (
+                  filteredCities.map((city) => (
+                    <button
+                      key={city}
+                      type="button"
+                      onClick={() => handleCitySelect(city)}
+                      className="w-full px-3 py-2 text-left hover:bg-gray-50 text-sm"
+                    >
+                      {city}
+                    </button>
+                  ))
+                ) : (
+                  <div className="px-3 py-2 text-sm text-gray-500">
+                    No cities found. Try different search terms.
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // Context for authentication
 const AuthContext = createContext();
 
