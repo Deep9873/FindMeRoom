@@ -2167,23 +2167,26 @@ const handleSubmit = async (e) => {
 const HomePage = ({ setCurrentView, setChatProperty }) => {
   const { selectedCity } = useCity();
   const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
 
-  useEffect(() => {
-    fetchProperties();
-  }, []);
-
-  // Fetch properties when selected city changes
+  // Only fetch properties when a city is selected (performance optimization)
   useEffect(() => {
     if (selectedCity) {
       fetchProperties({ city: selectedCity });
     } else {
-      fetchProperties();
+      // Clear properties when no city is selected
+      setProperties([]);
+      setLoading(false);
     }
   }, [selectedCity]);
 
   const fetchProperties = async (filters = {}) => {
+    // Always ensure we have a city filter for performance
+    if (!filters.city && !selectedCity) {
+      return;
+    }
+    
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -2207,27 +2210,50 @@ const HomePage = ({ setCurrentView, setChatProperty }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <SearchFilters onSearch={fetchProperties} />
         
-        {loading ? (
+        {!selectedCity ? (
+          <div className="text-center py-12">
+            <div className="mx-auto w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+              <svg className="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Select Your City</h3>
+            <p className="text-gray-600 mb-6">Choose your city from the navigation bar to see nearby properties</p>
+            <p className="text-sm text-gray-500">This helps us show you relevant properties and improves loading performance</p>
+          </div>
+        ) : loading ? (
           <div className="flex justify-center py-8">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.map((property) => (
-              <PropertyCard
-                key={property.id}
-                property={property}
-                onViewDetails={setSelectedProperty}
-                setCurrentView={setCurrentView}
-                setChatProperty={setChatProperty}
-              />
-            ))}
-          </div>
+          <>
+            {properties.length > 0 && (
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  Properties in {selectedCity}
+                </h2>
+                <p className="text-gray-600">{properties.length} properties available</p>
+              </div>
+            )}
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {properties.map((property) => (
+                <PropertyCard
+                  key={property.id}
+                  property={property}
+                  onViewDetails={setSelectedProperty}
+                  setCurrentView={setCurrentView}
+                  setChatProperty={setChatProperty}
+                />
+              ))}
+            </div>
+          </>
         )}
         
-        {!loading && properties.length === 0 && (
+        {!loading && selectedCity && properties.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-gray-500">No properties found. Try adjusting your search filters.</p>
+            <p className="text-gray-500">No properties found in {selectedCity}. Try adjusting your search filters.</p>
           </div>
         )}
       </div>
