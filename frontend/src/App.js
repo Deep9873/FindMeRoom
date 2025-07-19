@@ -949,6 +949,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   const [error, setError] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
   const [lastConversationsUpdate, setLastConversationsUpdate] = useState(null);
+  const [showMobileChat, setShowMobileChat] = useState(false); // Mobile state management
   const messagesEndRef = useRef(null);
 
   // Poll for new messages and unread count with optimized intervals
