@@ -503,6 +503,7 @@ const ProfilePage = ({ setCurrentView }) => {
 
 const Header = ({ currentView, setCurrentView }) => {
   const { user, logout } = useAuth();
+  const { selectedCity, setSelectedCity } = useCity();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
