@@ -1247,22 +1247,13 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
     }
   };
 
-  // Handle typing state to prevent polling disruption
-  const handleMessageInputChange = (e) => {
-    setNewMessage(e.target.value);
-    setIsTyping(true);
-    
-    // Clear typing state after user stops typing for 2 seconds
-    clearTimeout(window.typingTimeout);
-    window.typingTimeout = setTimeout(() => {
-      setIsTyping(false);
-    }, 2000);
-  };
+  const handleConversationSelect = (conversation) => {
     setSelectedConversation(conversation);
     setError('');
     
     // Load messages immediately when conversation is selected
     loadChatMessages(conversation.property_id, conversation.other_user_id);
+  };
   };
 
   // Stable conversation selection that preserves selection across updates
