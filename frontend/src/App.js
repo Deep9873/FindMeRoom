@@ -1254,7 +1254,6 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
     // Load messages immediately when conversation is selected
     loadChatMessages(conversation.property_id, conversation.other_user_id);
   };
-  };
 
   // Stable conversation selection that preserves selection across updates
   const preserveSelectedConversation = (newConversations) => {
