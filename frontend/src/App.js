@@ -872,6 +872,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   const [conversationsLoading, setConversationsLoading] = useState(true);
   const [error, setError] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
+  const [lastConversationsUpdate, setLastConversationsUpdate] = useState(null);
   const messagesEndRef = useRef(null);
 
   // Poll for new messages and unread count
@@ -883,7 +884,8 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       // Set up polling for real-time updates
       const interval = setInterval(() => {
         loadUnreadCount();
-        loadConversations(); // Refresh conversations to show latest messages
+        // Only refresh conversations if needed to prevent shuffling
+        checkAndUpdateConversations();
         if (selectedConversation) {
           loadChatMessages(selectedConversation.property_id, selectedConversation.other_user_id);
         }
