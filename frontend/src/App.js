@@ -1352,12 +1352,11 @@ const SearchFilters = ({ onSearch }) => {
     <div id="search-section" className="bg-white p-6 rounded-lg shadow-md mb-8">
       <h3 className="text-lg font-semibold mb-4">Search Properties</h3>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <input
-          type="text"
-          placeholder="City"
+        <CitySelector
           value={filters.city}
-          onChange={(e) => setFilters({...filters, city: e.target.value})}
-          className="border rounded-md px-3 py-2"
+          onChange={(city) => setFilters({...filters, city})}
+          placeholder="Select City"
+          className=""
         />
         <select
           value={filters.property_type}
