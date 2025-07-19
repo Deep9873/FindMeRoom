@@ -207,20 +207,89 @@ backend:
         agent: "testing"
         comment: "✅ PASSED: Unread count endpoint (/api/chat/unread-count) working correctly. Returns proper JSON format with unread_count field as integer. Accurately tracks unread messages for authenticated users. Unread count updates correctly when messages are marked as read. Authentication properly required."
 
-  - task: "Auto-refresh and Message Status Tracking"
+  - task: "Chat Interface Auto-scroll Functionality"
     implemented: true
-    working: true
-    file: "server.py, App.js"
+    working: "NA"
+    file: "App.js"
     stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Added automatic message refresh every 3 seconds to ensure real-time message receiving. Implemented message status indicators (sent/read) with visual checkmarks. Messages are automatically marked as read when viewed."
-      - working: true
-        agent: "testing"
-        comment: "✅ PASSED: Message status tracking working correctly. Mark-read endpoint (/api/chat/mark-read) successfully updates message read status and read_at timestamp. Handles empty message ID arrays gracefully. Properly restricts marking to messages where user is receiver. Edge cases handled well including non-existent message IDs."
+        comment: "Implemented auto-scroll functionality in chat interface using useRef and useEffect. Messages now automatically scroll to bottom when new messages arrive. Added messagesEndRef and scrollToBottom function to EnhancedChatInterface component."
+
+  - task: "Major Indian Cities Dropdown System"
+    implemented: true
+    working: "NA"
+    file: "App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created comprehensive list of 80+ major Indian cities sorted alphabetically. Implemented reusable CitySelector component with dropdown functionality, search capability, and option to add custom cities. Component includes click-outside-to-close functionality and proper keyboard navigation."
+
+  - task: "Custom City Input Option"
+    implemented: true
+    working: "NA"
+    file: "App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Integrated custom city input functionality within CitySelector component. Users can toggle between selecting from major cities list or typing custom city name. Includes 'Add Other City' option and 'Use List' toggle button for seamless switching between modes."
+
+  - task: "Navbar City Selector"
+    implemented: true
+    working: "NA"
+    file: "App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added city selector to navigation bar for both desktop and mobile views. Implemented with location icon and proper styling. Mobile navigation includes dedicated city selector section. Created CityContext and CityProvider for managing selected city state across the application."
+
+  - task: "Location-based Property Filtering"
+    implemented: true
+    working: "NA"
+    file: "App.js, server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented city-based property filtering using selected city from navbar. Updated HomePage component to automatically filter properties when city is selected. Modified SearchFilters to sync with selected city. Properties dashboard now shows only nearby properties based on user's city selection."
+
+  - task: "City Selection Context Management"
+    implemented: true
+    working: "NA"
+    file: "App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Created CityContext and CityProvider for managing selected city state globally. Implemented localStorage persistence for selected city. Added useCity hook for easy access to city selection functionality throughout the application. Wrapped App component with CityProvider."
+
+  - task: "Updated Property Forms with City Selector"
+    implemented: true
+    working: "NA"
+    file: "App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated PostPropertyForm and SearchFilters components to use new CitySelector component instead of plain text inputs. Both forms now support major Indian cities dropdown with search and custom city input functionality."
 
   - task: "My Properties Management"
     implemented: true
