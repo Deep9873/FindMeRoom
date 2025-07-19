@@ -1128,9 +1128,9 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
                   <p>No messages yet. Start the conversation!</p>
                 </div>
               ) : (
-                messages.map((message, index) => (
+                messages.map((message) => (
                   <div
-                    key={index}
+                    key={message.id}
                     className={`flex ${message.sender_id === user.id ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
