@@ -1106,6 +1106,8 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
         );
         
         setConversations(sortedData);
+        // Preserve selected conversation across updates
+        preserveSelectedConversation(sortedData);
         setLastConversationsUpdate(Date.now().toString());
       }
     } catch (error) {
