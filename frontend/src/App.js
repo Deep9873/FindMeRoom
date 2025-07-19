@@ -1230,7 +1230,29 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
 
   const handleConversationSelect = (conversation) => {
     setSelectedConversation(conversation);
-    // loadChatMessages will be called by useEffect when selectedConversation changes
+    setError('');
+    
+    // Mark messages as read when conversation is selected
+    markMessagesAsRead(conversation.property_id, conversation.other_user_id);
+    
+    // Load messages immediately when conversation is selected
+    loadChatMessages(conversation.property_id, conversation.other_user_id);
+  };
+
+  // Stable conversation selection that preserves selection across updates
+  const preserveSelectedConversation = (newConversations) => {
+    if (selectedConversation && newConversations.length > 0) {
+      // Find the same conversation in the new list to preserve selection
+      const currentConversation = newConversations.find(conv => 
+        conv.property_id === selectedConversation.property_id && 
+        conv.other_user_id === selectedConversation.other_user_id
+      );
+      
+      if (currentConversation) {
+        // Update the selected conversation with new data to reflect latest changes
+        setSelectedConversation(currentConversation);
+      }
+    }
   };
 
   if (!user) {
