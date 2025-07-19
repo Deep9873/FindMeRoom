@@ -1485,9 +1485,10 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
               )}
               <form onSubmit={sendMessage} className="flex space-x-2">
                 <input
+                  ref={messageInputRef}
                   type="text"
                   value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
+                  onChange={handleMessageInputChange}
                   placeholder="Type a message..."
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                   disabled={loading}
