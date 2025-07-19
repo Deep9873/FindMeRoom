@@ -945,14 +945,11 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState(prefilledMessage);
   const [loading, setLoading] = useState(false);
-  const [messagePollingLoading, setMessagePollingLoading] = useState(false);
   const [conversationsLoading, setConversationsLoading] = useState(true);
   const [error, setError] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
   const [lastConversationsUpdate, setLastConversationsUpdate] = useState(null);
-  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
-  const messageInputRef = useRef(null);
 
   // Poll for new messages and unread count with optimized intervals
   useEffect(() => {
