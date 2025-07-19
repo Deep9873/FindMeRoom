@@ -800,14 +800,15 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       // Set up polling for real-time updates
       const interval = setInterval(() => {
         loadUnreadCount();
+        loadConversations(); // Refresh conversations to show latest messages
         if (selectedConversation) {
           loadChatMessages(selectedConversation.property_id, selectedConversation.other_user_id);
         }
-      }, 10000); // Poll every 10 seconds
+      }, 3000); // Poll every 3 seconds for better real-time experience
       
       return () => clearInterval(interval);
     }
-  }, [user]); // Remove selectedConversation from dependencies to prevent reload loops
+  }, [user, selectedConversation?.property_id, selectedConversation?.other_user_id]); // Include selectedConversation in dependencies
 
   // Load messages when conversation selection changes
   useEffect(() => {
