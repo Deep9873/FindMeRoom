@@ -947,6 +947,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
                   </div>
                 ))
               )}
+              <div ref={messagesEndRef} />
             </div>
 
             {/* Message Input */}
