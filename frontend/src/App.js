@@ -951,23 +951,36 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   const [lastConversationsUpdate, setLastConversationsUpdate] = useState(null);
   const messagesEndRef = useRef(null);
 
-  // Poll for new messages and unread count
+  // Poll for new messages and unread count with optimized intervals
   useEffect(() => {
     if (user) {
       loadConversations();
       loadUnreadCount();
       
-      // Set up polling for real-time updates
-      const interval = setInterval(() => {
-        loadUnreadCount();
-        // Only refresh conversations if needed to prevent shuffling
-        checkAndUpdateConversations();
+      // Set up optimized polling for real-time updates
+      const unreadInterval = setInterval(() => {
+        loadUnreadCount(); // Poll unread count more frequently
+      }, 3000); // Poll every 3 seconds for unread count
+
+      const conversationInterval = setInterval(() => {
+        // Only check conversations if no conversation is currently selected to prevent disruption
+        if (!selectedConversation) {
+          checkAndUpdateConversations();
+        }
+      }, 10000); // Poll conversations less frequently (every 10 seconds)
+
+      const messageInterval = setInterval(() => {
+        // Poll messages for selected conversation more frequently
         if (selectedConversation) {
           loadChatMessages(selectedConversation.property_id, selectedConversation.other_user_id);
         }
-      }, 3000); // Poll every 3 seconds for better real-time experience
+      }, 3000); // Poll messages every 3 seconds when in conversation
       
-      return () => clearInterval(interval);
+      return () => {
+        clearInterval(unreadInterval);
+        clearInterval(conversationInterval);
+        clearInterval(messageInterval);
+      };
     }
   }, [user, selectedConversation?.property_id, selectedConversation?.other_user_id]); // Include selectedConversation in dependencies
 
