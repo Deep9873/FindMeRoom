@@ -1037,16 +1037,38 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
           new Date(b.last_message_time) - new Date(a.last_message_time)
         );
         
-        // Check if conversations have actually changed
-        const currentUpdate = JSON.stringify(sortedData);
-        if (currentUpdate !== lastConversationsUpdate) {
+        // Check if conversations have actually changed using a more reliable comparison
+        if (hasConversationsChanged(conversations, sortedData)) {
           setConversations(sortedData);
-          setLastConversationsUpdate(currentUpdate);
+          setLastConversationsUpdate(Date.now().toString());
         }
       }
     } catch (error) {
       console.error('Failed to check conversations:', error);
     }
+  };
+
+  // Helper function to check if conversations have meaningfully changed
+  const hasConversationsChanged = (oldConversations, newConversations) => {
+    if (oldConversations.length !== newConversations.length) {
+      return true;
+    }
+    
+    // Compare conversations by creating stable identifiers
+    for (let i = 0; i < oldConversations.length; i++) {
+      const oldConv = oldConversations[i];
+      const newConv = newConversations[i];
+      
+      // Check key properties that would require a UI update
+      const oldSignature = `${oldConv.property_id}-${oldConv.other_user_id}-${oldConv.last_message}-${oldConv.unread_count}-${Math.floor(new Date(oldConv.last_message_time).getTime() / 1000)}`;
+      const newSignature = `${newConv.property_id}-${newConv.other_user_id}-${newConv.last_message}-${newConv.unread_count}-${Math.floor(new Date(newConv.last_message_time).getTime() / 1000)}`;
+      
+      if (oldSignature !== newSignature) {
+        return true;
+      }
+    }
+    
+    return false;
   };
 
   const loadConversations = async () => {
