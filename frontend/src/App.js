@@ -1232,9 +1232,6 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
     setSelectedConversation(conversation);
     setError('');
     
-    // Mark messages as read when conversation is selected
-    markMessagesAsRead(conversation.property_id, conversation.other_user_id);
-    
     // Load messages immediately when conversation is selected
     loadChatMessages(conversation.property_id, conversation.other_user_id);
   };
