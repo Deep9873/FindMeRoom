@@ -2115,9 +2115,11 @@ const App = () => {
   
   return (
     <AuthProvider>
-      <div className="App">
-        <MainContent currentView={currentView} setCurrentView={setCurrentView} />
-      </div>
+      <CityProvider>
+        <div className="App">
+          <MainContent currentView={currentView} setCurrentView={setCurrentView} />
+        </div>
+      </CityProvider>
     </AuthProvider>
   );
 };
