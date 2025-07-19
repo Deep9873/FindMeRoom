@@ -1251,9 +1251,16 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   const handleConversationSelect = (conversation) => {
     setSelectedConversation(conversation);
     setError('');
+    setShowMobileChat(true); // Show chat view on mobile when conversation is selected
     
     // Load messages immediately when conversation is selected
     loadChatMessages(conversation.property_id, conversation.other_user_id);
+  };
+
+  // Mobile back to conversations handler
+  const handleMobileBackToConversations = () => {
+    setShowMobileChat(false);
+    setSelectedConversation(null);
   };
 
   // Stable conversation selection that preserves selection across updates
