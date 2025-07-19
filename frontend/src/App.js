@@ -1162,7 +1162,22 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
         const newMessagesSignature = data.map(msg => `${msg.id}-${msg.message}-${msg.is_read}`).join('|');
         
         if (currentMessagesSignature !== newMessagesSignature) {
+          // Preserve input focus state
+          const wasInputFocused = messageInputRef.current === document.activeElement;
+          const inputSelectionStart = messageInputRef.current?.selectionStart;
+          const inputSelectionEnd = messageInputRef.current?.selectionEnd;
+          
           setMessages(data || []);
+          
+          // Restore input focus and cursor position if it was focused
+          if (wasInputFocused && messageInputRef.current) {
+            setTimeout(() => {
+              messageInputRef.current.focus();
+              if (inputSelectionStart !== undefined && inputSelectionEnd !== undefined) {
+                messageInputRef.current.setSelectionRange(inputSelectionStart, inputSelectionEnd);
+              }
+            }, 0);
+          }
         }
         
         // Mark messages as read
