@@ -1137,10 +1137,16 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
     }
   };
 
-  const loadChatMessages = async (propertyId, otherUserId) => {
+  const loadChatMessages = async (propertyId, otherUserId, isPolling = false) => {
     if (!propertyId || !otherUserId || !user) return;
     
-    setLoading(true);
+    // Use different loading state for polling vs user actions
+    if (isPolling) {
+      setMessagePollingLoading(true);
+    } else {
+      setLoading(true);
+    }
+    
     try {
       const response = await fetch(`${BACKEND_URL}/api/chat/${propertyId}?other_user_id=${otherUserId}`, {
         headers: {
@@ -1150,7 +1156,14 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       
       if (response.ok) {
         const data = await response.json();
-        setMessages(data || []);
+        
+        // Only update messages if they've actually changed to prevent input disruption
+        const currentMessagesSignature = messages.map(msg => `${msg.id}-${msg.message}-${msg.is_read}`).join('|');
+        const newMessagesSignature = data.map(msg => `${msg.id}-${msg.message}-${msg.is_read}`).join('|');
+        
+        if (currentMessagesSignature !== newMessagesSignature) {
+          setMessages(data || []);
+        }
         
         // Mark messages as read
         const unreadMessages = data.filter(msg => 
@@ -1161,9 +1174,15 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
         }
       }
     } catch (error) {
-      setError('Failed to load messages');
+      if (!isPolling) {
+        setError('Failed to load messages');
+      }
     } finally {
-      setLoading(false);
+      if (isPolling) {
+        setMessagePollingLoading(false);
+      } else {
+        setLoading(false);
+      }
     }
   };
 
