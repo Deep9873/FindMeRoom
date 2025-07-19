@@ -484,7 +484,8 @@ test_plan:
     - "Major Indian Cities Dropdown System"
     - "Custom City Input Option"
     - "Navbar City Selector"
-    - "Location-based Property Filtering"
+    - "City Selection Context Management"
+    - "Updated Property Forms with City Selector"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
