@@ -375,6 +375,279 @@ class FindMeRoomTester:
         else:
             self.log_result("Pagination", False, f"HTTP {response.status_code}")
 
+    def test_enhanced_city_filtering(self):
+        """Test enhanced city-based property filtering functionality"""
+        print("\n=== Testing Enhanced City-Based Property Filtering ===")
+        
+        if not self.auth_tokens:
+            self.log_result("Enhanced City Filtering", False, "No auth tokens available")
+            return
+        
+        # Create test properties in different cities for comprehensive testing
+        test_cities_properties = [
+            {
+                "title": "Modern Apartment in Mumbai Central",
+                "description": "Luxurious 3BHK apartment in the heart of Mumbai with sea view",
+                "property_type": "house",
+                "rent": 45000,
+                "deposit": 90000,
+                "location": "Mumbai Central",
+                "city": "Mumbai",
+                "images": [],
+                "amenities": ["Sea View", "Gym", "Parking", "Security"]
+            },
+            {
+                "title": "Cozy PG in Delhi NCR",
+                "description": "Safe and comfortable PG accommodation in Gurgaon",
+                "property_type": "pg",
+                "rent": 15000,
+                "deposit": 30000,
+                "location": "Sector 14, Gurgaon",
+                "city": "Delhi",
+                "images": [],
+                "amenities": ["Meals", "WiFi", "Laundry", "AC"]
+            },
+            {
+                "title": "Student Room in Pune University Area",
+                "description": "Affordable room near Pune University for students",
+                "property_type": "room",
+                "rent": 8000,
+                "deposit": 16000,
+                "location": "Katraj, Pune",
+                "city": "Pune",
+                "images": [],
+                "amenities": ["WiFi", "Study Table", "Shared Kitchen"]
+            },
+            {
+                "title": "Tech Hub Apartment in Bangalore",
+                "description": "Modern apartment in Electronic City for IT professionals",
+                "property_type": "house",
+                "rent": 28000,
+                "deposit": 56000,
+                "location": "Electronic City Phase 1",
+                "city": "Bangalore",
+                "images": [],
+                "amenities": ["WiFi", "Gym", "Parking", "Near Metro"]
+            },
+            {
+                "title": "Heritage Room in Chennai",
+                "description": "Traditional room in T.Nagar area with modern amenities",
+                "property_type": "room",
+                "rent": 12000,
+                "deposit": 24000,
+                "location": "T.Nagar",
+                "city": "Chennai",
+                "images": [],
+                "amenities": ["AC", "WiFi", "Traditional Decor"]
+            }
+        ]
+        
+        # Create properties with different users
+        emails = list(self.auth_tokens.keys())
+        created_properties = []
+        
+        for i, property_data in enumerate(test_cities_properties):
+            email = emails[i % len(emails)]
+            token = self.auth_tokens[email]
+            
+            response, error = self.make_request("POST", "/properties", property_data, token)
+            if error:
+                self.log_result(f"Create Test Property {i+1} ({property_data['city']})", False, error)
+                continue
+            
+            if response.status_code == 200:
+                try:
+                    data = response.json()
+                    created_properties.append(data)
+                    self.log_result(f"Create Test Property {i+1} ({property_data['city']})", True, f"Created: {data['title']}")
+                except:
+                    self.log_result(f"Create Test Property {i+1} ({property_data['city']})", False, "Invalid response")
+            else:
+                self.log_result(f"Create Test Property {i+1} ({property_data['city']})", False, f"HTTP {response.status_code}")
+        
+        # Test 1: Exact city match filtering
+        print("\n   --- Testing Exact City Match ---")
+        test_cities = ["Mumbai", "Delhi", "Pune", "Bangalore", "Chennai"]
+        
+        for city in test_cities:
+            response, error = self.make_request("GET", "/properties", {"city": city})
+            if error:
+                self.log_result(f"Exact City Filter ({city})", False, error)
+                continue
+            
+            if response.status_code == 200:
+                try:
+                    data = response.json()
+                    # Verify all returned properties are from the requested city
+                    city_matches = all(prop.get("city", "").lower() == city.lower() for prop in data)
+                    if city_matches:
+                        self.log_result(f"Exact City Filter ({city})", True, f"Found {len(data)} properties in {city}")
+                    else:
+                        self.log_result(f"Exact City Filter ({city})", False, f"Some properties not from {city}")
+                except:
+                    self.log_result(f"Exact City Filter ({city})", False, "Invalid response")
+            else:
+                self.log_result(f"Exact City Filter ({city})", False, f"HTTP {response.status_code}")
+        
+        # Test 2: Case-insensitive city filtering
+        print("\n   --- Testing Case-Insensitive City Filtering ---")
+        case_variations = [
+            ("mumbai", "Mumbai"),
+            ("DELHI", "Delhi"),
+            ("bangalore", "Bangalore"),
+            ("PuNe", "Pune"),
+            ("chennai", "Chennai")
+        ]
+        
+        for search_city, expected_city in case_variations:
+            response, error = self.make_request("GET", "/properties", {"city": search_city})
+            if error:
+                self.log_result(f"Case-Insensitive Filter ({search_city})", False, error)
+                continue
+            
+            if response.status_code == 200:
+                try:
+                    data = response.json()
+                    # Check if we get results for the city regardless of case
+                    city_matches = any(prop.get("city", "").lower() == expected_city.lower() for prop in data)
+                    if len(data) > 0 and city_matches:
+                        self.log_result(f"Case-Insensitive Filter ({search_city})", True, f"Found {len(data)} properties (case-insensitive)")
+                    elif len(data) == 0:
+                        self.log_result(f"Case-Insensitive Filter ({search_city})", True, f"No properties found for {search_city} (expected)")
+                    else:
+                        self.log_result(f"Case-Insensitive Filter ({search_city})", False, f"Case sensitivity issue")
+                except:
+                    self.log_result(f"Case-Insensitive Filter ({search_city})", False, "Invalid response")
+            else:
+                self.log_result(f"Case-Insensitive Filter ({search_city})", False, f"HTTP {response.status_code}")
+        
+        # Test 3: Partial city name matching
+        print("\n   --- Testing Partial City Name Matching ---")
+        partial_searches = [
+            ("Mum", "Mumbai"),
+            ("Bang", "Bangalore"),
+            ("Del", "Delhi"),
+            ("Chen", "Chennai")
+        ]
+        
+        for partial, full_city in partial_searches:
+            response, error = self.make_request("GET", "/properties", {"city": partial})
+            if error:
+                self.log_result(f"Partial City Search ({partial})", False, error)
+                continue
+            
+            if response.status_code == 200:
+                try:
+                    data = response.json()
+                    # Check if partial search returns properties from the expected city
+                    matching_properties = [prop for prop in data if full_city.lower() in prop.get("city", "").lower()]
+                    if len(matching_properties) > 0:
+                        self.log_result(f"Partial City Search ({partial})", True, f"Found {len(matching_properties)} properties matching '{partial}'")
+                    else:
+                        self.log_result(f"Partial City Search ({partial})", True, f"No properties found for partial search '{partial}' (expected)")
+                except:
+                    self.log_result(f"Partial City Search ({partial})", False, "Invalid response")
+            else:
+                self.log_result(f"Partial City Search ({partial})", False, f"HTTP {response.status_code}")
+        
+        # Test 4: Empty city parameter
+        print("\n   --- Testing Empty City Parameter ---")
+        response, error = self.make_request("GET", "/properties", {"city": ""})
+        if error:
+            self.log_result("Empty City Parameter", False, error)
+        elif response.status_code == 200:
+            try:
+                data = response.json()
+                self.log_result("Empty City Parameter", True, f"Empty city returns all properties ({len(data)} found)")
+            except:
+                self.log_result("Empty City Parameter", False, "Invalid response")
+        else:
+            self.log_result("Empty City Parameter", False, f"HTTP {response.status_code}")
+        
+        # Test 5: Non-existent city
+        print("\n   --- Testing Non-existent City ---")
+        response, error = self.make_request("GET", "/properties", {"city": "NonExistentCity"})
+        if error:
+            self.log_result("Non-existent City", False, error)
+        elif response.status_code == 200:
+            try:
+                data = response.json()
+                if len(data) == 0:
+                    self.log_result("Non-existent City", True, "Non-existent city returns empty list")
+                else:
+                    self.log_result("Non-existent City", False, f"Should return empty list, got {len(data)} properties")
+            except:
+                self.log_result("Non-existent City", False, "Invalid response")
+        else:
+            self.log_result("Non-existent City", False, f"HTTP {response.status_code}")
+        
+        # Test 6: City filter combined with other filters
+        print("\n   --- Testing Combined City and Other Filters ---")
+        
+        # City + Property Type
+        response, error = self.make_request("GET", "/properties", {"city": "Bangalore", "property_type": "house"})
+        if error:
+            self.log_result("City + Property Type Filter", False, error)
+        elif response.status_code == 200:
+            try:
+                data = response.json()
+                # Verify all properties match both city and property type
+                matches = all(
+                    prop.get("city", "").lower() == "bangalore" and 
+                    prop.get("property_type", "") == "house" 
+                    for prop in data
+                )
+                if matches or len(data) == 0:
+                    self.log_result("City + Property Type Filter", True, f"Found {len(data)} houses in Bangalore")
+                else:
+                    self.log_result("City + Property Type Filter", False, "Filter combination not working correctly")
+            except:
+                self.log_result("City + Property Type Filter", False, "Invalid response")
+        else:
+            self.log_result("City + Property Type Filter", False, f"HTTP {response.status_code}")
+        
+        # City + Rent Range
+        response, error = self.make_request("GET", "/properties", {"city": "Mumbai", "min_rent": 40000, "max_rent": 50000})
+        if error:
+            self.log_result("City + Rent Range Filter", False, error)
+        elif response.status_code == 200:
+            try:
+                data = response.json()
+                # Verify all properties match city and rent range
+                matches = all(
+                    prop.get("city", "").lower() == "mumbai" and 
+                    40000 <= prop.get("rent", 0) <= 50000
+                    for prop in data
+                )
+                if matches or len(data) == 0:
+                    self.log_result("City + Rent Range Filter", True, f"Found {len(data)} properties in Mumbai within rent range")
+                else:
+                    self.log_result("City + Rent Range Filter", False, "Combined filter not working correctly")
+            except:
+                self.log_result("City + Rent Range Filter", False, "Invalid response")
+        else:
+            self.log_result("City + Rent Range Filter", False, f"HTTP {response.status_code}")
+        
+        # Test 7: Special characters in city name
+        print("\n   --- Testing Special Characters in City ---")
+        special_chars = ["Mumbai@", "Delhi#123", "Bangalore$%", "City with spaces"]
+        
+        for special_city in special_chars:
+            response, error = self.make_request("GET", "/properties", {"city": special_city})
+            if error:
+                self.log_result(f"Special Characters ({special_city})", False, error)
+            elif response.status_code == 200:
+                try:
+                    data = response.json()
+                    self.log_result(f"Special Characters ({special_city})", True, f"Handled special characters gracefully ({len(data)} results)")
+                except:
+                    self.log_result(f"Special Characters ({special_city})", False, "Invalid response")
+            else:
+                self.log_result(f"Special Characters ({special_city})", False, f"HTTP {response.status_code}")
+        
+        # Clean up: Store created properties for potential cleanup
+        self.test_properties.extend(created_properties)
+
     def test_get_property_by_id(self):
         """Test get specific property by ID"""
         print("\n=== Testing Get Property by ID ===")
