@@ -1091,7 +1091,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
         );
         
         setConversations(sortedData);
-        setLastConversationsUpdate(JSON.stringify(sortedData));
+        setLastConversationsUpdate(Date.now().toString());
       }
     } catch (error) {
       console.error('Failed to load conversations:', error);
