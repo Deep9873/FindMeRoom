@@ -353,6 +353,69 @@ const useAuth = () => {
   return context;
 };
 
+// City Selection Popup Component
+const CitySelectionPopup = ({ onCitySelect }) => {
+  const [selectedCity, setSelectedCity] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!selectedCity.trim()) {
+      setError('Please select a city to continue');
+      return;
+    }
+    onCitySelect(selectedCity);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-xl">
+        <div className="text-center mb-6">
+          <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+            <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to FindMeRoom!</h2>
+          <p className="text-gray-600">Please select your city to find nearby properties and get the best experience.</p>
+        </div>
+
+        {error && (
+          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Select Your City <span className="text-red-500">*</span>
+            </label>
+            <CitySelector
+              value={selectedCity}
+              onChange={setSelectedCity}
+              placeholder="Choose your city"
+              className="w-full"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium"
+          >
+            Continue to FindMeRoom
+          </button>
+
+          <p className="mt-4 text-xs text-gray-500 text-center">
+            This helps us show you properties in your area and improves page loading performance.
+          </p>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 // Components
 // Mobile Bottom Navigation Component
 const MobileBottomNavigation = ({ currentView, setCurrentView }) => {
