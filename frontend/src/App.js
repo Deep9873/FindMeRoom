@@ -1271,18 +1271,6 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
     }
   };
 
-  // Handle typing state to prevent polling disruption
-  const handleMessageInputChange = (e) => {
-    setNewMessage(e.target.value);
-    setIsTyping(true);
-    
-    // Clear typing state after user stops typing for 2 seconds
-    clearTimeout(window.typingTimeout);
-    window.typingTimeout = setTimeout(() => {
-      setIsTyping(false);
-    }, 2000);
-  };
-
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
