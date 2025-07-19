@@ -973,11 +973,11 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       }, 10000); // Poll conversations less frequently (every 10 seconds)
 
       const messageInterval = setInterval(() => {
-        // Poll messages for selected conversation more frequently
-        if (selectedConversation) {
-          loadChatMessages(selectedConversation.property_id, selectedConversation.other_user_id);
+        // Poll messages for selected conversation more frequently, but only if user is not typing
+        if (selectedConversation && !isTyping) {
+          loadChatMessages(selectedConversation.property_id, selectedConversation.other_user_id, true);
         }
-      }, 3000); // Poll messages every 3 seconds when in conversation
+      }, 3000); // Poll messages every 3 seconds when in conversation and not typing
       
       return () => {
         clearInterval(unreadInterval);
