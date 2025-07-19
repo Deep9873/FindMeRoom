@@ -165,6 +165,9 @@ const CitySelector = ({ value, onChange, placeholder = "Select City", className 
 // Context for authentication
 const AuthContext = createContext();
 
+// Context for city selection
+const CityContext = createContext();
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
