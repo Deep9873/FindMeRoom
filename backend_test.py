@@ -1376,6 +1376,7 @@ class FindMeRoomTester:
         self.test_property_creation()
         self.test_get_properties()
         self.test_property_search_and_filter()
+        self.test_enhanced_city_filtering()  # New comprehensive city filtering test
         self.test_get_property_by_id()
         self.test_update_property()
         self.test_get_my_properties()
