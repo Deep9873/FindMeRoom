@@ -1395,8 +1395,8 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       } flex-1 flex flex-col`}>
         {selectedConversation ? (
           <>
-            {/* Chat Header - Mobile friendly */}
-            <div className="bg-white border-b border-gray-200 p-4">
+            {/* Chat Header - Mobile friendly - Fixed sticky position */}
+            <div className="sticky top-0 z-10 bg-white border-b border-gray-200 p-4 shadow-sm">{/* Added sticky positioning */}
               <div className="flex items-center space-x-3">
                 {/* Mobile back button */}
                 <button
