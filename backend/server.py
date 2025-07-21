@@ -443,7 +443,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_credentials=True, 
     allow_origins=
-    ["http://localhost:3000",
+    ["https://findmeroom-backend.onrender.com",
+     "https://findmeroom-backend.onrender.com/api"
+        "http://localhost:3000",
     "https://findmeroom.onrender.com"],
     allow_methods=["*"],
     allow_headers=["*"],
