@@ -107,6 +107,8 @@ const MAJOR_INDIAN_CITIES = [
 ].sort();
 
 
+
+
 // Reusable City Selector Component
 const CitySelector = ({ value, onChange, placeholder = "Select City", className = "" }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -708,12 +710,12 @@ const Header = ({ currentView, setCurrentView }) => {
   return (
     <header className="bg-white shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-16"> 
           <div className="flex items-center space-x-6">
             {/* <h1 className="text-2xl font-bold text-blue-600 cursor-pointer" onClick={() => setCurrentView('home')}>
               FindMeRoom
             </h1> */}
-            <img className="w-30 h-20 -rotate-12" src="/logo.png" alt="FindMeRoom" onClick={() => setCurrentView('home')} />
+            <img  style={{ marginTop: 25 }} className="w-30 h-20 -rotate-12" src="/logo.png" alt="FindMeRoom" onClick={() => setCurrentView('home')} />
             
             
             {/* City Selector */}
@@ -1372,9 +1374,19 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
                     <p className="text-xs text-gray-500 truncate">
                       {conversation.is_sender ? 'You: ' : ''}{conversation.last_message || 'No messages yet'}
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {new Date(conversation.last_message_time).toLocaleString()}
-                    </p>
+                    {/* <p className="text-xs text-gray-400 mt-1">
+                      {new Date(conversation.last_message_time).toLocaleTimeString('en-IN', {
+  timeZone: 'Asia/Kolkata',
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: true,
+})}
+
+                      
+                    </p> */}
                   </div>
                   {/* Mobile chevron indicator */}
                   <div className="md:hidden flex-shrink-0">
@@ -1463,8 +1475,13 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
                         <p className={`text-xs ${
                           message.sender_id === user.id ? 'text-blue-100' : 'text-gray-500'
                         }`}>
-                          {new Date(message.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                        </p>
+                      {new Date(new Date(message.created_at).getTime() + (5.5 * 60 * 60 * 1000))
+  .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
+ 
+
+
+
+                        </p> 
                         {message.sender_id === user.id && (
                           <div className="flex items-center space-x-1">
                             <svg className={`w-3 h-3 ${message.is_read ? 'text-blue-200' : 'text-blue-300'}`} fill="currentColor" viewBox="0 0 20 20">
@@ -2034,9 +2051,9 @@ const RegisterForm = ({ setCurrentView }) => {
               e.target.value = e.target.value.replace(/\D/g, '');
             }}
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter 10-15 digit phone number"
+            placeholder="Enter 10 digit phone number"
             minLength="10"
-            maxLength="15"
+            maxLength="10"
             required
           />
         </div>
