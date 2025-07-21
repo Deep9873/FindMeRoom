@@ -8,14 +8,14 @@ import logging
 from pathlib import Path 
 from pydantic import BaseModel, Field 
 from typing import List, Optional
-import uuid
+import uuid 
 from datetime import datetime, timedelta
 import hashlib
 import jwt
 from passlib.context import CryptContext
 
 ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
+load_dotenv(ROOT_DIR / '.env') 
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -160,25 +160,14 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 # Authentication routes
 @api_router.post("/auth/register", response_model=TokenResponse)
 async def register(user_data: UserCreate):
-    # Validate phone number format (only digits, 10+ digits)
-    phone_digits = ''.join(filter(str.isdigit, user_data.phone))
-    if len(phone_digits) < 10 or len(phone_digits) > 15:
-        raise HTTPException(status_code=400, detail="Phone number must be between 10-15 digits")
-    
-    # Check if user already exists by email
+    # Check if user already exists
     existing_user = await db.users.find_one({"email": user_data.email})
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     
-    # Check if phone number already exists (check against cleaned digits)
-    existing_phone = await db.users.find_one({"phone": phone_digits})
-    if existing_phone:
-        raise HTTPException(status_code=400, detail="Phone number already registered")
-    
     # Create new user
     user_dict = user_data.dict()
     user_dict["password_hash"] = get_password_hash(user_data.password)
-    user_dict["phone"] = phone_digits  # Store only digits
     del user_dict["password"]
     
     user_obj = User(**user_dict)
@@ -297,14 +286,6 @@ async def send_message(chat_data: ChatCreate, current_user: dict = Depends(get_c
     if not property_doc:
         raise HTTPException(status_code=404, detail="Property not found")
     
-    # Check if user is trying to contact themselves (prevent self-contact)
-    if current_user["id"] == chat_data.receiver_id:
-        raise HTTPException(status_code=400, detail="Cannot send message to yourself")
-    
-    # Check if user is the property owner trying to contact themselves
-    if property_doc["user_id"] == current_user["id"] and current_user["id"] == chat_data.receiver_id:
-        raise HTTPException(status_code=400, detail="Cannot contact yourself on your own property")
-    
     chat_dict = chat_data.dict()
     chat_dict["sender_id"] = current_user["id"]
     
@@ -315,7 +296,7 @@ async def send_message(chat_data: ChatCreate, current_user: dict = Depends(get_c
 
 @api_router.get("/chat/conversations", response_model=List[ConversationSummary])
 async def get_user_conversations(current_user: dict = Depends(get_current_user)):
-    # Get all unique (property_id, other_user_id) pairs where user has conversations
+    # Get all unique property_ids where user has conversations
     pipeline = [
         {
             "$match": {
@@ -326,25 +307,11 @@ async def get_user_conversations(current_user: dict = Depends(get_current_user))
             }
         },
         {
-            "$addFields": {
-                "other_user_id": {
-                    "$cond": {
-                        "if": {"$eq": ["$sender_id", current_user["id"]]},
-                        "then": "$receiver_id",
-                        "else": "$sender_id"
-                    }
-                }
-            }
-        },
-        {
             "$sort": {"created_at": -1}
         },
         {
             "$group": {
-                "_id": {
-                    "property_id": "$property_id",
-                    "other_user_id": "$other_user_id"
-                },
+                "_id": "$property_id",
                 "last_message": {"$first": "$message"},
                 "last_message_time": {"$first": "$created_at"},
                 "sender_id": {"$first": "$sender_id"},
@@ -358,24 +325,25 @@ async def get_user_conversations(current_user: dict = Depends(get_current_user))
     
     result = []
     for conv in conversations:
-        property_id = conv["_id"]["property_id"]
-        other_user_id = conv["_id"]["other_user_id"]
+        property_id = conv["_id"]
         
         # Get property details
         property_doc = await db.properties.find_one({"id": property_id})
         if not property_doc:
             continue
             
+        # Determine other user
+        other_user_id = conv["receiver_id"] if conv["sender_id"] == current_user["id"] else conv["sender_id"]
+        
         # Get other user details
         other_user = await db.users.find_one({"id": other_user_id})
         if not other_user:
             continue
             
-        # Count unread messages for this specific conversation
+        # Count unread messages
         unread_count = await db.chats.count_documents({
             "property_id": property_id,
             "receiver_id": current_user["id"],
-            "sender_id": other_user_id,
             "is_read": False
         })
         
@@ -419,13 +387,13 @@ async def mark_messages_read(chat_data: ChatMarkRead, current_user: dict = Depen
     return {"message": "Messages marked as read"}
 
 @api_router.get("/chat/{property_id}")
-async def get_chat_messages(property_id: str, other_user_id: str, current_user: dict = Depends(get_current_user)):
-    # Get messages for this property between current user and the other user only
+async def get_chat_messages(property_id: str, current_user: dict = Depends(get_current_user)):
+    # Get all messages for this property where current user is involved
     messages = await db.chats.find({
         "property_id": property_id,
         "$or": [
-            {"sender_id": current_user["id"], "receiver_id": other_user_id},
-            {"sender_id": other_user_id, "receiver_id": current_user["id"]}
+            {"sender_id": current_user["id"]},
+            {"receiver_id": current_user["id"]}
         ]
     }).sort("created_at", 1).to_list(length=100)
     
@@ -446,29 +414,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# seo 
-from fastapi.responses import Response
-
-@app.get("/sitemap.xml", response_class=Response)
-async def sitemap():
-    content = """<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        <url>
-            <loc>https://www.findmeroom.com/</loc>
-            <changefreq>daily</changefreq>
-            <priority>1.0</priority>
-        </url>
-        <!-- Add more URLs dynamically if needed -->
-    </urlset>
-    """
-    return Response(content=content, media_type="application/xml")
-
-@app.get("/robots.txt", response_class=Response)
-async def robots():
-    return Response(content="User-agent: *\nAllow: /\n", media_type="text/plain")
-
-
 
 # Configure logging
 logging.basicConfig(

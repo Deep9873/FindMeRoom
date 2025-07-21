@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import './App.css';
 import axios from 'axios';
 
@@ -6,293 +6,8 @@ const RAW_BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
 const BACKEND_URL = RAW_BACKEND_URL.replace(/\/+$/, '');
 const API = `${BACKEND_URL}/api`;
 
-// Major Indian Cities List
-const MAJOR_INDIAN_CITIES = [
-  'Agartala, Tripura',
-  'Agra, Uttar Pradesh',
-  'Ahmedabad, Gujarat',
-  'Ajmer, Rajasthan',
-  'Akola, Maharashtra',
-  'Aligarh, Uttar Pradesh',
-  'Allahabad, Uttar Pradesh',
-  'Amravati, Maharashtra',
-  'Amritsar, Punjab',
-  'Asansol, West Bengal',
-  'Aurangabad, Maharashtra',
-  'Bangalore, Karnataka',
-  'Bareilly, Uttar Pradesh',
-  'Belgaum, Karnataka',
-  'Bhubaneswar, Odisha',
-  'Bhiwandi, Maharashtra',
-  'Bhilai, Chhattisgarh',
-  'Bhopal, Madhya Pradesh',
-  'Bikaner, Rajasthan',
-  'Chandigarh, Chandigarh',
-  'Chennai, Tamil Nadu',
-  'Coimbatore, Tamil Nadu',
-  'Cuttack, Odisha',
-  'Dehradun, Uttarakhand',
-  'Dhanbad, Jharkhand',
-  'Durgapur, West Bengal',
-  'Erode, Tamil Nadu',
-  'Faridabad, Haryana',
-  'Firozabad, Uttar Pradesh',
-  'Ghaziabad, Uttar Pradesh',
-  'Gorakhpur, Uttar Pradesh',
-  'Guntur, Andhra Pradesh',
-  'Gurgaon, Haryana',
-  'Gwalior, Madhya Pradesh',
-  'Guwahati, Assam',
-  'Hubballi-Dharwad, Karnataka',
-  'Howrah, West Bengal',
-  'Hyderabad, Telangana',
-  'Indore, Madhya Pradesh',
-  'Jabalpur, Madhya Pradesh',
-  'Jaipur, Rajasthan',
-  'Jalandhar, Punjab',
-  'Jammu, Jammu and Kashmir',
-  'Jamshedpur, Jharkhand',
-  'Jodhpur, Rajasthan',
-  'Kanpur, Uttar Pradesh',
-  'Kochi, Kerala',
-  'Kolkata, West Bengal',
-  'Kolhapur, Maharashtra',
-  'Kota, Rajasthan',
-  'Lucknow, Uttar Pradesh',
-  'Ludhiana, Punjab',
-  'Madurai, Tamil Nadu',
-  'Maheshtala, West Bengal',
-  'Malegaon, Maharashtra',
-  'Mangalore, Karnataka',
-  'Meerut, Uttar Pradesh',
-  'Moradabad, Uttar Pradesh',
-  'Mysore, Karnataka',
-  'Nagpur, Maharashtra',
-  'Nanded, Maharashtra',
-  'Nashik, Maharashtra',
-  'Nellore, Andhra Pradesh',
-  'Noida, Uttar Pradesh',
-  'Panaji, Goa',
-  'Patna, Bihar',
-  'Pimpri-Chinchwad, Maharashtra',
-  'Prayagraj, Uttar Pradesh',
-  'Pune, Maharashtra',
-  'Rajkot, Gujarat',
-  'Raipur, Chhattisgarh',
-  'Ranchi, Jharkhand',
-  'Rourkela, Odisha',
-  'Salem, Tamil Nadu',
-  'Sangli-Miraj & Kupwad, Maharashtra',
-  'Siliguri, West Bengal',
-  'Surat, Gujarat',
-  'Thane, Maharashtra',
-  'Thiruchirappalli, Tamil Nadu',
-  'Thiruvananthapuram, Kerala',
-  'Tirunelveli, Tamil Nadu',
-  'Tiruppur, Tamil Nadu',
-  'Udaipur, Rajasthan',
-  'Ujjain, Madhya Pradesh',
-  'Ulhasnagar, Maharashtra',
-  'Vadodara, Gujarat',
-  'Varanasi, Uttar Pradesh',
-  'Vasai-Virar, Maharashtra',
-  'Vijayawada, Andhra Pradesh',
-  'Visakhapatnam, Andhra Pradesh',
-  'Warangal, Telangana',
-  'Shillong, Meghalaya',
-  'Delhi',
-  'New Delhi',
-  'Old Delhi',
-  'Shimla, Himachal Pradesh'
-].sort();
-
-
-
-
-// Reusable City Selector Component
-const CitySelector = ({ value, onChange, placeholder = "Select City", className = "" }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isCustomCity, setIsCustomCity] = useState(false);
-  const dropdownRef = useRef(null);
-
-  // Filter cities based on search term
-  const filteredCities = MAJOR_INDIAN_CITIES.filter(city =>
-    city.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  // Handle click outside to close dropdown
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleCitySelect = (city) => {
-    onChange(city);
-    setIsDropdownOpen(false);
-    setSearchTerm('');
-    setIsCustomCity(false);
-  };
-
-  const handleCustomCityToggle = () => {
-    setIsCustomCity(true);
-    setIsDropdownOpen(false);
-    if (!isCustomCity) {
-      onChange(''); // Clear current value when switching to custom
-    }
-  };
-
-  const handleCustomCityChange = (e) => {
-    onChange(e.target.value);
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  // Check if current value is a custom city (not in the major cities list)
-  const isCurrentValueCustom = value && !MAJOR_INDIAN_CITIES.includes(value);
-
-  return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
-      {isCustomCity || isCurrentValueCustom ? (
-        <div className="relative">
-          <input
-            type="text"
-            value={value}
-            onChange={handleCustomCityChange}
-            placeholder="Enter your city"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-20"
-          />
-          <button
-            type="button"
-            onClick={() => {
-              setIsCustomCity(false);
-              onChange('');
-            }}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-blue-600 hover:text-blue-800"
-          >
-            Use List
-          </button>
-        </div>
-      ) : (
-        <div className="relative">
-          <button
-            type="button"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-left flex justify-between items-center"
-          >
-            <span className={value ? 'text-black' : 'text-gray-500'}>
-              {value || placeholder}
-            </span>
-            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {isDropdownOpen && (
-            <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
-              {/* Search input */}
-              <div className="p-2 border-b">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  placeholder="Search cities..."
-                  className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-              </div>
-
-              {/* Custom city option */}
-              <button
-                type="button"
-                onClick={handleCustomCityToggle}
-                className="w-full px-3 py-2 text-left hover:bg-blue-50 text-blue-600 border-b text-sm font-medium"
-              >
-                + Add Other City
-              </button>
-
-              {/* Cities list */}
-              <div className="max-h-40 overflow-y-auto">
-                {filteredCities.length > 0 ? (
-                  filteredCities.map((city) => (
-                    <button
-                      key={city}
-                      type="button"
-                      onClick={() => handleCitySelect(city)}
-                      className="w-full px-3 py-2 text-left hover:bg-gray-50 text-sm"
-                    >
-                      {city}
-                    </button>
-                  ))
-                ) : (
-                  <div className="px-3 py-2 text-sm text-gray-500">
-                    No cities found. Try different search terms.
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-};
-
 // Context for authentication
 const AuthContext = createContext();
-
-// Context for city selection
-const CityContext = createContext();
-
-const CityProvider = ({ children }) => {
-  const [selectedCity, setSelectedCity] = useState(() => {
-    // Get from localStorage if available
-    return localStorage.getItem('selectedCity') || '';
-  });
-  const [showCityPopup, setShowCityPopup] = useState(() => {
-    // Show popup if no city is selected
-    return !localStorage.getItem('selectedCity');
-  });
-
-  const updateSelectedCity = (city) => {
-    setSelectedCity(city);
-    setShowCityPopup(false);
-    if (city) {
-      localStorage.setItem('selectedCity', city);
-    } else {
-      localStorage.removeItem('selectedCity');
-      setShowCityPopup(true);
-    }
-  };
-
-  const handleCityPopupSelect = (city) => {
-    updateSelectedCity(city);
-  };
-
-  return (
-    <CityContext.Provider value={{ selectedCity, setSelectedCity: updateSelectedCity }}>
-      {showCityPopup && (
-        <CitySelectionPopup onCitySelect={handleCityPopupSelect} />
-      )}
-      {children}
-    </CityContext.Provider>
-  );
-};
-
-const useCity = () => {
-  const context = useContext(CityContext);
-  if (!context) {
-    throw new Error('useCity must be used within a CityProvider');
-  }
-  return context;
-};
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -366,69 +81,6 @@ const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-};
-
-// City Selection Popup Component
-const CitySelectionPopup = ({ onCitySelect }) => {
-  const [selectedCity, setSelectedCity] = useState('');
-  const [error, setError] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!selectedCity.trim()) {
-      setError('Please select a city to continue');
-      return;
-    }
-    onCitySelect(selectedCity);
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-xl">
-        <div className="text-center mb-6">
-          <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-            <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to FindMeRoom!</h2>
-          <p className="text-gray-600">Please select your city to find nearby properties and get the best experience.</p>
-        </div>
-
-        {error && (
-          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Select Your City <span className="text-red-500">*</span>
-            </label>
-            <CitySelector
-              value={selectedCity}
-              onChange={setSelectedCity}
-              placeholder="Choose your city"
-              className="w-full"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium"
-          >
-            Continue to FindMeRoom
-          </button>
-
-          <p className="mt-4 text-xs text-gray-500 text-center">
-            This helps us show you properties in your area and improves page loading performance.
-          </p>
-        </form>
-      </div>
-    </div>
-  );
 };
 
 // Components
@@ -662,7 +314,6 @@ const ProfilePage = ({ setCurrentView }) => {
 
 const Header = ({ currentView, setCurrentView }) => {
   const { user, logout } = useAuth();
-  const { selectedCity, setSelectedCity } = useCity();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -710,29 +361,11 @@ const Header = ({ currentView, setCurrentView }) => {
   return (
     <header className="bg-white shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16"> 
-          <div className="flex items-center space-x-6">
-            {/* <h1 className="text-2xl font-bold text-blue-600 cursor-pointer" onClick={() => setCurrentView('home')}>
+        <div className="flex justify-between items-center h-16">
+          <div className="flex items-center">
+            <h1 className="text-2xl font-bold text-blue-600 cursor-pointer" onClick={() => setCurrentView('home')}>
               FindMeRoom
-            </h1> */}
-            <img  style={{ marginTop: 25 }} className="w-30 h-20 -rotate-12" src="/logo.png" alt="FindMeRoom" onClick={() => setCurrentView('home')} />
-            
-            
-            {/* City Selector */}
-            <div className="hidden md:block">
-              <div className="flex items-center space-x-2">
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <CitySelector
-                  value={selectedCity}
-                  onChange={setSelectedCity}
-                  placeholder="Select your city"
-                  className="w-40"
-                />
-              </div>
-            </div>
+            </h1>
           </div>
           
           {/* Desktop Navigation */}
@@ -825,17 +458,6 @@ const Header = ({ currentView, setCurrentView }) => {
         {mobileMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
-              {/* Mobile City Selector */}
-              <div className="px-3 py-2 border-b">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Select Your City</label>
-                <CitySelector
-                  value={selectedCity}
-                  onChange={setSelectedCity}
-                  placeholder="Select your city"
-                  className="w-full"
-                />
-              </div>
-              
               <button 
                 onClick={() => { setCurrentView('home'); setMobileMenuOpen(false); }}
                 className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
@@ -950,49 +572,24 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   const [conversationsLoading, setConversationsLoading] = useState(true);
   const [error, setError] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
-  const [lastConversationsUpdate, setLastConversationsUpdate] = useState(null);
-  const [showMobileChat, setShowMobileChat] = useState(false); // Mobile state management
-  const messagesEndRef = useRef(null);
 
-  // Poll for new messages and unread count with optimized intervals
+  // Poll for new messages and unread count
   useEffect(() => {
     if (user) {
       loadConversations();
       loadUnreadCount();
       
-      // Set up optimized polling for real-time updates
-      const unreadInterval = setInterval(() => {
-        loadUnreadCount(); // Poll unread count more frequently
-      }, 5000); // Poll every 5 seconds for unread count (reduced frequency)
-
-      const conversationInterval = setInterval(() => {
-        // Only check conversations if no conversation is currently selected
-        if (!selectedConversation) {
-          checkAndUpdateConversations();
-        }
-      }, 15000); // Poll conversations less frequently (every 15 seconds)
-
-      const messageInterval = setInterval(() => {
-        // Poll messages for selected conversation with reduced frequency
+      // Set up polling for real-time updates
+      const interval = setInterval(() => {
+        loadUnreadCount();
         if (selectedConversation) {
-          loadChatMessages(selectedConversation.property_id, selectedConversation.other_user_id, true);
+          loadChatMessages(selectedConversation.property_id);
         }
-      }, 8000); // Poll messages every 8 seconds (less frequent to reduce disruption)
+      }, 10000); // Poll every 10 seconds
       
-      return () => {
-        clearInterval(unreadInterval);
-        clearInterval(conversationInterval);
-        clearInterval(messageInterval);
-      };
+      return () => clearInterval(interval);
     }
-  }, [user, selectedConversation?.property_id, selectedConversation?.other_user_id]);
-
-  // Load messages when conversation selection changes
-  useEffect(() => {
-    if (selectedConversation && selectedConversation.property_id && selectedConversation.other_user_id) {
-      loadChatMessages(selectedConversation.property_id, selectedConversation.other_user_id);
-    }
-  }, [selectedConversation?.property_id, selectedConversation?.other_user_id]);
+  }, [user, selectedConversation]);
 
   // Handle initial property selection
   useEffect(() => {
@@ -1026,69 +623,6 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
     }
   }, [prefilledMessage]);
 
-  // Auto-scroll to bottom when messages change
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  // Check and update conversations only if there are actual changes
-  const checkAndUpdateConversations = async () => {
-    try {
-      const url = `${BACKEND_URL}/api/chat/conversations`;
-      const response = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        
-        // Sort conversations by last message time (newest first) for consistent ordering
-        const sortedData = data.sort((a, b) => 
-          new Date(b.last_message_time) - new Date(a.last_message_time)
-        );
-        
-        // Check if conversations have actually changed using a more reliable comparison
-        if (hasConversationsChanged(conversations, sortedData)) {
-          setConversations(sortedData);
-          // Preserve selected conversation across updates
-          preserveSelectedConversation(sortedData);
-          setLastConversationsUpdate(Date.now().toString());
-        }
-      }
-    } catch (error) {
-      console.error('Failed to check conversations:', error);
-    }
-  };
-
-  // Helper function to check if conversations have meaningfully changed
-  const hasConversationsChanged = (oldConversations, newConversations) => {
-    if (oldConversations.length !== newConversations.length) {
-      return true;
-    }
-    
-    // Compare conversations by creating stable identifiers
-    for (let i = 0; i < oldConversations.length; i++) {
-      const oldConv = oldConversations[i];
-      const newConv = newConversations[i];
-      
-      // Check key properties that would require a UI update
-      const oldSignature = `${oldConv.property_id}-${oldConv.other_user_id}-${oldConv.last_message}-${oldConv.unread_count}-${Math.floor(new Date(oldConv.last_message_time).getTime() / 1000)}`;
-      const newSignature = `${newConv.property_id}-${newConv.other_user_id}-${newConv.last_message}-${newConv.unread_count}-${Math.floor(new Date(newConv.last_message_time).getTime() / 1000)}`;
-      
-      if (oldSignature !== newSignature) {
-        return true;
-      }
-    }
-    
-    return false;
-  };
-
   const loadConversations = async () => {
     setConversationsLoading(true);
     try {
@@ -1102,16 +636,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       
       if (response.ok) {
         const data = await response.json();
-        
-        // Sort conversations by last message time (newest first) for consistent ordering
-        const sortedData = data.sort((a, b) => 
-          new Date(b.last_message_time) - new Date(a.last_message_time)
-        );
-        
-        setConversations(sortedData);
-        // Preserve selected conversation across updates
-        preserveSelectedConversation(sortedData);
-        setLastConversationsUpdate(Date.now().toString());
+        setConversations(data);
       }
     } catch (error) {
       console.error('Failed to load conversations:', error);
@@ -1137,16 +662,12 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
     }
   };
 
-  const loadChatMessages = async (propertyId, otherUserId, isPolling = false) => {
-    if (!propertyId || !otherUserId || !user) return;
+  const loadChatMessages = async (propertyId) => {
+    if (!propertyId || !user) return;
     
-    // Only show loading for user-initiated actions, not polling
-    if (!isPolling) {
-      setLoading(true);
-    }
-    
+    setLoading(true);
     try {
-      const response = await fetch(`${BACKEND_URL}/api/chat/${propertyId}?other_user_id=${otherUserId}`, {
+      const response = await fetch(`${BACKEND_URL}/api/chat/${propertyId}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -1154,14 +675,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       
       if (response.ok) {
         const data = await response.json();
-        
-        // Only update messages if they've actually changed
-        const currentMessagesSignature = messages.map(msg => `${msg.id}-${msg.message}-${msg.is_read}`).join('|');
-        const newMessagesSignature = data.map(msg => `${msg.id}-${msg.message}-${msg.is_read}`).join('|');
-        
-        if (currentMessagesSignature !== newMessagesSignature) {
-          setMessages(data || []);
-        }
+        setMessages(data || []);
         
         // Mark messages as read
         const unreadMessages = data.filter(msg => 
@@ -1172,13 +686,9 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
         }
       }
     } catch (error) {
-      if (!isPolling) {
-        setError('Failed to load messages');
-      }
+      setError('Failed to load messages');
     } finally {
-      if (!isPolling) {
-        setLoading(false);
-      }
+      setLoading(false);
     }
   };
 
@@ -1231,15 +741,8 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
         setNewMessage('');
         setError('');
         
-        // Refresh conversations to update last message only when not in active conversation
-        if (!selectedConversation) {
-          checkAndUpdateConversations();
-        } else {
-          // If we're in a conversation, just refresh the conversation list after sending
-          setTimeout(() => {
-            checkAndUpdateConversations();
-          }, 1000); // Delay to ensure message is processed
-        }
+        // Refresh conversations to update last message
+        loadConversations();
       } else {
         setError('Failed to send message');
       }
@@ -1252,33 +755,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
 
   const handleConversationSelect = (conversation) => {
     setSelectedConversation(conversation);
-    setError('');
-    setShowMobileChat(true); // Show chat view on mobile when conversation is selected
-    
-    // Load messages immediately when conversation is selected
-    loadChatMessages(conversation.property_id, conversation.other_user_id);
-  };
-
-  // Mobile back to conversations handler
-  const handleMobileBackToConversations = () => {
-    setShowMobileChat(false);
-    setSelectedConversation(null);
-  };
-
-  // Stable conversation selection that preserves selection across updates
-  const preserveSelectedConversation = (newConversations) => {
-    if (selectedConversation && newConversations.length > 0) {
-      // Find the same conversation in the new list to preserve selection
-      const currentConversation = newConversations.find(conv => 
-        conv.property_id === selectedConversation.property_id && 
-        conv.other_user_id === selectedConversation.other_user_id
-      );
-      
-      if (currentConversation) {
-        // Update the selected conversation with new data to reflect latest changes
-        setSelectedConversation(currentConversation);
-      }
-    }
+    loadChatMessages(conversation.property_id);
   };
 
   if (!user) {
@@ -1299,13 +776,11 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   }
 
   return (
-    <div className="flex h-screen bg-gray-50 pb-16 md:pb-0"> {/* Add bottom padding for mobile nav */}
-      {/* Conversations List - Mobile responsive */}
-      <div className={`${
-        showMobileChat ? 'hidden md:block' : 'block'
-      } w-full md:w-1/3 bg-white border-r border-gray-200 flex flex-col`}>
-        {/* Header - Fixed positioned */}
-        <div className="flex-shrink-0 bg-white border-b border-gray-200 p-4 shadow-sm">{/* Fixed header outside scroll */}
+    <div className="flex h-screen bg-gray-50">
+      {/* Conversations List */}
+      <div className="w-1/3 bg-white border-r border-gray-200 flex flex-col">
+        {/* Header */}
+        <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-900">Conversations</h2>
             <button
@@ -1326,25 +801,19 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
             </div>
           ) : conversations.length === 0 ? (
-            <div className="text-center py-8 text-gray-500 px-4">
-              <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No conversations yet</h3>
-              <p className="text-sm text-gray-500">Start chatting with property owners!</p>
+            <div className="text-center py-8 text-gray-500">
+              <p>No conversations yet</p>
+              <p className="text-sm">Start chatting with property owners!</p>
             </div>
           ) : (
             conversations.map((conversation) => (
               <div
-                key={`${conversation.property_id}-${conversation.other_user_id}`}
+                key={conversation.property_id}
                 onClick={() => handleConversationSelect(conversation)}
-                className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
-                  selectedConversation?.property_id === conversation.property_id ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+                className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${
+                  selectedConversation?.property_id === conversation.property_id ? 'bg-blue-50' : ''
                 }`}
               >
-                
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 bg-gray-200 rounded-lg flex-shrink-0">
                     {conversation.property_image ? (
@@ -1356,43 +825,27 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
                     ) : (
                       <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
                         <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                       </div>
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <h3 className="font-semibold text-gray-900 truncate text-sm md:text-base">{conversation.property_title}</h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold text-gray-900 truncate">{conversation.property_title}</h3>
                       {conversation.unread_count > 0 && (
-                        <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] text-center ml-2 flex-shrink-0">
-                          {conversation.unread_count > 99 ? '99+' : conversation.unread_count}
+                        <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] text-center">
+                          {conversation.unread_count}
                         </span>
                       )}
                     </div>
                     <p className="text-sm text-gray-600 truncate">{conversation.other_user_name}</p>
                     <p className="text-xs text-gray-500 truncate">
-                      {conversation.is_sender ? 'You: ' : ''}{conversation.last_message || 'No messages yet'}
+                      {conversation.is_sender ? 'You: ' : ''}{conversation.last_message}
                     </p>
-                    {/* <p className="text-xs text-gray-400 mt-1">
-                      {new Date(conversation.last_message_time).toLocaleTimeString('en-IN', {
-  timeZone: 'Asia/Kolkata',
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  hour12: true,
-})}
-
-                      
-                    </p> */}
-                  </div>
-                  {/* Mobile chevron indicator */}
-                  <div className="md:hidden flex-shrink-0">
-                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                    <p className="text-xs text-gray-400">
+                      {new Date(conversation.last_message_time).toLocaleString()}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1401,25 +854,13 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
         </div>
       </div>
 
-      {/* Chat Messages - Mobile responsive */}
-      <div className={`${
-        showMobileChat ? 'block' : 'hidden md:block'
-      } flex-1 flex flex-col h-full`}>
+      {/* Chat Messages */}
+      <div className="flex-1 flex flex-col">
         {selectedConversation ? (
           <>
-            {/* Chat Header - Mobile friendly - Fixed position */}
-            <div className="flex-shrink-0 bg-white border-b border-gray-200 p-4 shadow-sm">
+            {/* Chat Header */}
+            <div className="bg-white border-b border-gray-200 p-4">
               <div className="flex items-center space-x-3">
-                {/* Mobile back button */}
-                <button
-                  onClick={handleMobileBackToConversations}
-                  className="md:hidden text-gray-500 hover:text-gray-700 mr-2"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                
                 <div className="w-10 h-10 bg-gray-200 rounded-lg flex-shrink-0">
                   {selectedConversation.property_image ? (
                     <img 
@@ -1430,58 +871,48 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
                   ) : (
                     <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
                       <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </div>
                   )}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 truncate text-sm md:text-base">{selectedConversation.property_title}</h3>
-                  <p className="text-xs md:text-sm text-gray-600 truncate">{selectedConversation.other_user_name}</p>
+                <div>
+                  <h3 className="font-semibold text-gray-900">{selectedConversation.property_title}</h3>
+                  <p className="text-sm text-gray-600">{selectedConversation.other_user_name}</p>
                 </div>
               </div>
             </div>
 
-            {/* Messages - Mobile optimized - Separate scrolling area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {loading && messages.length === 0 ? (
                 <div className="flex justify-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                 </div>
               ) : messages.length === 0 ? (
                 <div className="text-center text-gray-500 py-8">
-                  <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                  </div>
-                  <p className="text-sm">No messages yet. Start the conversation!</p>
+                  <p>No messages yet. Start the conversation!</p>
                 </div>
               ) : (
-                messages.map((message) => (
+                messages.map((message, index) => (
                   <div
-                    key={message.id}
+                    key={index}
                     className={`flex ${message.sender_id === user.id ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[85%] md:max-w-xs lg:max-w-md px-3 md:px-4 py-2 rounded-lg ${
+                      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                         message.sender_id === user.id
-                          ? 'bg-blue-500 text-white rounded-br-sm'
-                          : 'bg-white text-gray-900 border rounded-bl-sm shadow-sm'
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-white text-gray-900 border'
                       }`}
                     >
-                      <p className="text-sm break-words">{message.message}</p>
+                      <p className="text-sm">{message.message}</p>
                       <div className="flex items-center justify-between mt-1">
                         <p className={`text-xs ${
                           message.sender_id === user.id ? 'text-blue-100' : 'text-gray-500'
                         }`}>
-                      {new Date(new Date(message.created_at).getTime() + (5.5 * 60 * 60 * 1000))
-  .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
- 
-
-
-
-                        </p> 
+                          {new Date(message.created_at).toLocaleTimeString()}
+                        </p>
                         {message.sender_id === user.id && (
                           <div className="flex items-center space-x-1">
                             <svg className={`w-3 h-3 ${message.is_read ? 'text-blue-200' : 'text-blue-300'}`} fill="currentColor" viewBox="0 0 20 20">
@@ -1499,13 +930,12 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
                   </div>
                 ))
               )}
-              <div ref={messagesEndRef} />
             </div>
 
-            {/* Message Input - Mobile optimized - Fixed at bottom */}
-            <div className="flex-shrink-0 bg-white border-t border-gray-200 p-4">
+            {/* Message Input */}
+            <div className="bg-white border-t border-gray-200 p-4">
               {error && (
-                <div className="mb-3 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+                <div className="mb-3 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
                   {error}
                 </div>
               )}
@@ -1515,13 +945,13 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Type a message..."
-                  className="flex-1 px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                   disabled={loading}
                 />
                 <button
                   type="submit"
                   disabled={loading || !newMessage.trim()}
-                  className="bg-blue-500 text-white px-4 md:px-6 py-2 rounded-full hover:bg-blue-600 transition-colors disabled:opacity-50 text-sm md:text-base"
+                  className="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors disabled:opacity-50"
                 >
                   {loading ? 'Sending...' : 'Send'}
                 </button>
@@ -1529,15 +959,12 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
             </div>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center p-4">
-            <div className="text-center text-gray-500 max-w-sm">
-              <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Select a conversation</h3>
-              <p className="text-sm text-gray-500">Choose a conversation from the list to start chatting</p>
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center text-gray-500">
+              <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              <p>Select a conversation to start chatting</p>
             </div>
           </div>
         )}
@@ -1555,19 +982,10 @@ const PropertyCard = ({ property, onViewDetails, setCurrentView, setChatProperty
       return;
     }
     
-    // Check if user is the owner of this property
-    if (user.id === property.user_id) {
-      alert('You cannot contact yourself on your own property!');
-      return;
-    }
-    
     // Open chat interface with this property
     setChatProperty(property);
     setCurrentView('chat');
   };
-  
-  // Check if current user is the owner of this property
-  const isOwner = user && user.id === property.user_id;
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
@@ -1593,14 +1011,6 @@ const PropertyCard = ({ property, onViewDetails, setCurrentView, setChatProperty
             {property.available ? 'Available' : 'Not Available'}
           </span>
         </div>
-        
-        {isOwner && (
-          <div className="absolute top-2 left-2">
-            <span className="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">
-              Your Property
-            </span>
-          </div>
-        )}
       </div>
       
       <div className="p-4">
@@ -1643,22 +1053,12 @@ const PropertyCard = ({ property, onViewDetails, setCurrentView, setChatProperty
           >
             View Details
           </button>
-          {isOwner ? (
-            <button 
-              className="flex-1 bg-gray-400 text-white py-2 rounded-md cursor-not-allowed"
-              disabled
-              title="You cannot contact yourself on your own property"
-            >
-              Your Property
-            </button>
-          ) : (
-            <button 
-              onClick={handleContactOwner}
-              className="flex-1 bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition-colors"
-            >
-              Contact Owner
-            </button>
-          )}
+          <button 
+            onClick={handleContactOwner}
+            className="flex-1 bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition-colors"
+          >
+            Contact Owner
+          </button>
         </div>
       </div>
     </div>
@@ -1666,20 +1066,12 @@ const PropertyCard = ({ property, onViewDetails, setCurrentView, setChatProperty
 };
 
 const SearchFilters = ({ onSearch }) => {
-  const { selectedCity } = useCity();
   const [filters, setFilters] = useState({
     city: '',
     property_type: '',
     min_rent: '',
     max_rent: ''
   });
-
-  // Update filters when selectedCity changes
-  useEffect(() => {
-    if (selectedCity) {
-      setFilters(prev => ({ ...prev, city: selectedCity }));
-    }
-  }, [selectedCity]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -1690,11 +1082,12 @@ const SearchFilters = ({ onSearch }) => {
     <div id="search-section" className="bg-white p-6 rounded-lg shadow-md mb-8">
       <h3 className="text-lg font-semibold mb-4">Search Properties</h3>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <CitySelector
+        <input
+          type="text"
+          placeholder="City"
           value={filters.city}
-          onChange={(city) => setFilters({...filters, city})}
-          placeholder="Select City"
-          className=""
+          onChange={(e) => setFilters({...filters, city: e.target.value})}
+          className="border rounded-md px-3 py-2"
         />
         <select
           value={filters.property_type}
@@ -1705,7 +1098,7 @@ const SearchFilters = ({ onSearch }) => {
           <option value="room">Room</option>
           <option value="house">House</option>
           <option value="pg">PG</option>
-        </select >
+        </select>
         <input
           type="number"
           placeholder="Min Rent"
@@ -1740,12 +1133,6 @@ const PropertyDetails = ({ property, onClose, setCurrentView, setChatProperty })
       return;
     }
     
-    // Check if user is the owner of this property
-    if (user.id === property.user_id) {
-      alert('You cannot contact yourself on your own property!');
-      return;
-    }
-    
     // Open chat interface with this property
     setChatProperty(property);
     setCurrentView('chat');
@@ -1758,12 +1145,6 @@ const PropertyDetails = ({ property, onClose, setCurrentView, setChatProperty })
       return;
     }
     
-    // Check if user is the owner of this property
-    if (user.id === property.user_id) {
-      alert('You cannot schedule a visit to your own property!');
-      return;
-    }
-    
     // Open chat interface with prefilled message
     setChatProperty({
       ...property,
@@ -1773,22 +1154,12 @@ const PropertyDetails = ({ property, onClose, setCurrentView, setChatProperty })
     onClose(); // Close the modal
   };
 
-  // Check if current user is the owner of this property
-  const isOwner = user && user.id === property.user_id;
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg max-w-4xl max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-start mb-6">
-            <div>
-              <h2 className="text-2xl font-bold">{property.title}</h2>
-              {isOwner && (
-                <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mt-2">
-                  Your Property
-                </span>
-              )}
-            </div>
+            <h2 className="text-2xl font-bold">{property.title}</h2>
             <button 
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700"
@@ -1867,39 +1238,18 @@ const PropertyDetails = ({ property, onClose, setCurrentView, setChatProperty })
           </div>
           
           <div className="flex space-x-4">
-            {isOwner ? (
-              <div className="flex space-x-4 w-full">
-                <button 
-                  className="flex-1 bg-gray-400 text-white px-6 py-2 rounded-md cursor-not-allowed"
-                  disabled
-                  title="You cannot contact yourself on your own property"
-                >
-                  Your Property - Cannot Contact
-                </button>
-                <button 
-                  className="flex-1 bg-gray-400 text-white px-6 py-2 rounded-md cursor-not-allowed"
-                  disabled
-                  title="You cannot schedule a visit to your own property"
-                >
-                  Your Property - Cannot Schedule Visit
-                </button>
-              </div>
-            ) : (
-              <>
-                <button 
-                  onClick={handleContactOwner}
-                  className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition-colors"
-                >
-                  Contact Owner
-                </button>
-                <button 
-                  onClick={handleScheduleVisit}
-                  className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
-                >
-                  Schedule Visit
-                </button>
-              </>
-            )}
+            <button 
+              onClick={handleContactOwner}
+              className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition-colors"
+            >
+              Contact Owner
+            </button>
+            <button 
+              onClick={handleScheduleVisit}
+              className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
+            >
+              Schedule Visit
+            </button>
           </div>
         </div>
       </div>
@@ -2039,21 +1389,8 @@ const RegisterForm = ({ setCurrentView }) => {
           <input
             type="tel"
             value={formData.phone}
-            onChange={(e) => {
-              // Only allow digits
-              const value = e.target.value.replace(/\D/g, '');
-              if (value.length <= 15) {
-                setFormData({...formData, phone: value});
-              }
-            }}
-            onInput={(e) => {
-              // Remove any non-digit characters
-              e.target.value = e.target.value.replace(/\D/g, '');
-            }}
+            onChange={(e) => setFormData({...formData, phone: e.target.value})}
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter 10 digit phone number"
-            minLength="10"
-            maxLength="10"
             required
           />
         </div>
@@ -2092,74 +1429,59 @@ const PostPropertyForm = ({ setCurrentView }) => {
     city: '',
     amenities: ''
   });
- const [images, setImages] = useState([]);
-const [loading, setLoading] = useState(false);
-const [success, setSuccess] = useState(false);
-const [imageError, setImageError] = useState(false);
-const handleImageUpload = (e) => {
-  const files = Array.from(e.target.files);
-  const fileReaders = [];
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  files.forEach((file) => {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setImages((prevImages) => [...prevImages, event.target.result]);
-    };
-    reader.readAsDataURL(file);
-    fileReaders.push(reader);
-  });
-
-  // Clear any previous error
-  setImageError(false);
-};
-
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-
-  // Validate image presence
-  if (images.length === 0) {
-    setImageError(true);
-    setLoading(false);
-    return;
-  }
-
-  try {
-    const propertyData = {
-      ...formData,
-      rent: parseInt(formData.rent),
-      deposit: parseInt(formData.deposit),
-      amenities: formData.amenities.split(',').map(a => a.trim()).filter(a => a),
-      images: images
-    };
-
-    await axios.post(`${API}/properties`, propertyData);
-    setSuccess(true);
-    setFormData({
-      title: '',
-      description: '',
-      property_type: 'room',
-      rent: '',
-      deposit: '',
-      location: '',
-      city: '',
-      amenities: ''
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setImages(prev => [...prev, event.target.result]);
+      };
+      reader.readAsDataURL(file);
     });
-    setImages([]);
-    setImageError(false); // clear error
+  };
 
-    // Redirect to home after successful post
-    setTimeout(() => {
-      setCurrentView('home');
-    }, 2000);
-  } catch (error) {
-    console.error('Error creating property:', error);
-  } finally {
-    setLoading(false);
-  }
-};
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      const propertyData = {
+        ...formData,
+        rent: parseInt(formData.rent),
+        deposit: parseInt(formData.deposit),
+        amenities: formData.amenities.split(',').map(a => a.trim()).filter(a => a),
+        images: images
+      };
+      
+      await axios.post(`${API}/properties`, propertyData);
+      setSuccess(true);
+      setFormData({
+        title: '',
+        description: '',
+        property_type: 'room',
+        rent: '',
+        deposit: '',
+        location: '',
+        city: '',
+        amenities: ''
+      });
+      setImages([]);
+      
+      // Redirect to home after successful post
+      setTimeout(() => {
+        setCurrentView('home');
+      }, 2000);
+    } catch (error) {
+      console.error('Error creating property:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
@@ -2176,7 +1498,6 @@ const handleSubmit = async (e) => {
           <label className="block text-gray-700 text-sm font-bold mb-2">Title</label>
           <input
             type="text"
-            placeholder="2 Room Set with Kitchen"
             value={formData.title}
             onChange={(e) => setFormData({...formData, title: e.target.value})}
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -2187,7 +1508,6 @@ const handleSubmit = async (e) => {
         <div>
           <label className="block text-gray-700 text-sm font-bold mb-2">Description</label>
           <textarea
-          placeholder="Well-ventilated room with attached bathroom, kitchen setup, and 24x7 water supply. 5 mins walk to metro."
             value={formData.description}
             onChange={(e) => setFormData({...formData, description: e.target.value})}
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -2212,11 +1532,12 @@ const handleSubmit = async (e) => {
           
           <div>
             <label className="block text-gray-700 text-sm font-bold mb-2">City</label>
-            <CitySelector
+            <input
+              type="text"
               value={formData.city}
-              onChange={(city) => setFormData({...formData, city})}
-              placeholder="Select City"
-              className="w-full"
+              onChange={(e) => setFormData({...formData, city: e.target.value})}
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
             />
           </div>
         </div>
@@ -2224,7 +1545,6 @@ const handleSubmit = async (e) => {
         <div>
           <label className="block text-gray-700 text-sm font-bold mb-2">Location</label>
           <input
-            placeholder="Malviya Nagar, South Delhi"
             type="text"
             value={formData.location}
             onChange={(e) => setFormData({...formData, location: e.target.value})}
@@ -2268,27 +1588,23 @@ const handleSubmit = async (e) => {
           />
         </div>
         
-<div>
-  <label className="block text-gray-700 text-sm font-bold mb-2">Images</label>
-  <input
-    type="file"
-    onChange={handleImageUpload}
-    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-    multiple
-    accept="image/*"
-  />
-  {imageError && (
-    <p className="text-red-500 text-sm mt-1">* At least one image is required.</p>
-  )}
-  {images.length > 0 && (
-    <div className="mt-2 grid grid-cols-3 gap-2">
-      {images.map((image, index) => (
-        <img key={index} src={image} alt={`Preview ${index}`} className="w-full h-20 object-cover rounded" />
-      ))}
-    </div>
-  )}
-</div>
-
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Images</label>
+          <input
+            type="file"
+            onChange={handleImageUpload}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            multiple
+            accept="image/*"
+          />
+          {images.length > 0 && (
+            <div className="mt-2 grid grid-cols-3 gap-2">
+              {images.map((image, index) => (
+                <img key={index} src={image} alt={`Preview ${index}`} className="w-full h-20 object-cover rounded" />
+              ))}
+            </div>
+          )}
+        </div>
         
         <button
           type="submit"
@@ -2303,28 +1619,15 @@ const handleSubmit = async (e) => {
 };
 
 const HomePage = ({ setCurrentView, setChatProperty }) => {
-  const { selectedCity } = useCity();
   const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedProperty, setSelectedProperty] = useState(null);
 
-  // Only fetch properties when a city is selected (performance optimization)
   useEffect(() => {
-    if (selectedCity) {
-      fetchProperties({ city: selectedCity });
-    } else {
-      // Clear properties when no city is selected
-      setProperties([]);
-      setLoading(false);
-    }
-  }, [selectedCity]);
+    fetchProperties();
+  }, []);
 
   const fetchProperties = async (filters = {}) => {
-    // Always ensure we have a city filter for performance
-    if (!filters.city && !selectedCity) {
-      return;
-    }
-    
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -2348,50 +1651,27 @@ const HomePage = ({ setCurrentView, setChatProperty }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <SearchFilters onSearch={fetchProperties} />
         
-        {!selectedCity ? (
-          <div className="text-center py-12">
-            <div className="mx-auto w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-6">
-              <svg className="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Select Your City</h3>
-            <p className="text-gray-600 mb-6">Choose your city from the navigation bar to see nearby properties</p>
-            <p className="text-sm text-gray-500">This helps us show you relevant properties and improves loading performance</p>
-          </div>
-        ) : loading ? (
+        {loading ? (
           <div className="flex justify-center py-8">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
           </div>
         ) : (
-          <>
-            {properties.length > 0 && (
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Properties in {selectedCity}
-                </h2>
-                <p className="text-gray-600">{properties.length} properties available</p>
-              </div>
-            )}
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {properties.map((property) => (
-                <PropertyCard
-                  key={property.id}
-                  property={property}
-                  onViewDetails={setSelectedProperty}
-                  setCurrentView={setCurrentView}
-                  setChatProperty={setChatProperty}
-                />
-              ))}
-            </div>
-          </>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {properties.map((property) => (
+              <PropertyCard
+                key={property.id}
+                property={property}
+                onViewDetails={setSelectedProperty}
+                setCurrentView={setCurrentView}
+                setChatProperty={setChatProperty}
+              />
+            ))}
+          </div>
         )}
         
-        {!loading && selectedCity && properties.length === 0 && (
+        {!loading && properties.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-gray-500">No properties found in {selectedCity}. Try adjusting your search filters.</p>
+            <p className="text-gray-500">No properties found. Try adjusting your search filters.</p>
           </div>
         )}
       </div>
@@ -2448,59 +1728,52 @@ const MyPropertiesPage = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
           </div>
         ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  {properties.map((property) => (
-    <div key={property.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-      <div className="h-48 bg-gray-200 relative">
-        {property.images && property.images.length > 0 ? (
-          <img 
-            src={
-              property.images[0].startsWith('data:')
-                ? property.images[0]
-                : `data:image/jpeg;base64,${property.images[0]}`
-            }
-            alt={property.title}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full bg-gray-300 flex items-center justify-center">
-            <span className="text-gray-500">No Image</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {properties.map((property) => (
+              <div key={property.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="h-48 bg-gray-200 relative">
+                  {property.images && property.images.length > 0 ? (
+                    <img 
+                      src={property.images[0].startsWith('data:') ? property.images[0] : `data:image/jpeg;base64,${property.images[0]}`}
+                      alt={property.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+                      <span className="text-gray-500">No Image</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">{property.title}</h3>
+                  <p className="text-gray-600 mb-3">{property.description}</p>
+                  
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <span className="text-2xl font-bold text-green-600">₹{property.rent}</span>
+                      <span className="text-gray-500">/month</span>
+                    </div>
+                    <span className={`px-2 py-1 rounded text-sm ${property.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                      {property.available ? 'Available' : 'Not Available'}
+                    </span>
+                  </div>
+                  
+                  <div className="flex space-x-2">
+                    <button className="flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors">
+                      Edit
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(property.id)}
+                      className="flex-1 bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        )}
-      </div>
-
-      <div className="p-6">
-        <h3 className="text-xl font-semibold mb-2">{property.title}</h3>
-        <p className="text-gray-600 mb-3">{property.description}</p>
-
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <span className="text-2xl font-bold text-green-600">₹{property.rent}</span>
-            <span className="text-gray-500">/month</span>
-          </div>
-          <span
-            className={`px-2 py-1 rounded text-sm ${
-              property.available
-                ? 'bg-green-100 text-green-800'
-                : 'bg-red-100 text-red-800'
-            }`}
-          >
-            {property.available ? 'Available' : 'Not Available'}
-          </span>
-        </div>
-
-        {/* Only Delete Button */}
-        <button
-          onClick={() => handleDelete(property.id)}
-          className="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition-colors"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
-  ))}
-</div>
-
         )}
         
         {!loading && properties.length === 0 && (
@@ -2518,11 +1791,9 @@ const App = () => {
   
   return (
     <AuthProvider>
-      <CityProvider>
-        <div className="App">
-          <MainContent currentView={currentView} setCurrentView={setCurrentView} />
-        </div>
-      </CityProvider>
+      <div className="App">
+        <MainContent currentView={currentView} setCurrentView={setCurrentView} />
+      </div>
     </AuthProvider>
   );
 };
@@ -2583,6 +1854,5 @@ const MainContent = ({ currentView, setCurrentView }) => {
     </div>
   );
 };
-
 
 export default App;
