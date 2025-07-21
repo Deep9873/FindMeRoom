@@ -447,6 +447,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# seo 
+from fastapi.responses import Response
+
+@app.get("/sitemap.xml", response_class=Response)
+async def sitemap():
+    content = """<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url>
+            <loc>https://www.findmeroom.com/</loc>
+            <changefreq>daily</changefreq>
+            <priority>1.0</priority>
+        </url>
+        <!-- Add more URLs dynamically if needed -->
+    </urlset>
+    """
+    return Response(content=content, media_type="application/xml")
+
+@app.get("/robots.txt", response_class=Response)
+async def robots():
+    return Response(content="User-agent: *\nAllow: /\n", media_type="text/plain")
+
+
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
