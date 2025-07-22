@@ -2801,11 +2801,36 @@ const Footer = ({ setCurrentView }) => {
           <div className="space-y-3">
             <h5 className="text-white font-medium">For Room Seekers</h5>
             <div className="space-y-2 text-sm">
-              <a href="#find-rooms" className="block text-gray-400 hover:text-white transition-colors">Find Rooms</a>
-              <a href="#find-roommates" className="block text-gray-400 hover:text-white transition-colors">Find Roommates</a>
-              <a href="#pg-finder" className="block text-gray-400 hover:text-white transition-colors">PG Finder</a>
-              <a href="#flatmate-matching" className="block text-gray-400 hover:text-white transition-colors">Flatmate Matching</a>
-              <a href="#room-sharing" className="block text-gray-400 hover:text-white transition-colors">Room Sharing</a>
+              <button 
+                onClick={() => setCurrentView('properties')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Find Rooms
+              </button>
+              <button 
+                onClick={() => setCurrentView('properties')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Find Roommates
+              </button>
+              <button 
+                onClick={() => setCurrentView('properties')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                PG Finder
+              </button>
+              <button 
+                onClick={() => setCurrentView('properties')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Flatmate Matching
+              </button>
+              <button 
+                onClick={() => setCurrentView('properties')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Room Sharing
+              </button>
             </div>
           </div>
 
@@ -2813,11 +2838,36 @@ const Footer = ({ setCurrentView }) => {
           <div className="space-y-3">
             <h5 className="text-white font-medium">For Property Owners</h5>
             <div className="space-y-2 text-sm">
-              <a href="#post-property" className="block text-gray-400 hover:text-white transition-colors">Post Your Property</a>
-              <a href="#manage-listings" className="block text-gray-400 hover:text-white transition-colors">Manage Listings</a>
-              <a href="#tenant-verification" className="block text-gray-400 hover:text-white transition-colors">Tenant Verification</a>
-              <a href="#rental-agreements" className="block text-gray-400 hover:text-white transition-colors">Rental Agreements</a>
-              <a href="#property-promotion" className="block text-gray-400 hover:text-white transition-colors">Promote Property</a>
+              <button 
+                onClick={() => user ? setCurrentView('post') : setCurrentView('login')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Post Your Property
+              </button>
+              <button 
+                onClick={() => user ? setCurrentView('my-properties') : setCurrentView('login')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Manage Listings
+              </button>
+              <button 
+                onClick={() => setCurrentView('properties')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Tenant Verification
+              </button>
+              <button 
+                onClick={() => setCurrentView('home')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Rental Agreements
+              </button>
+              <button 
+                onClick={() => user ? setCurrentView('post') : setCurrentView('login')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Promote Property
+              </button>
             </div>
           </div>
 
@@ -2825,11 +2875,36 @@ const Footer = ({ setCurrentView }) => {
           <div className="space-y-3">
             <h5 className="text-white font-medium">Support & Legal</h5>
             <div className="space-y-2 text-sm">
-              <a href="#help-center" className="block text-gray-400 hover:text-white transition-colors">Help Center</a>
-              <a href="#contact-us" className="block text-gray-400 hover:text-white transition-colors">Contact Us</a>
-              <a href="#privacy-policy" className="block text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#terms-of-service" className="block text-gray-400 hover:text-white transition-colors">Terms of Service</a>
-              <a href="#safety-tips" className="block text-gray-400 hover:text-white transition-colors">Safety Tips</a>
+              <button 
+                onClick={() => setCurrentView('home')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Help Center
+              </button>
+              <button 
+                onClick={() => setCurrentView('home')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Contact Us
+              </button>
+              <a 
+                href="#privacy-policy" 
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Privacy Policy
+              </a>
+              <a 
+                href="#terms-of-service" 
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Terms of Service
+              </a>
+              <button 
+                onClick={() => setCurrentView('home')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Safety Tips
+              </button>
             </div>
           </div>
         </div>
