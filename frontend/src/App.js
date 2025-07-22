@@ -2777,7 +2777,7 @@ const Footer = ({ setCurrentView }) => {
               {popularSearches.map((search, index) => (
                 <button 
                   key={index}
-                  onClick={() => setCurrentView('properties')}
+                  onClick={() => handleNavigation('properties')}
                   className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
                 >
                   {search}
