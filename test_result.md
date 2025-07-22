@@ -459,3 +459,29 @@ The chat system now provides a complete messaging experience with real-time upda
 - Edge Cases: Proper handling of non-existent properties, empty conversations, invalid message IDs
 
 🎯 **BACKEND READY**: All enhanced chat functionality is fully operational. Only minor authentication middleware inconsistencies remain (8 failed tests) but core functionality unaffected. Chat system provides complete real-time messaging experience with proper unread tracking and conversation management."
+  - agent: "user"
+    message: "User reported specific mobile chat issue: When clicking on property and then clicking Contact Owner or Schedule Visit button, the chat function doesn't work in mobile view. Need to test this specific mobile chat flow."
+  - agent: "testing"
+    message: "❌ MOBILE CHAT ISSUE CONFIRMED: Tested the specific user-reported issue in mobile viewport (375x667). 
+
+🔍 **ISSUE DETAILS**:
+- Scenario: User clicks property → Contact Owner/Schedule Visit button
+- Expected: Chat opens with message input for immediate typing
+- Actual: Chat opens but shows conversations list instead of chat view
+- Impact: Mobile users cannot easily contact property owners
+
+✅ **CONFIRMED WORKING**:
+- Mobile interface loads correctly
+- Authentication works in mobile view
+- Property viewing works in mobile
+- Contact Owner/Schedule Visit buttons are present and clickable
+- Chat interface is accessible via mobile bottom navigation
+
+❌ **MOBILE CHAT BUG**:
+- Property-to-chat flow broken in mobile view
+- Shows empty conversations instead of auto-switching to chat
+- Requires manual conversation selection (poor UX)
+- Desktop works fine, mobile-specific issue
+- Both Contact Owner and Schedule Visit buttons affected
+
+🔧 **SOLUTION NEEDED**: Mobile chat should automatically create conversation and switch to chat view with message input visible, not show conversations list."
