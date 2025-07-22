@@ -488,3 +488,14 @@ The chat system now provides a complete messaging experience with real-time upda
 - Both Contact Owner and Schedule Visit buttons affected
 
 🔧 **SOLUTION NEEDED**: Mobile chat should automatically create conversation and switch to chat view with message input visible, not show conversations list."
+  - agent: "main"
+    message: "🔧 MOBILE CHAT AUTO-SWITCHING FIX IMPLEMENTED: Fixed the mobile chat interface issue where clicking Contact Owner/Schedule Visit buttons would show conversations list instead of automatically switching to chat view. 
+
+Key changes made to EnhancedChatInterface component:
+✅ **Consolidated State Management**: Removed duplicate useEffect hooks that caused race conditions and timing issues
+✅ **Immediate Mobile Setup**: Added immediate setShowMobileChat(true) when selectedProperty exists, independent of conversations loading
+✅ **Improved Conversation Creation**: Enhanced new conversation flow to work immediately for mobile users
+✅ **Better State Sequencing**: Fixed timing issues between conversation loading and mobile state setup
+✅ **Async Owner Details**: Made property owner name fetching non-blocking for conversation creation
+
+The fix ensures that when users click Contact Owner or Schedule Visit buttons in mobile view, they immediately see the chat interface with message input ready for typing, providing a smooth mobile user experience. Ready for testing."
