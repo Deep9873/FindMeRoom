@@ -2848,31 +2848,31 @@ const Footer = ({ setCurrentView }) => {
             <h5 className="text-white font-medium">For Property Owners</h5>
             <div className="space-y-2 text-sm">
               <button 
-                onClick={() => user ? setCurrentView('post') : setCurrentView('login')}
+                onClick={() => user ? handleNavigation('post') : handleNavigation('login')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Post Your Property
               </button>
               <button 
-                onClick={() => user ? setCurrentView('my-properties') : setCurrentView('login')}
+                onClick={() => user ? handleNavigation('my-properties') : handleNavigation('login')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Manage Listings
               </button>
               <button 
-                onClick={() => setCurrentView('properties')}
+                onClick={() => handleNavigation('properties')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Tenant Verification
               </button>
               <button 
-                onClick={() => setCurrentView('home')}
+                onClick={() => handleNavigation('home')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Rental Agreements
               </button>
               <button 
-                onClick={() => user ? setCurrentView('post') : setCurrentView('login')}
+                onClick={() => user ? handleNavigation('post') : handleNavigation('login')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Promote Property
