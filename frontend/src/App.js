@@ -2811,31 +2811,31 @@ const Footer = ({ setCurrentView }) => {
             <h5 className="text-white font-medium">For Room Seekers</h5>
             <div className="space-y-2 text-sm">
               <button 
-                onClick={() => setCurrentView('properties')}
+                onClick={() => handleNavigation('properties')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Find Rooms
               </button>
               <button 
-                onClick={() => setCurrentView('properties')}
+                onClick={() => handleNavigation('properties')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Find Roommates
               </button>
               <button 
-                onClick={() => setCurrentView('properties')}
+                onClick={() => handleNavigation('properties')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 PG Finder
               </button>
               <button 
-                onClick={() => setCurrentView('properties')}
+                onClick={() => handleNavigation('properties')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Flatmate Matching
               </button>
               <button 
-                onClick={() => setCurrentView('properties')}
+                onClick={() => handleNavigation('properties')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Room Sharing
