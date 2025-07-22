@@ -448,6 +448,7 @@ async def log_cors_headers(request, call_next):
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://findmeroom-backend.onrender.com/api/auth/register",
         "https://findmeroom-backend.onrender.com",
         "https://findmeroom-backend.onrender.com/api",
         "http://localhost:3000",
