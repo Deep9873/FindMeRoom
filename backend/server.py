@@ -438,16 +438,22 @@ async def root():
 
 # Include the router in the main app
 app.include_router(api_router) 
+@app.middleware("http")
+async def log_cors_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["Access-Control-Allow-Origin"] = request.headers.get("origin", "*")
+    return response
+
     
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
     allow_origins=[
         "https://findmeroom-backend.onrender.com",
         "https://findmeroom-backend.onrender.com/api",
         "http://localhost:3000",
         "https://findmeroom.onrender.com",
     ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
