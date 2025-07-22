@@ -1053,30 +1053,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
     }
   }, [selectedConversation?.property_id, selectedConversation?.other_user_id]);
 
-  // Handle initial property selection
-  useEffect(() => {
-    if (selectedProperty) {
-      // Check if conversation already exists
-      const existingConv = conversations.find(c => c.property_id === selectedProperty.id);
-      if (existingConv) {
-        setSelectedConversation(existingConv);
-      } else {
-        // Create a new conversation structure
-        const newConv = {
-          property_id: selectedProperty.id,
-          property_title: selectedProperty.title,
-          property_image: selectedProperty.images?.[0] || null,
-          other_user_id: selectedProperty.user_id,
-          other_user_name: "Property Owner",
-          last_message: "",
-          last_message_time: new Date(),
-          unread_count: 0,
-          is_sender: false
-        };
-        setSelectedConversation(newConv);
-      }
-    }
-  }, [selectedProperty, conversations]);
+
 
   // Update message when prefilledMessage changes
   useEffect(() => {
