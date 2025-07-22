@@ -2946,13 +2946,13 @@ const Footer = ({ setCurrentView }) => {
           </div>
           <div className="flex flex-wrap gap-4">
             <button 
-              onClick={() => setCurrentView('home')}
+              onClick={() => handleNavigation('home')}
               className="hover:text-white transition-colors"
             >
               Accessibility
             </button>
             <button 
-              onClick={() => setCurrentView('properties')}
+              onClick={() => handleNavigation('properties')}
               className="hover:text-white transition-colors"
             >
               Sitemap
