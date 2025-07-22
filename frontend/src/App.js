@@ -956,7 +956,10 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
 
   // Handle selectedProperty prop - automatically set up conversation for mobile/desktop
   useEffect(() => {
-    if (selectedProperty && user && conversations.length >= 0) { // Changed condition to include empty conversations
+    if (selectedProperty && user) {
+      // CRITICAL: Always set mobile chat to true first when selectedProperty exists
+      setShowMobileChat(true);
+      
       // Find existing conversation for this property
       const existingConversation = conversations.find(conv => 
         conv.property_id === selectedProperty.id
@@ -965,8 +968,6 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       if (existingConversation) {
         // Select existing conversation
         setSelectedConversation(existingConversation);
-        // For mobile, automatically show chat interface
-        setShowMobileChat(true);
         // Load messages for this conversation
         loadChatMessages(existingConversation.property_id, existingConversation.other_user_id, true);
       } else if (selectedProperty.user_id) {
@@ -983,32 +984,22 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
           is_sender: false
         };
         
-        // Fetch property owner details and set up conversation
+        // Set conversation immediately for mobile
+        setSelectedConversation(newConversation);
+        setMessages([]); // Clear messages as this is a new conversation
+        
+        // Fetch property owner details asynchronously
         fetchPropertyOwnerDetails(selectedProperty.user_id).then(ownerName => {
           newConversation.other_user_name = ownerName;
-          setSelectedConversation(newConversation);
-          // CRITICAL: For mobile, automatically show chat interface  
-          setShowMobileChat(true);
-          setMessages([]); // Clear messages as this is a new conversation
+          setSelectedConversation(prev => 
+            prev && prev.property_id === newConversation.property_id 
+              ? { ...prev, other_user_name: ownerName }
+              : prev
+          );
         });
       }
     }
   }, [selectedProperty, user, conversations]);
-
-  // Also handle when conversations load but selectedProperty exists
-  useEffect(() => {
-    if (selectedProperty && user && !selectedConversation && conversations.length > 0) {
-      const existingConversation = conversations.find(conv => 
-        conv.property_id === selectedProperty.id
-      );
-      
-      if (existingConversation) {
-        setSelectedConversation(existingConversation);
-        setShowMobileChat(true);
-        loadChatMessages(existingConversation.property_id, existingConversation.other_user_id, true);
-      }
-    }
-  }, [conversations, selectedProperty, user, selectedConversation]);
 
   // Helper function to fetch property owner details
   const fetchPropertyOwnerDetails = async (userId) => {
