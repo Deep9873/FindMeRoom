@@ -2636,5 +2636,186 @@ const MainContent = ({ currentView, setCurrentView }) => {
   );
 };
 
+// SEO-Friendly Footer Component
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
+  
+  const popularCities = [
+    'Delhi', 'Mumbai', 'Bangalore', 'Pune', 'Chennai', 'Hyderabad',
+    'Kolkata', 'Ahmedabad', 'Gurgaon', 'Noida', 'Faridabad', 'Ghaziabad'
+  ];
+
+  const propertyTypes = [
+    'Single Rooms', 'Shared Rooms', '1 BHK', '2 BHK', '3 BHK', 
+    'PG for Boys', 'PG for Girls', 'Co-living Spaces', 'Flatmate'
+  ];
+
+  const popularSearches = [
+    'Rooms near me', 'PG near me', 'Flatmate finder', 'Roommate matching',
+    'Affordable rooms', 'Furnished rooms', 'Single occupancy rooms', 'Shared accommodation'
+  ];
+
+  return (
+    <footer className="bg-gray-900 text-gray-300 mt-8 md:mt-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+          
+          {/* Company Info & About */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <img className="w-8 h-8" src="/logo.png" alt="FindMeRoom Logo" />
+              <h3 className="text-xl font-bold text-white">FindMeRoom</h3>
+            </div>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              India's premier platform for finding rental rooms, roommates, flatmates, and PG accommodations. 
+              Discover perfect shared living spaces, single rooms, and paying guest facilities across major Indian cities. 
+              Connect with verified roommates and property owners for hassle-free room rentals.
+            </p>
+            <div className="flex space-x-4">
+              <a href="#" className="text-gray-400 hover:text-white transition-colors" aria-label="Facebook">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors" aria-label="Twitter">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                </svg>
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors" aria-label="Instagram">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987s11.987-5.367 11.987-11.987C24.014 5.367 18.647.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.323-1.297C3.85 14.424 3.85 12.78 3.85 12.78s0-1.644 1.276-2.911c.875-.807 2.026-1.297 3.323-1.297s2.448.49 3.323 1.297c1.276 1.267 1.276 2.911 1.276 2.911s0 1.644-1.276 2.911c-.875.807-2.026 1.297-3.323 1.297z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          {/* Popular Cities & Locations */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-white">Popular Cities</h4>
+            <div className="space-y-2">
+              {popularCities.map((city, index) => (
+                <a 
+                  key={index}
+                  href={`#rooms-${city.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="block text-gray-400 hover:text-white text-sm transition-colors"
+                >
+                  Rooms in {city}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Property Types & Accommodation */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-white">Accommodation Types</h4>
+            <div className="space-y-2">
+              {propertyTypes.map((type, index) => (
+                <a 
+                  key={index}
+                  href={`#${type.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="block text-gray-400 hover:text-white text-sm transition-colors"
+                >
+                  {type}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Popular Searches & Quick Links */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-white">Popular Searches</h4>
+            <div className="space-y-2">
+              {popularSearches.map((search, index) => (
+                <a 
+                  key={index}
+                  href={`#search-${search.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="block text-gray-400 hover:text-white text-sm transition-colors"
+                >
+                  {search}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Secondary Links Section */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6 border-t border-gray-800">
+          
+          {/* For Renters */}
+          <div className="space-y-3">
+            <h5 className="text-white font-medium">For Room Seekers</h5>
+            <div className="space-y-2 text-sm">
+              <a href="#find-rooms" className="block text-gray-400 hover:text-white transition-colors">Find Rooms</a>
+              <a href="#find-roommates" className="block text-gray-400 hover:text-white transition-colors">Find Roommates</a>
+              <a href="#pg-finder" className="block text-gray-400 hover:text-white transition-colors">PG Finder</a>
+              <a href="#flatmate-matching" className="block text-gray-400 hover:text-white transition-colors">Flatmate Matching</a>
+              <a href="#room-sharing" className="block text-gray-400 hover:text-white transition-colors">Room Sharing</a>
+            </div>
+          </div>
+
+          {/* For Property Owners */}
+          <div className="space-y-3">
+            <h5 className="text-white font-medium">For Property Owners</h5>
+            <div className="space-y-2 text-sm">
+              <a href="#post-property" className="block text-gray-400 hover:text-white transition-colors">Post Your Property</a>
+              <a href="#manage-listings" className="block text-gray-400 hover:text-white transition-colors">Manage Listings</a>
+              <a href="#tenant-verification" className="block text-gray-400 hover:text-white transition-colors">Tenant Verification</a>
+              <a href="#rental-agreements" className="block text-gray-400 hover:text-white transition-colors">Rental Agreements</a>
+              <a href="#property-promotion" className="block text-gray-400 hover:text-white transition-colors">Promote Property</a>
+            </div>
+          </div>
+
+          {/* Support & Legal */}
+          <div className="space-y-3">
+            <h5 className="text-white font-medium">Support & Legal</h5>
+            <div className="space-y-2 text-sm">
+              <a href="#help-center" className="block text-gray-400 hover:text-white transition-colors">Help Center</a>
+              <a href="#contact-us" className="block text-gray-400 hover:text-white transition-colors">Contact Us</a>
+              <a href="#privacy-policy" className="block text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#terms-of-service" className="block text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+              <a href="#safety-tips" className="block text-gray-400 hover:text-white transition-colors">Safety Tips</a>
+            </div>
+          </div>
+        </div>
+
+        {/* SEO Rich Description */}
+        <div className="py-6 border-t border-gray-800">
+          <div className="text-sm text-gray-500 leading-relaxed">
+            <p className="mb-3">
+              <strong className="text-gray-300">FindMeRoom</strong> - Your trusted partner for finding rental accommodations across India. 
+              Whether you're searching for a single room for rent, looking for compatible roommates, seeking affordable PG accommodation, 
+              or need a flatmate to share expenses, we connect you with verified property owners and genuine tenants.
+            </p>
+            <p className="mb-3">
+              Our platform specializes in helping students, working professionals, and families find perfect living spaces including 
+              furnished rooms, shared apartments, paying guest facilities, co-living spaces, and traditional rental properties. 
+              From budget-friendly PG for boys and girls to premium 1 BHK, 2 BHK, and 3 BHK apartments, discover your ideal home today.
+            </p>
+            <p>
+              Available in major cities: Delhi NCR (Gurgaon, Noida, Faridabad), Mumbai, Bangalore, Pune, Chennai, Hyderabad, Kolkata, 
+              Ahmedabad and 100+ other cities. Start your room hunting journey with verified listings, instant chat with property owners, 
+              and hassle-free roommate matching services.
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom Footer */}
+        <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-gray-800 text-sm text-gray-500">
+          <div className="mb-4 md:mb-0">
+            <p>&copy; {currentYear} FindMeRoom. All rights reserved. Made with ❤️ in India</p>
+          </div>
+          <div className="flex flex-wrap gap-4">
+            <a href="#accessibility" className="hover:text-white transition-colors">Accessibility</a>
+            <a href="#sitemap" className="hover:text-white transition-colors">Sitemap</a>
+            <a href="#cookies" className="hover:text-white transition-colors">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
 
 export default App;
