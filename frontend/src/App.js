@@ -1344,7 +1344,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   }
 
   return (
-    <div className="flex h-screen bg-gray-50 pb-16 md:pb-0"> {/* Add bottom padding for mobile nav */}
+    <div className="flex h-screen bg-gray-50 pb-16 md:pb-0 relative"> {/* Add relative positioning */}
       {/* Conversations List - Mobile responsive */}
       <div className={`${
         showMobileChat ? 'hidden md:block' : 'block'
@@ -1446,14 +1446,14 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
         </div>
       </div>
 
-      {/* Chat Messages - Mobile responsive */}
+      {/* Chat Messages - Mobile responsive with improved layout */}
       <div className={`${
         showMobileChat ? 'block' : 'hidden md:block'
-      } flex-1 flex flex-col h-full`}>
+      } flex-1 flex flex-col h-screen relative`}> {/* Fixed height and relative positioning */}
         {selectedConversation ? (
           <>
-            {/* Chat Header - Mobile friendly - Fixed position */}
-            <div className="flex-shrink-0 bg-white border-b border-gray-200 p-4 shadow-sm">
+            {/* Chat Header - Sticky at top */}
+            <div className="sticky top-0 z-10 bg-white border-b border-gray-200 p-4 shadow-sm">
               <div className="flex items-center space-x-3">
                 {/* Mobile back button */}
                 <button
@@ -1487,8 +1487,8 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
               </div>
             </div>
 
-            {/* Messages - Mobile optimized - Separate scrolling area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
+            {/* Messages Container - Scrollable middle section */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ maxHeight: 'calc(100vh - 200px)' }}> {/* Fixed max height */}
               {loading && messages.length === 0 ? (
                 <div className="flex justify-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
@@ -1522,10 +1522,6 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
                         }`}>
                       {new Date(new Date(message.created_at).getTime() + (5.5 * 60 * 60 * 1000))
   .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
- 
-
-
-
                         </p> 
                         {message.sender_id === user.id && (
                           <div className="flex items-center space-x-1">
@@ -1547,8 +1543,8 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Message Input - Mobile optimized - Fixed at bottom */}
-            <div className="flex-shrink-0 bg-white border-t border-gray-200 p-4">
+            {/* Message Input - Sticky at bottom */}
+            <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
               {error && (
                 <div className="mb-3 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
                   {error}
