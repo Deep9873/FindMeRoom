@@ -2788,20 +2788,7 @@ const Footer = ({ setCurrentView }) => {
         </div>
 
         {/* Property Types & Accommodation - New Section */}
-        <div className="py-6 border-t border-gray-800">
-          <h4 className="text-lg font-semibold text-white mb-4">Find by Property Type</h4>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {propertyTypes.map((type, index) => (
-              <button 
-                key={index}
-                onClick={() => handleNavigation('properties')}
-                className="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm transition-colors border border-gray-700"
-              >
-                {type}
-              </button>
-            ))}
-          </div>
-        </div>
+  
 
         {/* Secondary Links Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6 border-t border-gray-800">
