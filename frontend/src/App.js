@@ -2630,6 +2630,7 @@ const MainContent = ({ currentView, setCurrentView }) => {
     <div className="pb-16 md:pb-0">
       <Header currentView={currentView} setCurrentView={setCurrentView} />
       {renderContent()}
+      <Footer />
       <MobileBottomNavigation currentView={currentView} setCurrentView={setCurrentView} />
     </div>
   );
