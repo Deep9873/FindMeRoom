@@ -2641,6 +2641,19 @@ const Footer = ({ setCurrentView }) => {
   const { user } = useAuth();
   const currentYear = new Date().getFullYear();
   
+  // Function to scroll to top and navigate
+  const handleNavigation = (view) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setCurrentView(view);
+  };
+  
+  // Function for city navigation with scroll to top
+  const handleCityNavigation = (city) => {
+    localStorage.setItem('selectedCity', city);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setCurrentView('properties');
+  };
+  
   const popularCities = [
     'Delhi', 'Mumbai', 'Bangalore', 'Pune', 'Chennai', 'Hyderabad',
     'Kolkata', 'Ahmedabad', 'Gurgaon', 'Noida', 'Faridabad', 'Ghaziabad'
