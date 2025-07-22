@@ -2637,7 +2637,8 @@ const MainContent = ({ currentView, setCurrentView }) => {
 };
 
 // SEO-Friendly Footer Component
-const Footer = () => {
+const Footer = ({ setCurrentView }) => {
+  const { user } = useAuth();
   const currentYear = new Date().getFullYear();
   
   const popularCities = [
