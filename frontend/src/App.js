@@ -2794,7 +2794,7 @@ const Footer = ({ setCurrentView }) => {
             {propertyTypes.map((type, index) => (
               <button 
                 key={index}
-                onClick={() => setCurrentView('properties')}
+                onClick={() => handleNavigation('properties')}
                 className="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm transition-colors border border-gray-700"
               >
                 {type}
