@@ -2586,6 +2586,13 @@ const MainContent = ({ currentView, setCurrentView }) => {
     };
   }, []);
 
+  // Clear chatProperty when leaving chat view
+  useEffect(() => {
+    if (currentView !== 'chat') {
+      setChatProperty(null);
+    }
+  }, [currentView]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
