@@ -439,18 +439,18 @@ async def root():
 # Include the router in the main app
 app.include_router(api_router, prefix="/api") 
     
-app.add_middleware(  
+app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True, 
-    allow_origins=
-    ["https://findmeroom-backend.onrender.com",
-     "https://findmeroom-backend.onrender.com/api"
+    allow_credentials=True,
+    allow_origins=[
+        "https://findmeroom-backend.onrender.com",
+        "https://findmeroom-backend.onrender.com/api",
         "http://localhost:3000",
-    "https://findmeroom.onrender.com"],
+        "https://findmeroom.onrender.com",
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # seo 
 from fastapi.responses import Response
 
