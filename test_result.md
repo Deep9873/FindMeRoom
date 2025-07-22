@@ -327,9 +327,9 @@ frontend:
 
   - task: "Enhanced Chat Interface with Real-time Updates"
     implemented: true
-    working: true
+    working: false
     file: "App.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -339,6 +339,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "✅ PASSED: Enhanced chat interface working correctly. Mobile chat interface is accessible via bottom navigation, shows conversations list properly, handles empty state correctly. Two-panel layout works on desktop. Mobile responsive design implemented with proper navigation between conversations and chat views."
+      - working: false
+        agent: "testing"
+        comment: "❌ MOBILE CHAT ISSUE CONFIRMED: Tested specific user-reported issue in mobile viewport (375x667). When user clicks on property → Contact Owner button, chat interface opens but shows conversations list instead of automatically switching to chat view with message input. Mobile should auto-create conversation and switch to chat view for immediate messaging. Desktop works fine, mobile requires manual conversation selection. Same issue affects Schedule Visit button. This breaks the mobile user experience for property inquiries."
 
   - task: "Chat Notifications and Unread Indicators"
     implemented: true
