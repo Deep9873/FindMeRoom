@@ -2692,34 +2692,71 @@ const Footer = ({ setCurrentView }) => {
             </div>
           </div>
 
+          {/* Important Quick Links */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-white">Quick Access</h4>
+            <div className="space-y-2">
+              <button 
+                onClick={() => setCurrentView('home')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                🏠 Home
+              </button>
+              <button 
+                onClick={() => setCurrentView('properties')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                🔍 Browse Properties
+              </button>
+              <button 
+                onClick={() => user ? setCurrentView('post') : setCurrentView('login')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                ➕ Post Your Property
+              </button>
+              <button 
+                onClick={() => user ? setCurrentView('my-properties') : setCurrentView('login')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                🏘️ My Properties
+              </button>
+              <button 
+                onClick={() => user ? setCurrentView('chat') : setCurrentView('login')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                💬 Chat & Messages
+              </button>
+              <button 
+                onClick={() => user ? setCurrentView('profile') : setCurrentView('login')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                👤 My Profile
+              </button>
+              <button 
+                onClick={() => !user ? setCurrentView('login') : null}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                {user ? '✅ Logged In' : '🔐 Login / Register'}
+              </button>
+            </div>
+          </div>
+
           {/* Popular Cities & Locations */}
           <div className="space-y-4">
             <h4 className="text-lg font-semibold text-white">Popular Cities</h4>
             <div className="space-y-2">
               {popularCities.map((city, index) => (
-                <a 
+                <button 
                   key={index}
-                  href={`#rooms-${city.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="block text-gray-400 hover:text-white text-sm transition-colors"
+                  onClick={() => {
+                    // Set city and go to properties view
+                    localStorage.setItem('selectedCity', city);
+                    setCurrentView('properties');
+                  }}
+                  className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
                 >
                   Rooms in {city}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Property Types & Accommodation */}
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white">Accommodation Types</h4>
-            <div className="space-y-2">
-              {propertyTypes.map((type, index) => (
-                <a 
-                  key={index}
-                  href={`#${type.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="block text-gray-400 hover:text-white text-sm transition-colors"
-                >
-                  {type}
-                </a>
+                </button>
               ))}
             </div>
           </div>
@@ -2729,15 +2766,31 @@ const Footer = ({ setCurrentView }) => {
             <h4 className="text-lg font-semibold text-white">Popular Searches</h4>
             <div className="space-y-2">
               {popularSearches.map((search, index) => (
-                <a 
+                <button 
                   key={index}
-                  href={`#search-${search.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="block text-gray-400 hover:text-white text-sm transition-colors"
+                  onClick={() => setCurrentView('properties')}
+                  className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
                 >
                   {search}
-                </a>
+                </button>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Property Types & Accommodation - New Section */}
+        <div className="py-6 border-t border-gray-800">
+          <h4 className="text-lg font-semibold text-white mb-4">Find by Property Type</h4>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {propertyTypes.map((type, index) => (
+              <button 
+                key={index}
+                onClick={() => setCurrentView('properties')}
+                className="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm transition-colors border border-gray-700"
+              >
+                {type}
+              </button>
+            ))}
           </div>
         </div>
 
