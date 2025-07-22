@@ -2710,43 +2710,43 @@ const Footer = ({ setCurrentView }) => {
             <h4 className="text-lg font-semibold text-white">Quick Access</h4>
             <div className="space-y-2">
               <button 
-                onClick={() => setCurrentView('home')}
+                onClick={() => handleNavigation('home')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 🏠 Home
               </button>
               <button 
-                onClick={() => setCurrentView('properties')}
+                onClick={() => handleNavigation('properties')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 🔍 Browse Properties
               </button>
               <button 
-                onClick={() => user ? setCurrentView('post') : setCurrentView('login')}
+                onClick={() => user ? handleNavigation('post') : handleNavigation('login')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 ➕ Post Your Property
               </button>
               <button 
-                onClick={() => user ? setCurrentView('my-properties') : setCurrentView('login')}
+                onClick={() => user ? handleNavigation('my-properties') : handleNavigation('login')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 🏘️ My Properties
               </button>
               <button 
-                onClick={() => user ? setCurrentView('chat') : setCurrentView('login')}
+                onClick={() => user ? handleNavigation('chat') : handleNavigation('login')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 💬 Chat & Messages
               </button>
               <button 
-                onClick={() => user ? setCurrentView('profile') : setCurrentView('login')}
+                onClick={() => user ? handleNavigation('profile') : handleNavigation('login')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 👤 My Profile
               </button>
               <button 
-                onClick={() => !user ? setCurrentView('login') : null}
+                onClick={() => !user ? handleNavigation('login') : null}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 {user ? '✅ Logged In' : '🔐 Login / Register'}
