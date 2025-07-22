@@ -1008,30 +1008,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
     }
   }, [selectedProperty]);
 
-  // Immediate mobile state setup for selectedProperty (independent of conversations loading)
-  useEffect(() => {
-    if (selectedProperty && user) {
-      // Immediately set mobile chat view when selectedProperty exists
-      setShowMobileChat(true);
-      
-      // If we don't have conversations yet, create a basic conversation structure
-      if (conversations.length === 0 && selectedProperty.user_id) {
-        const tempConversation = {
-          property_id: selectedProperty.id,
-          property_title: selectedProperty.title,
-          property_image: selectedProperty.images?.[0] || null,
-          other_user_id: selectedProperty.user_id,
-          other_user_name: "Property Owner",
-          last_message: "",
-          last_message_time: new Date(),
-          unread_count: 0,
-          is_sender: false
-        };
-        setSelectedConversation(tempConversation);
-        setMessages([]);
-      }
-    }
-  }, [selectedProperty, user]); // This effect doesn't depend on conversations
+
 
   // Helper function to fetch property owner details
   const fetchPropertyOwnerDetails = async (userId) => {
