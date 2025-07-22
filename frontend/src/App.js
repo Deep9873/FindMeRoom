@@ -954,6 +954,59 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   const [showMobileChat, setShowMobileChat] = useState(false); // Mobile state management
   const messagesEndRef = useRef(null);
 
+  // Handle selectedProperty prop - automatically set up conversation for mobile/desktop
+  useEffect(() => {
+    if (selectedProperty && user && conversations.length > 0) {
+      // Find existing conversation for this property
+      const existingConversation = conversations.find(conv => 
+        conv.property_id === selectedProperty.id
+      );
+      
+      if (existingConversation) {
+        // Select existing conversation
+        setSelectedConversation(existingConversation);
+        // For mobile, automatically show chat interface
+        setShowMobileChat(true);
+        // Load messages for this conversation
+        loadChatMessages(existingConversation.property_id, existingConversation.other_user_id, true);
+      } else {
+        // Create a new conversation object for the selected property
+        const newConversation = {
+          property_id: selectedProperty.id,
+          property_title: selectedProperty.title,
+          property_image: selectedProperty.images?.[0] || null,
+          other_user_id: selectedProperty.user_id, // Property owner
+          other_user_name: 'Property Owner', // Will be updated when we fetch user details
+          last_message: '',
+          last_message_time: new Date(),
+          unread_count: 0,
+          is_sender: false
+        };
+        
+        // Fetch property owner details
+        fetchPropertyOwnerDetails(selectedProperty.user_id).then(ownerName => {
+          newConversation.other_user_name = ownerName;
+          setSelectedConversation(newConversation);
+          // For mobile, automatically show chat interface  
+          setShowMobileChat(true);
+          setMessages([]); // Clear messages as this is a new conversation
+        });
+      }
+    }
+  }, [selectedProperty, user, conversations]);
+
+  // Helper function to fetch property owner details
+  const fetchPropertyOwnerDetails = async (userId) => {
+    try {
+      // We don't have a direct user details endpoint, so we'll use a placeholder
+      // In a real app, you'd have an endpoint to fetch user details by ID
+      return `Owner (ID: ${userId.substring(0, 8)}...)`;
+    } catch (error) {
+      console.error('Error fetching property owner details:', error);
+      return 'Property Owner';
+    }
+  };
+
   // Poll for new messages and unread count with optimized intervals
   useEffect(() => {
     if (user) {
