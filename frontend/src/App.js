@@ -714,8 +714,7 @@ const Header = ({ currentView, setCurrentView }) => {
             {/* <h1 className="text-2xl font-bold text-blue-600 cursor-pointer" onClick={() => setCurrentView('home')}>
               FindMeRoom
             </h1> */}
-            <img  style={{ marginTop: 25 }} className="w-30 h-20 -rotate-12" src="/logo.png" alt="FindMeRoom" onClick={() => setCurrentView('home')} />
-            
+             <img  style={{ marginTop: 25 }} className="w-30 h-20 -rotate-12 cursor-pointer" src="/logo.png" alt="FindMeRoom" onClick={() => window.location.href = "/"} />
             
      
           </div>
