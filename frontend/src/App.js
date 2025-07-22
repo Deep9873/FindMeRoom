@@ -2761,11 +2761,7 @@ const Footer = ({ setCurrentView }) => {
               {popularCities.map((city, index) => (
                 <button 
                   key={index}
-                  onClick={() => {
-                    // Set city and go to properties view
-                    localStorage.setItem('selectedCity', city);
-                    setCurrentView('properties');
-                  }}
+                  onClick={() => handleCityNavigation(city)}
                   className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
                 >
                   Rooms in {city}
