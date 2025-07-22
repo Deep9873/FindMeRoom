@@ -2885,13 +2885,13 @@ const Footer = ({ setCurrentView }) => {
             <h5 className="text-white font-medium">Support & Legal</h5>
             <div className="space-y-2 text-sm">
               <button 
-                onClick={() => setCurrentView('home')}
+                onClick={() => handleNavigation('home')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Help Center
               </button>
               <button 
-                onClick={() => setCurrentView('home')}
+                onClick={() => handleNavigation('home')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Contact Us
@@ -2909,7 +2909,7 @@ const Footer = ({ setCurrentView }) => {
                 Terms of Service
               </a>
               <button 
-                onClick={() => setCurrentView('home')}
+                onClick={() => handleNavigation('home')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Safety Tips
