@@ -2430,20 +2430,22 @@ const HomePage = ({ setCurrentView, setChatProperty }) => {
   <div className="max-w-screen-xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
     <div>
       <h4 className="text-lg font-semibold mb-2">About</h4>
-      <p><strong>FindMeRoom</strong>helps you discover the perfect rented room, homes, PGs, roommate, flatmate, or room partner in major cities like Noida, Delhi, Mumbai, and Bangalore. Whether you're searching for a <strong>room for rent</strong> or sharing your space, our platform is designed for quick, trusted matches at your nearby loactions.</strong></p>
+      <p>
+        <strong>FindMeRoom</strong> helps you discover the perfect rented room, homes, PGs, roommate, flatmate, or room partner in major cities like Noida, Delhi, Mumbai, and Bangalore. Whether you're searching for a <strong>room for rent</strong> or sharing your space, our platform is designed for quick, trusted matches at your nearby locations.
+      </p>
     </div>
 
     <div>
       <h4 className="text-lg font-semibold mb-2">Popular Searches</h4>
-        <p className="text-sm text-gray-300">
-              Rented Rooms, Rented Homes, Rooms on rent near me, House on rent, Findmeroom, FindMeRoom.pro, Find me room pro Roommate finder, flatmates, room partner, findmyroom, room for rent in Noida, shared flats, PG in Delhi, boys hostel in Pune, girls PG in Mumbai, rent in Bangalore, room on rent near me.
-            </p>
-    </div>
-    
+      <p className="text-sm text-gray-300">
+        Rented Rooms, Rented Homes, Rooms on rent near me, House on rent, Findmeroom, FindMeRoom.pro, Find me room pro, <strong>Roommate finder</strong>, flatmates, room partner, findmyroom, room for rent in Noida, shared flats, PG in Delhi, boys hostel in Pune, girls PG in Mumbai, rent in Bangalore, room on rent near me.
+      </p>
     </div>
   </div>
+
   <p className="text-center mt-6 text-sm">© 2025 FindMeRoom. All rights reserved.</p>
 </footer>
+
 
                     
             </div>
