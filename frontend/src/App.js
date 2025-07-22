@@ -2936,8 +2936,18 @@ const Footer = ({ setCurrentView }) => {
             <p>&copy; {currentYear} FindMeRoom. All rights reserved. Made with ❤️ in India</p>
           </div>
           <div className="flex flex-wrap gap-4">
-            <a href="#accessibility" className="hover:text-white transition-colors">Accessibility</a>
-            <a href="#sitemap" className="hover:text-white transition-colors">Sitemap</a>
+            <button 
+              onClick={() => setCurrentView('home')}
+              className="hover:text-white transition-colors"
+            >
+              Accessibility
+            </button>
+            <button 
+              onClick={() => setCurrentView('properties')}
+              className="hover:text-white transition-colors"
+            >
+              Sitemap
+            </button>
             <a href="#cookies" className="hover:text-white transition-colors">Cookie Policy</a>
           </div>
         </div>
