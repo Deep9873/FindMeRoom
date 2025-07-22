@@ -1,7 +1,6 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
 import './App.css';
 import axios from 'axios';
-
 const RAW_BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
 const BACKEND_URL = RAW_BACKEND_URL.replace(/\/+$/, '');
 const API = `${BACKEND_URL}/api`;
@@ -718,7 +717,12 @@ const Header = ({ currentView, setCurrentView }) => {
             <img  style={{ marginTop: 25 }} className="w-30 h-20 -rotate-12" src="/logo.png" alt="FindMeRoom" onClick={() => setCurrentView('home')} />
             
             
-            {/* City Selector */}
+     
+          </div>
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex space-x-8">
+                   {/* City Selector */}
             <div className="hidden md:block">
               <div className="flex items-center space-x-2">
                 <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -733,10 +737,6 @@ const Header = ({ currentView, setCurrentView }) => {
                 />
               </div>
             </div>
-          </div>
-          
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
             <button 
               onClick={() => setCurrentView('home')}
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
