@@ -957,9 +957,6 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   // Handle selectedProperty prop - automatically set up conversation for mobile/desktop
   useEffect(() => {
     if (selectedProperty && user) {
-      // CRITICAL: Always set mobile chat to true first when selectedProperty exists
-      setShowMobileChat(true);
-      
       // Find existing conversation for this property
       const existingConversation = conversations.find(conv => 
         conv.property_id === selectedProperty.id
@@ -968,6 +965,8 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       if (existingConversation) {
         // Select existing conversation
         setSelectedConversation(existingConversation);
+        // For mobile, show chat view when coming from selectedProperty
+        setShowMobileChat(true);
         // Load messages for this conversation
         loadChatMessages(existingConversation.property_id, existingConversation.other_user_id, true);
       } else if (selectedProperty.user_id) {
@@ -984,8 +983,9 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
           is_sender: false
         };
         
-        // Set conversation immediately for mobile
+        // Set conversation immediately and show mobile chat for property-initiated chats
         setSelectedConversation(newConversation);
+        setShowMobileChat(true);
         setMessages([]); // Clear messages as this is a new conversation
         
         // Fetch property owner details asynchronously
@@ -1000,6 +1000,13 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
       }
     }
   }, [selectedProperty, user, conversations]);
+
+  // Handle mobile navigation from chat - reset state when no selectedProperty
+  useEffect(() => {
+    if (!selectedProperty) {
+      setShowMobileChat(false);
+    }
+  }, [selectedProperty]);
 
   // Immediate mobile state setup for selectedProperty (independent of conversations loading)
   useEffect(() => {
