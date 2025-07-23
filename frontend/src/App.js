@@ -1,6 +1,67 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
 import './App.css';
 import axios from 'axios';
+
+// SEO Context for Dynamic Meta Tags
+const SEOContext = createContext();
+
+const SEOProvider = ({ children }) => {
+  const updateSEO = (title, description, keywords) => {
+    // Update document title
+    document.title = title;
+    
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', description);
+    }
+    
+    // Update meta keywords
+    const metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (metaKeywords) {
+      metaKeywords.setAttribute('content', keywords);
+    }
+    
+    // Update Open Graph title
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute('content', title);
+    }
+    
+    // Update Open Graph description
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    if (ogDescription) {
+      ogDescription.setAttribute('content', description);
+    }
+    
+    // Update Twitter title
+    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twitterTitle) {
+      twitterTitle.setAttribute('content', title);
+    }
+    
+    // Update Twitter description
+    const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+    if (twitterDescription) {
+      twitterDescription.setAttribute('content', description);
+    }
+  };
+
+  return (
+    <SEOContext.Provider value={{ updateSEO }}>
+      {children}
+    </SEOContext.Provider>
+  );
+};
+
+const useSEO = () => {
+  const context = useContext(SEOContext);
+  if (!context) {
+    throw new Error('useSEO must be used within a SEOProvider');
+  }
+  return context;
+};
+
 const RAW_BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
 const BACKEND_URL = RAW_BACKEND_URL.replace(/\/+$/, '');
 const API = `${BACKEND_URL}/api`;
