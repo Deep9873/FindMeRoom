@@ -710,9 +710,10 @@ const Header = ({ currentView, setCurrentView }) => {
     <header className="bg-white shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16"> 
+    <img  style={{ marginTop: 10 }} className="w-30 h-20 cursor-pointer" src="/logo.png" alt="GetRentals" onClick={() => window.location.href = "/"} />
             <div className="flex items-center space-x-6">
           
-             <img  style={{ marginTop: 10 }} className="w-30 h-20 cursor-pointer" src="/logo.png" alt="GetRentals" onClick={() => window.location.href = "/"} />
+             
             
         <h1 className="text-2xl font-bold text-red-600 cursor-pointer font sarif" onClick={() => setCurrentView('home')}>
               GetRentals
@@ -2938,12 +2939,13 @@ const Footer = ({ setCurrentView }) => {
             >
               Accessibility
             </button>
-            <button 
-              onClick={() => handleNavigation('properties')}
-              className="hover:text-white transition-colors"
-            >
-              Sitemap
-            </button>
+            // <button 
+            //   onClick={() => handleNavigation('properties')}
+            //   className="hover:text-white transition-colors"
+            // >
+            //   Sitemap
+            // </button>
+                <a href="#sitemap.xml" className="hover:text-white transition-colors">Sitemap</a>
             <a href="#cookies" className="hover:text-white transition-colors">Cookie Policy</a>
           </div>
         </div>
