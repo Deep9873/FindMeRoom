@@ -166,6 +166,50 @@ const MAJOR_INDIAN_CITIES = [
   'Shimla, Himachal Pradesh'
 ].sort();
 
+// SEO Page Configurations
+const SEO_PAGES = {
+  home: {
+    title: "GetRentals - Find & Post Rooms, PG, Apartments for Free | Zero Brokerage",
+    description: "Discover and post rented rooms, PGs, flats & apartments on GetRentals. Zero brokerage rooms & flats for rent in Delhi, Mumbai, Bangalore, Pune, Chennai, Hyderabad. List free & find your perfect match.",
+    keywords: "GetRentals, room for rent, pg near me, flat for rent, shared accommodation, hostel, rent a room, roommate finder, co-living spaces, furnished room, rooms on rent delhi, mumbai rooms, bangalore pg, pune flats, zero brokerage"
+  },
+  properties: {
+    title: "Search Properties - Rooms, PG, Flats for Rent | GetRentals",
+    description: "Browse thousands of verified rooms, PG accommodations, and flats for rent across India. Filter by location, price, amenities and find your perfect home with zero brokerage.",
+    keywords: "search properties, browse rooms, find accommodation, pg listings, flat for rent, room search, property listings, rental properties, accommodation search"
+  },
+  post: {
+    title: "Post Your Property for Free - List Rooms, PG, Flats | GetRentals",
+    description: "List your room, PG, or flat for rent on GetRentals for free. Reach thousands of verified tenants, students and working professionals. Zero listing fees, maximum visibility.",
+    keywords: "post property, list room for rent, advertise pg, rent out flat, property listing, free listing, landlord, property owner, rent out room"
+  },
+  'my-properties': {
+    title: "My Properties - Manage Your Listings | GetRentals",
+    description: "Manage your property listings on GetRentals. Edit details, view inquiries, track performance and connect with potential tenants for your rooms, PG, and flats.",
+    keywords: "my properties, manage listings, property dashboard, landlord panel, edit listings, property management, rental management"
+  },
+  chat: {
+    title: "Messages & Chat - Connect with Property Owners | GetRentals",
+    description: "Chat directly with property owners and tenants on GetRentals. Get instant responses, schedule visits, negotiate rent and finalize your rental agreement seamlessly.",
+    keywords: "chat messages, contact property owner, rental inquiries, tenant communication, property chat, real-time messaging, rental communication"
+  },
+  login: {
+    title: "Login to GetRentals - Access Your Account",
+    description: "Login to your GetRentals account to post properties, search rooms, manage listings, chat with property owners and access all premium features.",
+    keywords: "GetRentals login, user login, account access, sign in, member login, rental platform login"
+  },
+  register: {
+    title: "Register on GetRentals - Create Free Account",
+    description: "Create your free GetRentals account to start posting properties, searching rooms, connecting with property owners and accessing all platform features.",
+    keywords: "GetRentals registration, create account, sign up, free registration, join GetRentals, new user registration"
+  },
+  profile: {
+    title: "My Profile - Account Settings | GetRentals",
+    description: "Manage your GetRentals profile, update personal information, change preferences and customize your rental experience.",
+    keywords: "user profile, account settings, profile management, personal information, account preferences"
+  }
+};
+
 
 
 
