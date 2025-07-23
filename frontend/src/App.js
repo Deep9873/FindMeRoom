@@ -710,18 +710,18 @@ const Header = ({ currentView, setCurrentView }) => {
     <header className="bg-white shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16"> 
-         
-          
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-     <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-6">
           
              <img  style={{ marginTop: 10 }} className="w-30 h-20 cursor-pointer" src="/logo.png" alt="GetRentals" onClick={() => window.location.href = "/"} />
             
-        <h1 className="text-2xl font-bold text-blue-600 cursor-pointer" onClick={() => setCurrentView('home')}>
+        <h1 className="text-2xl font-bold text-red-600 cursor-pointer font sarif" onClick={() => setCurrentView('home')}>
               GetRentals
             </h1>
           </div>
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex space-x-8">
+  
                    {/* City Selector */}
             <div className="hidden md:block">
               <div className="flex items-center space-x-2">
