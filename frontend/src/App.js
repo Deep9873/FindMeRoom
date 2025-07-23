@@ -711,12 +711,12 @@ const Header = ({ currentView, setCurrentView }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16"> 
           <div className="flex items-center space-x-6">
-            {/* <h1 className="text-2xl font-bold text-blue-600 cursor-pointer" onClick={() => setCurrentView('home')}>
-              FindMeRoom
-            </h1> */}
+          
              <img  style={{ marginTop: 25 }} className="w-30 h-20 -rotate-12 cursor-pointer" src="/logo.png" alt="FindMeRoom" onClick={() => window.location.href = "/"} />
             
-     
+        <h1 className="text-2xl font-bold text-blue-600 cursor-pointer" onClick={() => setCurrentView('home')}>
+              FindMeRoom
+            </h1>
           </div>
           
           {/* Desktop Navigation */}
