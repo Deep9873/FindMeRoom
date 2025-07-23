@@ -1651,8 +1651,8 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Message Input - Sticky at bottom */}
-            <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
+            {/* Message Input - Sticky at bottom, above mobile nav */}
+            <div className="sticky bottom-16 md:bottom-0 bg-white border-t border-gray-200 p-4">
               {error && (
                 <div className="mb-3 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
                   {error}
