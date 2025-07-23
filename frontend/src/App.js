@@ -2669,19 +2669,28 @@ const App = () => {
   const [currentView, setCurrentView] = useState('home');
   
   return (
-    <AuthProvider>
-      <CityProvider>
-        <div className="App">
-          <MainContent currentView={currentView} setCurrentView={setCurrentView} />
-        </div>
-      </CityProvider>
-    </AuthProvider>
+    <SEOProvider>
+      <AuthProvider>
+        <CityProvider>
+          <div className="App">
+            <MainContent currentView={currentView} setCurrentView={setCurrentView} />
+          </div>
+        </CityProvider>
+      </AuthProvider>
+    </SEOProvider>
   );
 };
 
 const MainContent = ({ currentView, setCurrentView }) => {
   const { user, loading } = useAuth();
+  const { updateSEO } = useSEO();
   const [chatProperty, setChatProperty] = useState(null);
+
+  // Update SEO when view changes
+  useEffect(() => {
+    const seoConfig = SEO_PAGES[currentView] || SEO_PAGES.home;
+    updateSEO(seoConfig.title, seoConfig.description, seoConfig.keywords);
+  }, [currentView, updateSEO]);
 
   // Listen for navigation changes from Header
   useEffect(() => {
