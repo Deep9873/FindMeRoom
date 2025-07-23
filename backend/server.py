@@ -14,6 +14,8 @@ import hashlib
 import jwt
 from passlib.context import CryptContext
 from fastapi.responses import Response
+from fastapi.responses import FileResponse
+
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
