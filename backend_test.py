@@ -770,7 +770,7 @@ class FindMeRoomTester:
             self.log_result("Send Message (Invalid Property)", False, "Should reject message to non-existent property")
         
         # Test 2: Get messages for non-existent property
-        response, error = self.make_request("GET", "/chat/non-existent-property", auth_token=token)
+        response, error = self.make_request("GET", "/chat/non-existent-property", {"other_user_id": "dummy-user-id"}, token)
         if not error and response.status_code == 200:
             try:
                 data = response.json()
