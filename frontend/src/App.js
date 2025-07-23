@@ -391,7 +391,7 @@ const CitySelectionPopup = ({ onCitySelect }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to FindMeRoom!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to GetRentals!</h2>
           <p className="text-gray-600">Please select your city to find nearby properties and get the best experience.</p>
         </div>
 
@@ -418,7 +418,7 @@ const CitySelectionPopup = ({ onCitySelect }) => {
             type="submit"
             className="w-full bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium"
           >
-            Continue to FindMeRoom
+            Continue to GetRentals
           </button>
 
           <p className="mt-4 text-xs text-gray-500 text-center">
@@ -712,10 +712,10 @@ const Header = ({ currentView, setCurrentView }) => {
         <div className="flex justify-between items-center h-16"> 
           <div className="flex items-center space-x-6">
           
-             <img  style={{ marginTop: 25 }} className="w-30 h-20 -rotate-12 cursor-pointer" src="/logo.png" alt="FindMeRoom" onClick={() => window.location.href = "/"} />
+             <img  style={{ marginTop: 10 }} className="w-30 h-20 cursor-pointer" src="/logo.png" alt="GetRentals" onClick={() => window.location.href = "/"} />
             
         <h1 className="text-2xl font-bold text-blue-600 cursor-pointer" onClick={() => setCurrentView('home')}>
-              FindMeRoom
+              GetRentals
             </h1>
           </div>
           
@@ -2677,8 +2677,8 @@ const Footer = ({ setCurrentView }) => {
           {/* Company Info & About */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <img className="w-8 h-8" src="/logo.png" alt="FindMeRoom Logo" />
-              <h3 className="text-xl font-bold text-white">FindMeRoom</h3>
+              <img className="w-8 h-8" src="/logo.png" alt="GetRentals Logo" />
+              <h3 className="text-xl font-bold text-white">GetRentals</h3>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
               India's premier platform for finding rental rooms, roommates, flatmates, and PG accommodations. 
@@ -2908,7 +2908,7 @@ const Footer = ({ setCurrentView }) => {
         <div className="py-6 border-t border-gray-800">
           <div className="text-sm text-gray-500 leading-relaxed">
             <p className="mb-3">
-              <strong className="text-gray-300">FindMeRoom</strong> - Your trusted partner for finding rental accommodations across India. 
+              <strong className="text-gray-300">GetRentals</strong> - Your trusted partner for finding rental accommodations across India. 
               Whether you're searching for a single room for rent, looking for compatible roommates, seeking affordable PG accommodation, 
               or need a flatmate to share expenses, we connect you with verified property owners and genuine tenants.
             </p>
@@ -2928,7 +2928,7 @@ const Footer = ({ setCurrentView }) => {
         {/* Bottom Footer */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-gray-800 text-sm text-gray-500">
           <div className="mb-4 md:mb-0">
-            <p>&copy; {currentYear} FindMeRoom. All rights reserved. Made with ❤️ in India</p>
+            <p>&copy; {currentYear} GetRentals. All rights reserved. Made with ❤️ in India</p>
           </div>
           <div className="flex flex-wrap gap-4">
             <button 
