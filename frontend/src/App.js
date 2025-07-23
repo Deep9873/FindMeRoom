@@ -2939,13 +2939,13 @@ const Footer = ({ setCurrentView }) => {
             >
               Accessibility
             </button>
-            // <button 
-            //   onClick={() => handleNavigation('properties')}
-            //   className="hover:text-white transition-colors"
-            // >
-            //   Sitemap
-            // </button>
-                <a href="#sitemap.xml" className="hover:text-white transition-colors">Sitemap</a>
+            {/* <button 
+              onClick={() => handleNavigation('properties')}
+              className="hover:text-white transition-colors"
+            >
+              Sitemap
+            </button> */}
+            <a href="#sitemap.xml" className="hover:text-white transition-colors">Sitemap</a>
             <a href="#cookies" className="hover:text-white transition-colors">Cookie Policy</a>
           </div>
         </div>
