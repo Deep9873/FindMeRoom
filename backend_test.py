@@ -657,45 +657,44 @@ class FindMeRoomTester:
                     
                     # Now get messages with proper other_user_id parameter
                     response, error = self.make_request("GET", f"/chat/{property_id}", {"other_user_id": sender_user["id"]}, receiver_token)
-            
-            if response and response.status_code == 200:
-                try:
-                    messages = response.json()
-                    if messages:
-                        # Get message IDs where receiver is the current user
-                        receiver_response, _ = self.make_request("GET", "/auth/me", auth_token=receiver_token)
-                        if receiver_response.status_code == 200:
-                            receiver_user = receiver_response.json()
-                            message_ids = [msg["id"] for msg in messages if msg["receiver_id"] == receiver_user["id"]]
-                            
-                            if message_ids:
-                                # Test marking messages as read
-                                mark_read_data = {"message_ids": message_ids}
-                                response, error = self.make_request("POST", "/chat/mark-read", mark_read_data, receiver_token)
+                    
+                    if response and response.status_code == 200:
+                        try:
+                            messages = response.json()
+                            if messages:
+                                # Get message IDs where receiver is the current user
+                                message_ids = [msg["id"] for msg in messages if msg["receiver_id"] == receiver_user["id"]]
                                 
-                                if error:
-                                    self.log_result("Mark Messages Read", False, error)
-                                elif response.status_code == 200:
-                                    try:
-                                        data = response.json()
-                                        if "message" in data:
-                                            self.log_result("Mark Messages Read", True, f"Marked {len(message_ids)} messages as read")
-                                        else:
-                                            self.log_result("Mark Messages Read", False, "Invalid response format")
-                                    except:
-                                        self.log_result("Mark Messages Read", False, "Invalid JSON response")
+                                if message_ids:
+                                    # Test marking messages as read
+                                    mark_read_data = {"message_ids": message_ids}
+                                    response, error = self.make_request("POST", "/chat/mark-read", mark_read_data, receiver_token)
+                                    
+                                    if error:
+                                        self.log_result("Mark Messages Read", False, error)
+                                    elif response.status_code == 200:
+                                        try:
+                                            data = response.json()
+                                            if "message" in data:
+                                                self.log_result("Mark Messages Read", True, f"Marked {len(message_ids)} messages as read")
+                                            else:
+                                                self.log_result("Mark Messages Read", False, "Invalid response format")
+                                        except:
+                                            self.log_result("Mark Messages Read", False, "Invalid JSON response")
+                                    else:
+                                        self.log_result("Mark Messages Read", False, f"HTTP {response.status_code}")
                                 else:
-                                    self.log_result("Mark Messages Read", False, f"HTTP {response.status_code}")
+                                    self.log_result("Mark Messages Read", True, "No messages to mark as read for this user")
                             else:
-                                self.log_result("Mark Messages Read", True, "No messages to mark as read for this user")
-                        else:
-                            self.log_result("Mark Messages Read", False, "Could not get receiver user info")
+                                self.log_result("Mark Messages Read", True, "No messages available to mark as read")
+                        except:
+                            self.log_result("Mark Messages Read", False, "Could not parse messages")
                     else:
-                        self.log_result("Mark Messages Read", True, "No messages available to mark as read")
-                except:
-                    self.log_result("Mark Messages Read", False, "Could not parse messages")
+                        self.log_result("Mark Messages Read", False, "Could not retrieve messages")
+                else:
+                    self.log_result("Mark Messages Read", False, "Could not get sender user info")
             else:
-                self.log_result("Mark Messages Read", False, "Could not retrieve messages")
+                self.log_result("Mark Messages Read", False, "Could not get receiver user info")
         
         # Test with empty message IDs
         empty_data = {"message_ids": []}
