@@ -1180,13 +1180,13 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   }, [prefilledMessage]);
 
   // Auto-scroll to bottom when messages change
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  // const scrollToBottom = () => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  // useEffect(() => {
+  //   scrollToBottom();
+  // }, [messages]);
 
   // Check and update conversations only if there are actual changes
   const checkAndUpdateConversations = async () => {
