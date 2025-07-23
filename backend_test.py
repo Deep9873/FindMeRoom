@@ -95,13 +95,13 @@ class FindMeRoomTester:
             {
                 "email": f"john.doe.{timestamp}@example.com",
                 "name": "John Doe",
-                "phone": "+91-9876543210",
+                "phone": f"98765432{timestamp[-2:]}",
                 "password": "securepass123"
             },
             {
                 "email": f"jane.smith.{timestamp}@example.com", 
                 "name": "Jane Smith",
-                "phone": "+91-9876543211",
+                "phone": f"98765433{timestamp[-2:]}",
                 "password": "mypassword456"
             }
         ]
