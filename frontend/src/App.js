@@ -818,7 +818,7 @@ const Header = ({ currentView, setCurrentView }) => {
           {/* Logo and Brand Name */}
           <div className="flex items-center space-x-3 flex-shrink-0">
             <img style={{ marginTop: 10 }} className="w-10 h-12 lg:w-12 lg:h-16 cursor-pointer" src="/logo.png" alt="GetRentals" onClick={() => window.location.href = "/"} />
-            <h1 className="text-xl lg:text-2xl font-bold text-red-600 cursor-pointer font-serif" onClick={() => setCurrentView('home')}>
+            <h1 className="text-xl lg:text-2xl font-bold text-red-600 cursor-pointer font sarif" onClick={() => setCurrentView('home')}>
               GetRentals
             </h1>
           </div>
