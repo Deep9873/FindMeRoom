@@ -779,26 +779,27 @@ const Header = ({ currentView, setCurrentView }) => {
           {/* Auth Buttons - Responsive */}
           <div className="hidden md:flex items-center space-x-2 flex-shrink-0">
             {user ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-gray-700">Welcome, {user.name}!</span>
+              <div className="flex items-center space-x-2 lg:space-x-4">
+                <span className="text-gray-700 text-xs lg:text-sm hidden lg:inline">Welcome, {user.name}!</span>
+                <span className="text-gray-700 text-xs lg:hidden">{user.name}</span>
                 <button 
                   onClick={logout}
-                  className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors"
+                  className="bg-red-500 text-white px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-red-600 transition-colors text-xs lg:text-sm"
                 >
                   Logout
                 </button>
               </div>
             ) : (
-              <div className="flex space-x-2">
+              <div className="flex space-x-1 lg:space-x-2">
                 <button 
                   onClick={() => setCurrentView('login')}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+                  className="bg-blue-500 text-white px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-blue-600 transition-colors text-xs lg:text-sm"
                 >
                   Login
                 </button>
                 <button 
                   onClick={() => setCurrentView('register')}
-                  className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors"
+                  className="bg-green-500 text-white px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-green-600 transition-colors text-xs lg:text-sm"
                 >
                   Register
                 </button>
