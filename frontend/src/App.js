@@ -1554,10 +1554,10 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
         </div>
       </div>
 
-      {/* Chat Messages - Mobile responsive with improved layout */}
+      {/* Chat Messages - Mobile responsive with proper mobile spacing */}
       <div className={`${
         showMobileChat ? 'block' : 'hidden md:block'
-      } flex-1 flex flex-col h-screen relative`}> {/* Fixed height and relative positioning */}
+      } flex-1 flex flex-col h-screen relative pb-16 md:pb-0`}> {/* Added mobile bottom padding */}
         {selectedConversation ? (
           <>
             {/* Chat Header - Sticky at top */}
