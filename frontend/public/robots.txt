@@ -1,0 +1,43 @@
+User-agent: *
+Allow: /
+
+# High-priority pages
+Allow: /properties
+Allow: /post-property
+Allow: /rooms-for-rent-in-*
+Allow: /pg-accommodation
+Allow: /shared-rooms
+Allow: /single-rooms
+Allow: /1-bhk-apartments
+Allow: /2-bhk-apartments
+
+# Disallow admin and private pages
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /user-data/
+Disallow: /chat/
+Disallow: /my-properties/
+
+# Allow images and assets
+Allow: /static/
+Allow: /images/
+Allow: /assets/
+Allow: /*.css
+Allow: /*.js
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.ico
+
+# Crawl delay
+Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://getrentals.onrender.com/sitemap.xml
+
+# Additional sitemaps (for future use)
+# Sitemap: https://getrentals.onrender.com/properties-sitemap.xml
+# Sitemap: https://getrentals.onrender.com/cities-sitemap.xml
