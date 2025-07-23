@@ -3,51 +3,196 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-         <!-- 1) JSON‑LD structured data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebSite",
-          "@id": "https://GetRentals.onrender.com/#website",
-          "url": "https://GetRentals.onrender.com/",
-          "name": "GetRentals",
-          "description": "Discover and post rented rooms, PGs & homes in Delhi, Mumbai, Bangalore, Pune with zero brokerage."
-        },
-        {
-          "@type": "Organization",
-          "@id": "https://findmeroom.onrender.com/#organization",
-          "name": "GetRentals",
-          "url": "https://findmeroom.onrender.com/",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://findmeroom.onrender.com/logo.png"
-          }
-        }
-      ]
-    }
-    </script>
-        <link rel="icon" type="image/png" href="%PUBLIC_URL%/logo.png" />
-        <meta name="keywords" content="room for rent in delhi, pg in bangalore, flat for rent in mumbai, shared accommodation, hostel near me, rent a room, female roommate, male roommate, pg in noida, 2 bhk flatmates, single room for rent, roommate finder, co-living spaces, monthly room rental, furnished room for rent, pg for girls, pg for boys, cheap rooms for rent, bachelor room in gurgaon, shared room in pune
-,rent, GetRentals, rooms on rent, rooms on rent near me, rooms on rent in gurgaon, rooms on rent in nagpur, rooms on rent in pune, rooms on rent pune, pune rooms on rent, rooms on rent mumbai, rooms on rent in indore, rooms on rent in jaipur, rooms on rent in bhopal, rooms on rent in nashik, rooms on rent in delhi, rooms on rent in chandigarh, rooms on rent in shimla, rooms on rent in noida, rooms on rent in ahmedabad, rooms on rent photos, olx rooms on rent
-, find me room, findmyroom, find my room, GetRentalss, Get rentals, get rental, getrental, getrentals, findmyroom, find me room, get rentals room, get rentals house find me rooms, find my rooms, findmyrooms.in, findmyroom.in, flatmates, GetRentals, Find room, find rented rooms, rent rooms, GetRentals.com, GetRentals.onrender.com, GetRentals on render, rooms, apartments, PG, find rooms, house rental, student rental, cheap rent, room finder, PG near me, Tolet service, rooms on rent, rented rooms, 3 set room, pg for boys, pg for girls, pg for students" />
-        <meta name="author" content="GetRentals" />
-        <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://www.findmeroom.onrender.com/" />
-
-    
-        <title> Post or Find Rooms, PG, Apartment, Flatmate for Free on GetRentals</title>
+        <meta name="theme-color" content="#dc2626" />
         
-
-        <meta name="description" content="Discover Room, PGs, Flats on GetRentals. Zero brokerage rooms & flats for rent in Delhi, Mumbai, Bangalore, Pune, etc. List free & find your perfect match.">
+        <!-- Basic SEO Meta Tags -->
+        <title>GetRentals - Find & Post Rooms, PG, Apartments for Free | Zero Brokerage</title>
+        <meta name="description" content="Discover and post rented rooms, PGs, flats & apartments on GetRentals. Zero brokerage rooms & flats for rent in Delhi, Mumbai, Bangalore, Pune, Chennai, Hyderabad. List free & find your perfect match.">
+        <meta name="keywords" content="GetRentals, room for rent, pg near me, flat for rent, shared accommodation, hostel, rent a room, roommate finder, co-living spaces, furnished room, rooms on rent delhi, mumbai rooms, bangalore pg, pune flats, zero brokerage, room rental, flatmates, accommodation, single room, 1 bhk, 2 bhk" />
+        <meta name="author" content="GetRentals" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <link rel="canonical" href="https://getrentals.onrender.com/" />
+        
+        <!-- Open Graph Meta Tags for Social Media -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="GetRentals - Find & Post Rooms, PG, Apartments for Free" />
+        <meta property="og:description" content="Discover and post rented rooms, PGs, flats & apartments with zero brokerage. Find your perfect accommodation in Delhi, Mumbai, Bangalore, Pune & more cities." />
+        <meta property="og:url" content="https://getrentals.onrender.com/" />
+        <meta property="og:site_name" content="GetRentals" />
+        <meta property="og:image" content="https://getrentals.onrender.com/logo.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="GetRentals - Room and Property Rental Platform" />
+        <meta property="og:locale" content="en_IN" />
+        
+        <!-- Twitter Card Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="GetRentals - Find & Post Rooms, PG, Apartments for Free" />
+        <meta name="twitter:description" content="Discover and post rented rooms, PGs, flats & apartments with zero brokerage. Find your perfect accommodation in major Indian cities." />
+        <meta name="twitter:image" content="https://getrentals.onrender.com/logo.png" />
+        <meta name="twitter:image:alt" content="GetRentals Logo" />
+        <meta name="twitter:site" content="@GetRentals" />
+        <meta name="twitter:creator" content="@GetRentals" />
+        
+        <!-- Additional SEO Meta Tags -->
+        <meta name="application-name" content="GetRentals" />
+        <meta name="apple-mobile-web-app-title" content="GetRentals" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="theme-color" content="#dc2626" />
+        <meta name="msapplication-TileColor" content="#dc2626" />
+        
+        <!-- Geo Location Meta Tags -->
+        <meta name="geo.region" content="IN" />
+        <meta name="geo.placename" content="India" />
+        <meta name="ICBM" content="20.5937, 78.9629" />
+        
+        <!-- JSON-LD Structured Data -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebSite",
+              "@id": "https://getrentals.onrender.com/#website",
+              "url": "https://getrentals.onrender.com/",
+              "name": "GetRentals",
+              "alternateName": "Get Rentals",
+              "description": "India's leading platform to discover and post rented rooms, PGs, flats & apartments with zero brokerage.",
+              "publisher": {
+                "@id": "https://getrentals.onrender.com/#organization"
+              },
+              "potentialAction": [
+                {
+                  "@type": "SearchAction",
+                  "target": {
+                    "@type": "EntryPoint",
+                    "urlTemplate": "https://getrentals.onrender.com/?search={search_term_string}"
+                  },
+                  "query-input": "required name=search_term_string"
+                }
+              ],
+              "inLanguage": "en-IN"
+            },
+            {
+              "@type": "Organization",
+              "@id": "https://getrentals.onrender.com/#organization",
+              "name": "GetRentals",
+              "alternateName": "Get Rentals",
+              "url": "https://getrentals.onrender.com/",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://getrentals.onrender.com/logo.png",
+                "width": 512,
+                "height": 512
+              },
+              "description": "India's leading room and property rental platform offering zero brokerage solutions for rooms, PGs, flats and apartments.",
+              "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "IN",
+                "addressRegion": "India"
+              },
+              "sameAs": [
+                "https://facebook.com/getrentals",
+                "https://twitter.com/getrentals",
+                "https://instagram.com/getrentals"
+              ]
+            },
+            {
+              "@type": "WebPage",
+              "@id": "https://getrentals.onrender.com/#webpage",
+              "url": "https://getrentals.onrender.com/",
+              "name": "GetRentals - Find & Post Rooms, PG, Apartments for Free",
+              "isPartOf": {
+                "@id": "https://getrentals.onrender.com/#website"
+              },
+              "about": {
+                "@id": "https://getrentals.onrender.com/#organization"
+              },
+              "description": "Discover and post rented rooms, PGs, flats & apartments with zero brokerage in Delhi, Mumbai, Bangalore, Pune, Chennai, Hyderabad and other major Indian cities.",
+              "breadcrumb": {
+                "@id": "https://getrentals.onrender.com/#breadcrumb"
+              },
+              "inLanguage": "en-IN"
+            },
+            {
+              "@type": "BreadcrumbList",
+              "@id": "https://getrentals.onrender.com/#breadcrumb",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://getrentals.onrender.com/"
+                }
+              ]
+            },
+            {
+              "@type": "Service",
+              "serviceType": "Room Rental Platform",
+              "provider": {
+                "@id": "https://getrentals.onrender.com/#organization"
+              },
+              "areaServed": {
+                "@type": "Country",
+                "name": "India"
+              },
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Room & Property Rentals",
+                "itemListElement": [
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Room Rental",
+                      "description": "Single rooms, shared rooms, and private rooms for rent"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "PG Accommodation",
+                      "description": "Paying guest accommodations with meals and facilities"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Apartment Rental",
+                      "description": "1 BHK, 2 BHK, 3 BHK apartments and flats for rent"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+        </script>
+        
+        <!-- Favicon and Icons -->
+        <link rel="icon" type="image/png" href="%PUBLIC_URL%/logo.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/logo.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/logo.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/logo.png" />
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+        
+        <!-- Google Search Console Verification -->
         <meta name="google-site-verification" content="moIcx-hszUsRKOBljHEnUuwjfPsP4BhSuQITkos_N2s" />
+        
+        <!-- Preconnect for Performance -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        
+        <!-- DNS Prefetch for Performance -->
+        <link rel="dns-prefetch" href="//images.unsplash.com" />
+        <link rel="dns-prefetch" href="//api.getrentals.onrender.com" />
     </head>
     <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <noscript>You need to enable JavaScript to run this app. GetRentals is a modern web application that requires JavaScript for the best user experience.</noscript>
         <div id="root"></div>
-        
-      
     </body>
 </html>  
