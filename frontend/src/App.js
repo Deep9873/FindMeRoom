@@ -1452,7 +1452,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
   }
 
   return (
-    <div className="flex h-screen bg-gray-50 pb-16 md:pb-0 relative"> {/* Add relative positioning */}
+    <div className="flex h-screen bg-gray-50 relative"> {/* Remove problematic pb-16 md:pb-0 */}
       {/* Conversations List - Mobile responsive */}
       <div className={`${
         showMobileChat ? 'hidden md:block' : 'block'
