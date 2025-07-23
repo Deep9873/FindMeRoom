@@ -710,21 +710,18 @@ const Header = ({ currentView, setCurrentView }) => {
     <header className="bg-white shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16"> 
-    <img  style={{ marginTop: 10 }} className="w-30 h-20 cursor-pointer" src="/logo.png" alt="GetRentals" onClick={() => window.location.href = "/"} />
-            <div className="flex items-center space-x-6">
-          
-             
-            
-        <h1 className="text-2xl font-bold text-red-600 cursor-pointer font sarif" onClick={() => setCurrentView('home')}>
+          {/* Logo and Brand Name */}
+          <div className="flex items-center space-x-3 flex-shrink-0">
+            <img style={{ marginTop: 10 }} className="w-10 h-12 lg:w-12 lg:h-16 cursor-pointer" src="/logo.png" alt="GetRentals" onClick={() => window.location.href = "/"} />
+            <h1 className="text-xl lg:text-2xl font-bold text-red-600 cursor-pointer font-serif" onClick={() => setCurrentView('home')}>
               GetRentals
             </h1>
           </div>
           
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-  
-                   {/* City Selector */}
-            <div className="hidden md:block">
+          {/* Desktop & Tablet Navigation */}
+          <nav className="hidden md:flex items-center space-x-2 lg:space-x-4 xl:space-x-6">
+            {/* City Selector - Hide on smaller tablets */}
+            <div className="hidden lg:block">
               <div className="flex items-center space-x-2">
                 <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -734,49 +731,53 @@ const Header = ({ currentView, setCurrentView }) => {
                   value={selectedCity}
                   onChange={setSelectedCity}
                   placeholder="Select your city"
-                  className="w-40"
+                  className="w-32 xl:w-40"
                 />
               </div>
             </div>
+            
+            {/* Navigation Buttons with responsive text */}
             <button 
               onClick={() => setCurrentView('home')}
-              className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
             >
               Home
             </button>
             <button 
               onClick={() => setCurrentView('properties')}
-              className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
             >
               Properties
             </button>
             <button 
               onClick={() => user ? setCurrentView('post') : setCurrentView('login')}
-              className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+              className="text-gray-700 hover:text-blue-600 px-1 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
             >
-              Post Property
+              <span className="hidden lg:inline">Post Property</span>
+              <span className="lg:hidden">Post</span>
             </button>
             <button 
               onClick={() => user ? setCurrentView('my-properties') : setCurrentView('login')}
-              className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+              className="text-gray-700 hover:text-blue-600 px-1 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
             >
-              My Properties
+              <span className="hidden lg:inline">My Properties</span>
+              <span className="lg:hidden">My Props</span>
             </button>
             <button 
               onClick={handleChatClick}
-              className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium relative"
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium relative whitespace-nowrap"
             >
               Chat
               {user && unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 lg:w-5 lg:h-5 flex items-center justify-center">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
             </button>
           </nav>
 
-          {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          {/* Auth Buttons - Responsive */}
+          <div className="hidden md:flex items-center space-x-2 flex-shrink-0">
             {user ? (
               <div className="flex items-center space-x-4">
                 <span className="text-gray-700">Welcome, {user.name}!</span>
