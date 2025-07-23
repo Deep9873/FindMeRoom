@@ -437,7 +437,7 @@ async def get_chat_messages(property_id: str, other_user_id: str, current_user: 
 # Basic test route
 @api_router.get("/")
 async def root():
-    return {"message": "FindMeRoom API is running"}
+    return {"message": "GetRentals API is running"}
 
 # Include the router in the main app
 app.include_router(api_router) 
@@ -456,6 +456,9 @@ app.add_middleware(
         "https://findmeroom-backend.onrender.com",
         "https://findmeroom-backend.onrender.com/api",
         "http://localhost:3000",
+        "http://getrentals.online",
+        "https://getrentals.online",
+        "https://api.getrentals.online",
         "https://findmeroom.onrender.com",
     ],
     allow_credentials=True,
