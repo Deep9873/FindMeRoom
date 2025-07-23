@@ -1596,7 +1596,7 @@ const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefil
             </div>
 
             {/* Messages Container - Scrollable middle section */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ maxHeight: 'calc(100vh - 200px)' }}> {/* Fixed max height */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4" > {/* Fixed max height */}
               {loading && messages.length === 0 ? (
                 <div className="flex justify-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
