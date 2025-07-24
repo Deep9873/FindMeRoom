@@ -817,7 +817,7 @@ const Header = ({ currentView, setCurrentView }) => {
         <div className="flex justify-between items-center h-16"> 
           {/* Logo and Brand Name */}
           <div className="flex items-center space-x-3 flex-shrink-0">
-            <img className="w-16 h-16 lg:w-12 lg:h-16 cursor-pointer" src="/logo.png" alt="GetRentals" onClick={() => window.location.href = "/"} />
+            <img className="w-16 h-16 lg:w-16 lg:h-16 cursor-pointer" src="/logo.png" alt="GetRentals" onClick={() => window.location.href = "/"} />
             <h1 className="text-xl lg:text-2xl font-bold text-red-600 cursor-pointer font sarif" onClick={() => setCurrentView('home')}>
               GetRentals
             </h1>
