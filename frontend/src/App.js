@@ -2059,11 +2059,12 @@ const PropertyDetails = ({ property, onClose, setCurrentView, setChatProperty })
   );
 };
 
-const LoginForm = ({ setCurrentView }) => {
+const LoginForm = () => {
   const { login } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -2073,7 +2074,7 @@ const LoginForm = ({ setCurrentView }) => {
     const result = await login(formData.email, formData.password);
     
     if (result.success) {
-      setCurrentView('home');
+      navigate('/');
     } else {
       setError(result.error);
     }
