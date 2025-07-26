@@ -1712,12 +1712,13 @@ const EnhancedChatInterface = ({ selectedProperty = null, prefilledMessage = "" 
   );
 };
 
-const PropertyCard = ({ property, onViewDetails, setCurrentView, setChatProperty }) => {
+const PropertyCard = ({ property, onViewDetails, setChatProperty }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   
   const handleContactOwner = async () => {
     if (!user) {
-      setCurrentView('login');
+      navigate('/login');
       return;
     }
     
@@ -1729,7 +1730,7 @@ const PropertyCard = ({ property, onViewDetails, setCurrentView, setChatProperty
     
     // Open chat interface with this property
     setChatProperty(property);
-    setCurrentView('chat');
+    navigate('/chat');
   };
   
   // Check if current user is the owner of this property
