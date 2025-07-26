@@ -998,13 +998,13 @@ const Header = () => {
                 ) : (
                   <div className="space-y-2">
                     <button 
-                      onClick={() => { setCurrentView('login'); setMobileMenuOpen(false); }}
+                      onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}
                       className="block w-full text-left px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
                     >
                       Login
                     </button>
                     <button 
-                      onClick={() => { setCurrentView('register'); setMobileMenuOpen(false); }}
+                      onClick={() => { navigate('/register'); setMobileMenuOpen(false); }}
                       className="block w-full text-left px-3 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
                     >
                       Register
