@@ -538,9 +538,11 @@ const CitySelectionPopup = ({ onCitySelect }) => {
 
 // Components
 // Mobile Bottom Navigation Component
-const MobileBottomNavigation = ({ currentView, setCurrentView }) => {
+const MobileBottomNavigation = () => {
   const { user } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
   
   // Load unread count when user is logged in
   useEffect(() => {
@@ -579,7 +581,8 @@ const MobileBottomNavigation = ({ currentView, setCurrentView }) => {
   
   const navItems = [
     { 
-      id: 'home', 
+      id: 'home',
+      route: '/',
       name: 'Home', 
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -590,7 +593,8 @@ const MobileBottomNavigation = ({ currentView, setCurrentView }) => {
       requireAuth: false
     },
     { 
-      id: 'chat', 
+      id: 'chat',
+      route: '/chat',
       name: 'Chat', 
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -600,7 +604,8 @@ const MobileBottomNavigation = ({ currentView, setCurrentView }) => {
       requireAuth: true
     },
     { 
-      id: 'profile', 
+      id: 'profile',
+      route: '/profile',
       name: 'Profile', 
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -613,10 +618,17 @@ const MobileBottomNavigation = ({ currentView, setCurrentView }) => {
 
   const handleNavClick = (item) => {
     if (item.requireAuth && !user) {
-      setCurrentView('login');
+      navigate('/login');
     } else {
-      setCurrentView(item.id);
+      navigate(item.route);
     }
+  };
+
+  // Determine if current route matches nav item
+  const isActiveRoute = (item) => {
+    if (item.route === '/' && location.pathname === '/') return true;
+    if (item.route !== '/' && location.pathname.startsWith(item.route)) return true;
+    return false;
   };
 
   return (
