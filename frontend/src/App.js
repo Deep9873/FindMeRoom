@@ -1034,10 +1034,21 @@ const Header = () => {
 };
 
 const HeroSection = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  
   const scrollToSearch = () => {
     const searchSection = document.getElementById('search-section');
     if (searchSection) {
       searchSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handlePostProperty = () => {
+    if (user) {
+      navigate('/post-property');
+    } else {
+      navigate('/login');
     }
   };
 
@@ -1052,12 +1063,20 @@ const HeroSection = () => {
       <div className="relative z-10 text-center text-white">
         <h2 className="text-5xl font-bold mb-4">Find Your Perfect Room</h2>
         <p className="text-xl mb-8">Discover amazing rooms, houses, and PGs in your city</p>
-        <button 
-          onClick={scrollToSearch}
-          className="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors"
-        >
-          Start Searching
-        </button>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <button 
+            onClick={scrollToSearch}
+            className="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors"
+          >
+            🔍 Start Searching
+          </button>
+          <button 
+            onClick={handlePostProperty}
+            className="bg-green-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition-colors border-2 border-green-400"
+          >
+            ➕ Post Property
+          </button>
+        </div>
       </div>
     </div>
   );
