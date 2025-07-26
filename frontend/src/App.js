@@ -2306,7 +2306,7 @@ const handleSubmit = async (e) => {
 
     // Redirect to home after successful post
     setTimeout(() => {
-      setCurrentView('home');
+      navigate('/');
     }, 2000);
   } catch (error) {
     console.error('Error creating property:', error);
