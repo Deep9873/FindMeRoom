@@ -639,7 +639,7 @@ const MobileBottomNavigation = () => {
             key={item.id}
             onClick={() => handleNavClick(item)}
             className={`flex flex-col items-center justify-center p-2 flex-1 relative ${
-              currentView === item.id 
+              isActiveRoute(item)
                 ? 'text-blue-600' 
                 : 'text-gray-600 hover:text-blue-600'
             }`}
