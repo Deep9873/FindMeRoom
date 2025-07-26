@@ -2557,7 +2557,6 @@ const HomePage = ({ setChatProperty }) => {
         <PropertyDetails
           property={selectedProperty}
           onClose={() => setSelectedProperty(null)}
-          setCurrentView={setCurrentView}
           setChatProperty={setChatProperty}
         />
       )}
