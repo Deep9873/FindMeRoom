@@ -2536,7 +2536,6 @@ const HomePage = ({ setChatProperty }) => {
                   key={property.id}
                   property={property}
                   onViewDetails={setSelectedProperty}
-                  setCurrentView={setCurrentView}
                   setChatProperty={setChatProperty}
                 />
               ))}
