@@ -2819,43 +2819,43 @@ const Footer = () => {
             <h4 className="text-lg font-semibold text-white">Quick Access</h4>
             <div className="space-y-2">
               <button 
-                onClick={() => handleNavigation('home')}
+                onClick={() => handleNavigation('/')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 🏠 Home
               </button>
               <button 
-                onClick={() => handleNavigation('properties')}
+                onClick={() => handleNavigation('/properties')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 🔍 Browse Properties
               </button>
               <button 
-                onClick={() => user ? handleNavigation('post') : handleNavigation('login')}
+                onClick={() => user ? handleNavigation('/post-property') : handleNavigation('/login')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 ➕ Post Your Property
               </button>
               <button 
-                onClick={() => user ? handleNavigation('my-properties') : handleNavigation('login')}
+                onClick={() => user ? handleNavigation('/my-properties') : handleNavigation('/login')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 🏘️ My Properties
               </button>
               <button 
-                onClick={() => user ? handleNavigation('chat') : handleNavigation('login')}
+                onClick={() => user ? handleNavigation('/chat') : handleNavigation('/login')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 💬 Chat & Messages
               </button>
               <button 
-                onClick={() => user ? handleNavigation('profile') : handleNavigation('login')}
+                onClick={() => user ? handleNavigation('/profile') : handleNavigation('/login')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 👤 My Profile
               </button>
               <button 
-                onClick={() => !user ? handleNavigation('login') : null}
+                onClick={() => !user ? handleNavigation('/login') : null}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 {user ? '✅ Logged In' : '🔐 Login / Register'}
