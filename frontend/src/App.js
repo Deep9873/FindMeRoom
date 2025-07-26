@@ -1898,12 +1898,13 @@ const SearchFilters = ({ onSearch }) => {
   );
 };
 
-const PropertyDetails = ({ property, onClose, setCurrentView, setChatProperty }) => {
+const PropertyDetails = ({ property, onClose, setChatProperty }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleContactOwner = () => {
     if (!user) {
-      setCurrentView('login');
+      navigate('/login');
       return;
     }
     
@@ -1915,13 +1916,13 @@ const PropertyDetails = ({ property, onClose, setCurrentView, setChatProperty })
     
     // Open chat interface with this property
     setChatProperty(property);
-    setCurrentView('chat');
+    navigate('/chat');
     onClose(); // Close the modal
   };
 
   const handleScheduleVisit = () => {
     if (!user) {
-      setCurrentView('login');
+      navigate('/login');
       return;
     }
     
@@ -1936,7 +1937,7 @@ const PropertyDetails = ({ property, onClose, setCurrentView, setChatProperty })
       ...property,
       prefilledMessage: "I am willing to visit your site"
     });
-    setCurrentView('chat');
+    navigate('/chat');
     onClose(); // Close the modal
   };
 
