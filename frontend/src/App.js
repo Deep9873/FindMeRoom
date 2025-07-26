@@ -3159,7 +3159,7 @@ const Footer = () => {
             >
               Sitemap
             </button> */}
-            <a href="#sitemap.xml" className="hover:text-white transition-colors">Sitemap</a>
+            <a href="https://getrentals.online/sitemap.xml" className="hover:text-white transition-colors">Sitemap</a>
             <a href="#cookies" className="hover:text-white transition-colors">Cookie Policy</a>
           </div>
         </div>
