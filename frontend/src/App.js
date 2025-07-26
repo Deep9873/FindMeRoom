@@ -2457,7 +2457,7 @@ const handleSubmit = async (e) => {
   );
 };
 
-const HomePage = ({ setCurrentView, setChatProperty }) => {
+const HomePage = ({ setChatProperty }) => {
   const { selectedCity } = useCity();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
