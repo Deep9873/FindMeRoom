@@ -948,25 +948,25 @@ const Header = () => {
               </div>
               
               <button 
-                onClick={() => { setCurrentView('home'); setMobileMenuOpen(false); }}
+                onClick={() => { navigate('/'); setMobileMenuOpen(false); }}
                 className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
               >
                 Home
               </button>
               <button 
-                onClick={() => { setCurrentView('properties'); setMobileMenuOpen(false); }}
+                onClick={() => { navigate('/properties'); setMobileMenuOpen(false); }}
                 className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
               >
                 Properties
               </button>
               <button 
-                onClick={() => { user ? setCurrentView('post') : setCurrentView('login'); setMobileMenuOpen(false); }}
+                onClick={() => { user ? navigate('/post-property') : navigate('/login'); setMobileMenuOpen(false); }}
                 className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
               >
                 Post Property
               </button>
               <button 
-                onClick={() => { user ? setCurrentView('my-properties') : setCurrentView('login'); setMobileMenuOpen(false); }}
+                onClick={() => { user ? navigate('/my-properties') : navigate('/login'); setMobileMenuOpen(false); }}
                 className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
               >
                 My Properties
