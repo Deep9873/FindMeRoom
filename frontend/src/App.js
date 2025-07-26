@@ -661,8 +661,9 @@ const MobileBottomNavigation = () => {
 };
 
 // Profile Component
-const ProfilePage = ({ setCurrentView }) => {
+const ProfilePage = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   
   if (!user) {
     return (
@@ -671,7 +672,7 @@ const ProfilePage = ({ setCurrentView }) => {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Please Login</h2>
           <p className="text-gray-600 mb-6">You need to be logged in to access your profile</p>
           <button
-            onClick={() => setCurrentView('login')}
+            onClick={() => navigate('/login')}
             className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
           >
             Login
@@ -688,7 +689,7 @@ const ProfilePage = ({ setCurrentView }) => {
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
             <button 
-              onClick={() => setCurrentView('home')}
+              onClick={() => navigate('/')}
               className="text-gray-500 hover:text-gray-700 md:hidden"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
