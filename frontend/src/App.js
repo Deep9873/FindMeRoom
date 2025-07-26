@@ -723,7 +723,7 @@ const ProfilePage = () => {
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button
-                  onClick={() => setCurrentView('post')}
+                  onClick={() => navigate('/post-property')}
                   className="flex items-center justify-center p-4 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
                 >
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -732,7 +732,7 @@ const ProfilePage = () => {
                   Post New Property
                 </button>
                 <button
-                  onClick={() => setCurrentView('my-properties')}
+                  onClick={() => navigate('/my-properties')}
                   className="flex items-center justify-center p-4 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors"
                 >
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -741,7 +741,7 @@ const ProfilePage = () => {
                   My Properties
                 </button>
                 <button
-                  onClick={() => setCurrentView('chat')}
+                  onClick={() => navigate('/chat')}
                   className="flex items-center justify-center p-4 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors"
                 >
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -750,7 +750,7 @@ const ProfilePage = () => {
                   Chat Messages
                 </button>
                 <button
-                  onClick={() => setCurrentView('properties')}
+                  onClick={() => navigate('/properties')}
                   className="flex items-center justify-center p-4 bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors"
                 >
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
