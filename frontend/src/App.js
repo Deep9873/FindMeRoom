@@ -808,9 +808,9 @@ const Header = () => {
 
   const handleChatClick = () => {
     if (user) {
-      setCurrentView('chat');
+      navigate('/chat');
     } else {
-      setCurrentView('login');
+      navigate('/login');
     }
   };
 
