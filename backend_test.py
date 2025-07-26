@@ -10,7 +10,7 @@ import time
 from typing import Dict, Any, Optional
 
 # Configuration
-BASE_URL = "https://findmeroom-backend.onrender.com/api"
+BASE_URL = "https://getrentals.online/api"
 HEADERS = {"Content-Type": "application/json"}
 
 class FindMeRoomTester:
