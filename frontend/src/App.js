@@ -2745,21 +2745,22 @@ const MainContent = () => {
 };
 
 // SEO-Friendly Footer Component
-const Footer = ({ setCurrentView }) => {
+const Footer = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
   
   // Function to scroll to top and navigate
-  const handleNavigation = (view) => {
+  const handleNavigation = (route) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setCurrentView(view);
+    navigate(route);
   };
   
   // Function for city navigation with scroll to top
   const handleCityNavigation = (city) => {
     localStorage.setItem('selectedCity', city);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setCurrentView('properties');
+    navigate('/properties');
   };
   
   const popularCities = [
