@@ -2127,7 +2127,7 @@ const LoginForm = () => {
   );
 };
 
-const RegisterForm = ({ setCurrentView }) => {
+const RegisterForm = () => {
   const { register } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
@@ -2137,6 +2137,7 @@ const RegisterForm = ({ setCurrentView }) => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -2146,7 +2147,7 @@ const RegisterForm = ({ setCurrentView }) => {
     const result = await register(formData);
     
     if (result.success) {
-      setCurrentView('home');
+      navigate('/');
     } else {
       setError(result.error);
     }
