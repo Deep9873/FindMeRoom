@@ -1064,8 +1064,9 @@ const HeroSection = () => {
 };
 
 // Enhanced Chat Interface Component
-const EnhancedChatInterface = ({ setCurrentView, selectedProperty = null, prefilledMessage = "" }) => {
+const EnhancedChatInterface = ({ selectedProperty = null, prefilledMessage = "" }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
