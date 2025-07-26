@@ -2682,37 +2682,37 @@ const App = () => {
   );
 };
 
-const MainContent = ({ currentView, setCurrentView }) => {
+const MainContent = () => {
   const { user, loading } = useAuth();
   const { updateSEO } = useSEO();
   const [chatProperty, setChatProperty] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Update SEO when view changes
+  // Update SEO based on current route
   useEffect(() => {
-    const seoConfig = SEO_PAGES[currentView] || SEO_PAGES.home;
-    updateSEO(seoConfig.title, seoConfig.description, seoConfig.keywords);
-  }, [currentView, updateSEO]);
-
-  // Listen for navigation changes from Header
-  useEffect(() => {
-    const handleNavigation = (view) => {
-      setCurrentView(view);
+    const routeToSEOMap = {
+      '/': 'home',
+      '/properties': 'properties',
+      '/login': 'login', 
+      '/register': 'register',
+      '/post-property': 'post',
+      '/my-properties': 'my-properties',
+      '/chat': 'chat',
+      '/profile': 'profile'
     };
-
-    // You can add event listeners here if needed
-    window.addEventListener('navigate', handleNavigation);
     
-    return () => {
-      window.removeEventListener('navigate', handleNavigation);
-    };
-  }, []);
+    const seoKey = routeToSEOMap[location.pathname] || 'home';
+    const seoConfig = SEO_PAGES[seoKey] || SEO_PAGES.home;
+    updateSEO(seoConfig.title, seoConfig.description, seoConfig.keywords);
+  }, [location.pathname, updateSEO]);
 
-  // Clear chatProperty when leaving chat view
+  // Clear chatProperty when leaving chat route
   useEffect(() => {
-    if (currentView !== 'chat') {
+    if (location.pathname !== '/chat') {
       setChatProperty(null);
     }
-  }, [currentView]);
+  }, [location.pathname]);
 
   if (loading) {
     return (
@@ -2722,34 +2722,21 @@ const MainContent = ({ currentView, setCurrentView }) => {
     );
   }
 
-  const renderContent = () => {
-    switch (currentView) {
-      case 'home':
-      case 'properties':
-        return <HomePage setCurrentView={setCurrentView} setChatProperty={setChatProperty} />;
-      case 'login':
-        return !user ? <LoginForm setCurrentView={setCurrentView} /> : <HomePage setCurrentView={setCurrentView} setChatProperty={setChatProperty} />;
-      case 'register':
-        return !user ? <RegisterForm setCurrentView={setCurrentView} /> : <HomePage setCurrentView={setCurrentView} setChatProperty={setChatProperty} />;
-      case 'post':
-        return user ? <PostPropertyForm setCurrentView={setCurrentView} /> : <LoginForm setCurrentView={setCurrentView} />;
-      case 'my-properties':
-        return user ? <MyPropertiesPage /> : <LoginForm setCurrentView={setCurrentView} />;
-      case 'chat':
-        return <EnhancedChatInterface setCurrentView={setCurrentView} selectedProperty={chatProperty} prefilledMessage={chatProperty?.prefilledMessage || ""} />;
-      case 'profile':
-        return <ProfilePage setCurrentView={setCurrentView} />;
-      default:
-        return <HomePage setCurrentView={setCurrentView} setChatProperty={setChatProperty} />;
-    }
-  };
-
   return (
     <div className="pb-16 md:pb-0">
-      <Header currentView={currentView} setCurrentView={setCurrentView} />
-      {renderContent()}
-      <Footer setCurrentView={setCurrentView} />
-      <MobileBottomNavigation currentView={currentView} setCurrentView={setCurrentView} />
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage setChatProperty={setChatProperty} />} />
+        <Route path="/properties" element={<HomePage setChatProperty={setChatProperty} />} />
+        <Route path="/login" element={!user ? <LoginForm /> : <HomePage setChatProperty={setChatProperty} />} />
+        <Route path="/register" element={!user ? <RegisterForm /> : <HomePage setChatProperty={setChatProperty} />} />
+        <Route path="/post-property" element={user ? <PostPropertyForm /> : <LoginForm />} />
+        <Route path="/my-properties" element={user ? <MyPropertiesPage /> : <LoginForm />} />
+        <Route path="/chat" element={<EnhancedChatInterface selectedProperty={chatProperty} prefilledMessage={chatProperty?.prefilledMessage || ""} />} />
+        <Route path="/profile" element={<ProfilePage />} />
+      </Routes>
+      <Footer />
+      <MobileBottomNavigation />
     </div>
   );
 };
