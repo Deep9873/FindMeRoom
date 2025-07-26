@@ -900,13 +900,13 @@ const Header = () => {
             ) : (
               <div className="flex space-x-1 lg:space-x-2">
                 <button 
-                  onClick={() => setCurrentView('login')}
+                  onClick={() => navigate('/login')}
                   className="bg-blue-500 text-white px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-blue-600 transition-colors text-xs lg:text-sm"
                 >
                   Login
                 </button>
                 <button 
-                  onClick={() => setCurrentView('register')}
+                  onClick={() => navigate('/register')}
                   className="bg-green-500 text-white px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-green-600 transition-colors text-xs lg:text-sm"
                 >
                   Register
