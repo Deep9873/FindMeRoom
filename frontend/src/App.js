@@ -2667,15 +2667,15 @@ const MyPropertiesPage = () => {
 };
 
 const App = () => {
-  const [currentView, setCurrentView] = useState('home');
-  
   return (
     <SEOProvider>
       <AuthProvider>
         <CityProvider>
-          <div className="App">
-            <MainContent currentView={currentView} setCurrentView={setCurrentView} />
-          </div>
+          <Router>
+            <div className="App">
+              <MainContent />
+            </div>
+          </Router>
         </CityProvider>
       </AuthProvider>
     </SEOProvider>
