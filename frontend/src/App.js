@@ -846,26 +846,26 @@ const Header = () => {
             
             {/* Navigation Buttons with responsive text */}
             <button 
-              onClick={() => setCurrentView('home')}
+              onClick={() => navigate('/')}
               className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
             >
               Home
             </button>
             <button 
-              onClick={() => setCurrentView('properties')}
+              onClick={() => navigate('/properties')}
               className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
             >
               Properties
             </button>
             <button 
-              onClick={() => user ? setCurrentView('post') : setCurrentView('login')}
+              onClick={() => user ? navigate('/post-property') : navigate('/login')}
               className="text-gray-700 hover:text-blue-600 px-1 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
             >
               <span className="hidden lg:inline">Post Property</span>
               <span className="lg:hidden">Post</span>
             </button>
             <button 
-              onClick={() => user ? setCurrentView('my-properties') : setCurrentView('login')}
+              onClick={() => user ? navigate('/my-properties') : navigate('/login')}
               className="text-gray-700 hover:text-blue-600 px-1 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
             >
               <span className="hidden lg:inline">My Properties</span>
