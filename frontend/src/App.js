@@ -2235,7 +2235,7 @@ const RegisterForm = () => {
   );
 };
 
-const PostPropertyForm = ({ setCurrentView }) => {
+const PostPropertyForm = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -2250,6 +2250,7 @@ const PostPropertyForm = ({ setCurrentView }) => {
 const [loading, setLoading] = useState(false);
 const [success, setSuccess] = useState(false);
 const [imageError, setImageError] = useState(false);
+const navigate = useNavigate();
 const handleImageUpload = (e) => {
   const files = Array.from(e.target.files);
   const fileReaders = [];
