@@ -168,7 +168,7 @@ const PrivacyPolicy = () => {
               <li><strong>Withdrawal:</strong> Withdraw consent for data processing</li>
             </ul>
             <p className="text-gray-700 leading-relaxed mt-4">
-              To exercise these rights, please contact us at support@getrentals.online. We will respond to your 
+              To exercise these rights, please contact us at admin@getrentals.online. We will respond to your 
               request within 30 days.
             </p>
           </section>
@@ -222,7 +222,7 @@ const PrivacyPolicy = () => {
             </p>
             <div className="bg-gray-50 p-4 rounded-lg">
               <p className="text-gray-700">
-                <strong>Email:</strong> support@getrentals.online<br />
+                <strong>Email:</strong> admin@getrentals.online<br />
                 <strong>Subject:</strong> Privacy Policy Inquiry
               </p>
             </div>
