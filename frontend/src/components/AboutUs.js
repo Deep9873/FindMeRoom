@@ -46,11 +46,7 @@ const AboutUs = () => {
             accommodation in India's major cities, recognized the need for a platform that could eliminate the middleman 
             and connect property seekers directly with property owners.
           </p>
-          <p className="text-gray-700 leading-relaxed mb-4">
-            Starting with major metropolitan cities like Delhi, Mumbai, Bangalore, and Pune, we have gradually expanded our 
-            reach to cover over 100+ cities across India. Today, GetRentals serves thousands of users monthly, helping them 
-            find their ideal homes while saving on brokerage fees.
-          </p>
+          
           <p className="text-gray-700 leading-relaxed">
             Our platform has facilitated thousands of successful rentals, from single rooms for students to luxury apartments 
             for families, all while maintaining our commitment to zero brokerage and transparent pricing.
@@ -120,35 +116,8 @@ const AboutUs = () => {
           </div>
         </div>
 
-        {/* Team Section */}
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Our Team</h2>
-          <p className="text-gray-700 leading-relaxed mb-6">
-            GetRentals is powered by a dedicated team of technology enthusiasts, real estate experts, and customer service 
-            professionals who are passionate about transforming India's rental market. Our diverse team brings together 
-            expertise in technology, real estate, user experience, and customer support.
-          </p>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="text-center">
-              <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Technology Team</h3>
-              <p className="text-gray-600">Expert developers ensuring platform reliability and innovation</p>
-            </div>
-            <div className="text-center">
-              <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Support Team</h3>
-              <p className="text-gray-600">Dedicated customer service ensuring excellent user experience</p>
-            </div>
-          </div>
-        </div>
+        
+
 
         {/* Contact CTA */}
         <div className="text-center mt-12">
