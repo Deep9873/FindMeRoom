@@ -69,6 +69,9 @@ const useSEO = () => {
   return context;
 };
 
+// Export useSEO for use in other components
+export { useSEO };
+
 const RAW_BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
 const BACKEND_URL = RAW_BACKEND_URL.replace(/\/+$/, '');
 const API = `${BACKEND_URL}/api`;
