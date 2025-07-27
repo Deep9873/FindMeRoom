@@ -39,10 +39,10 @@ const ContactUs = () => {
                   <div>
                     <p className="font-medium text-gray-900">Email Support</p>
                     <a
-                      href="mailto:support@getrentals.online"
+                      href="mailto:admin@getrentals.online"
                       className="text-blue-600 hover:text-blue-800"
                     >
-                      support@getrentals.online
+                      admin@getrentals.online
                     </a>
                   </div>
                 </div>
@@ -173,7 +173,7 @@ const ContactUs = () => {
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">How do I report a problem with a listing?</h3>
               <p className="text-gray-600">
-                If you encounter any issues with a property listing, please email us at support@getrentals.online 
+                If you encounter any issues with a property listing, please email us at admin@getrentals.online 
                 with the listing details and we'll investigate immediately.
               </p>
             </div>
@@ -187,7 +187,7 @@ const ContactUs = () => {
             Don't hesitate to reach out to our support team. We're here to help!
           </p>
           <a
-            href="mailto:support@getrentals.online"
+            href="mailto:admin@getrentals.online"
             className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
           >
             Email Support
