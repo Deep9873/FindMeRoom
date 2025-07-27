@@ -3101,29 +3101,29 @@ const Footer = () => {
             <h5 className="text-white font-medium">Support & Legal</h5>
             <div className="space-y-2 text-sm">
               <button 
-                onClick={() => handleNavigation('home')}
+                onClick={() => handleNavigation('/about')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
-                Help Center
+                About Us
               </button>
               <button 
-                onClick={() => handleNavigation('home')}
+                onClick={() => handleNavigation('/contact')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Contact Us
               </button>
-              <a 
-                href="#privacy-policy" 
+              <button 
+                onClick={() => handleNavigation('/privacy-policy')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Privacy Policy
-              </a>
-              <a 
-                href="#terms-of-service" 
+              </button>
+              <button 
+                onClick={() => handleNavigation('/terms-and-conditions')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
-                Terms of Service
-              </a>
+                Terms & Conditions
+              </button>
               <button 
                 onClick={() => handleNavigation('home')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
