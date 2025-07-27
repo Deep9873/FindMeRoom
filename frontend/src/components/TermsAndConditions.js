@@ -263,7 +263,7 @@ const TermsAndConditions = () => {
             <p className="text-gray-700 leading-relaxed">
               We encourage users to resolve disputes amicably. If you have a dispute with another user, 
               we recommend attempting direct communication first. For disputes with GetRentals, please contact 
-              our support team at support@getrentals.online. We will make reasonable efforts to resolve 
+              our support team at admin@getrentals.online. We will make reasonable efforts to resolve 
               disputes through good faith negotiations.
             </p>
           </section>
@@ -296,7 +296,7 @@ const TermsAndConditions = () => {
             </p>
             <div className="bg-gray-50 p-4 rounded-lg">
               <p className="text-gray-700">
-                <strong>Email:</strong> support@getrentals.online<br />
+                <strong>Email:</strong> admin@getrentals.online<br />
                 <strong>Subject:</strong> Terms and Conditions Inquiry
               </p>
             </div>
