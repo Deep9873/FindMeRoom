@@ -3,6 +3,12 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, Link 
 import './App.css';
 import axios from 'axios';
 
+// Import new AdSense compliance pages
+import AboutUs from './components/AboutUs';
+import ContactUs from './components/ContactUs';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsAndConditions from './components/TermsAndConditions';
+
 // SEO Context for Dynamic Meta Tags
 const SEOContext = createContext();
 
