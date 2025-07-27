@@ -2945,6 +2945,12 @@ const Footer = () => {
                 🏠 Home
               </button>
               <button 
+                onClick={() => handleNavigation('/about')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                ℹ️ About Us
+              </button>
+              <button 
                 onClick={() => handleNavigation('/properties')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
