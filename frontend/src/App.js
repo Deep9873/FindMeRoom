@@ -2814,7 +2814,11 @@ const MainContent = () => {
       '/post-property': 'post',
       '/my-properties': 'my-properties',
       '/chat': 'chat',
-      '/profile': 'profile'
+      '/profile': 'profile',
+      '/about': 'home',
+      '/contact': 'home',
+      '/privacy-policy': 'home',
+      '/terms-and-conditions': 'home'
     };
     
     const seoKey = routeToSEOMap[location.pathname] || 'home';
