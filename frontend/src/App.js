@@ -2853,6 +2853,10 @@ const MainContent = () => {
         <Route path="/my-properties" element={user ? <MyPropertiesPage /> : <LoginForm />} />
         <Route path="/chat" element={<EnhancedChatInterface selectedProperty={chatProperty} prefilledMessage={chatProperty?.prefilledMessage || ""} />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact" element={<ContactUs />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
       </Routes>
       <Footer />
       <MobileBottomNavigation />
