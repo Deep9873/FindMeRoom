@@ -55,6 +55,32 @@
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
-
-
+   <!-- About Us page -->
+  <url>
+    <loc>https://getrentals.online/about</loc>
+    <lastmod>2025-07-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+   <!-- Privacy and Policy page -->
+  <url>
+    <loc>https://getrentals.online/privacy-policy</loc>
+    <lastmod>2025-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+ <!-- Contact page -->
+  <url>
+    <loc>https://getrentals.online/contact</loc>
+    <lastmod>2025-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+ <!-- Terms & Conditions Page -->
+  <url>
+    <loc>https://getrentals.online/terms-and-conditions</loc>
+    <lastmod>2025-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>
