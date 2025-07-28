@@ -173,7 +173,29 @@ const MAJOR_INDIAN_CITIES = [
   'Delhi',
   'New Delhi',
   'Old Delhi',
-  'Shimla, Himachal Pradesh'
+  'Bengaluru, Karnataka',
+  'Shimla, Himachal Pradesh',
+  'Aizawl, Mizoram',  'Alappuzha, Kerala',  'Anantapur, Andhra Pradesh',  'Arrah, Bihar',  'Ambala, Haryana',
+'Baranagar, West Bengal',  'Bardhaman, West Bengal',  'Bathinda, Punjab',  'Begusarai, Bihar',  'Bhagalpur, Bihar',
+'Bharatpur, Rajasthan',  'Bhavnagar, Gujarat',  'Bhiwani, Haryana',  'Bidar, Karnataka',  'Bokaro, Jharkhand',
+'Chhapra, Bihar',  'Chhindwara, Madhya Pradesh',  'Darbhanga, Bihar',  'Dibrugarh, Assam',  'Dindigul, Tamil Nadu',
+'Durg, Chhattisgarh',  'Eluru, Andhra Pradesh',  'Fatehpur, Uttar Pradesh',  'Gandhinagar, Gujarat',  'Gaya, Bihar',
+'Ghazipur, Uttar Pradesh',  'Gondia, Maharashtra',  'Gopalganj, Bihar',  'Hajipur, Bihar',  'Haldwani, Uttarakhand',
+'Hansi, Haryana',  'Hisar, Haryana',  'Ichalkaranji, Maharashtra',  'Itanagar, Arunachal Pradesh',  'Jagdalpur, Chhattisgarh',
+'Jalgaon, Maharashtra',  'Jalna, Maharashtra',  'Jamnagar, Gujarat',  'Jhansi, Uttar Pradesh',  'Junagadh, Gujarat',
+'Kadapa, Andhra Pradesh',  'Kakinada, Andhra Pradesh',  'Kalyan-Dombivli, Maharashtra',  'Kamarhati, West Bengal',
+'Kanchipuram, Tamil Nadu',  'Karaikudi, Tamil Nadu',  'Karimnagar, Telangana',  'Karnal, Haryana',  'Katihar, Bihar',
+'Khammam, Telangana',  'Khandwa, Madhya Pradesh',  'Kharagpur, West Bengal',  'Korba, Chhattisgarh',  'Kottayam, Kerala',
+'Kozhikode, Kerala',  'Kurnool, Andhra Pradesh',  'Latur, Maharashtra',  'Machilipatnam, Andhra Pradesh',  'Malda, West Bengal',
+'Mandya, Karnataka',  'Mathura, Uttar Pradesh',  'Medininagar, Jharkhand',  'Mira-Bhayandar, Maharashtra',  'Nadiad, Gujarat',
+'Nalgonda, Telangana',  'Namakkal, Tamil Nadu',  'Narsinghpur, Madhya Pradesh',  'Navsari, Gujarat',  'Nizamabad, Telangana',
+'Ongole, Andhra Pradesh',  'Palakkad, Kerala',  'Palghar, Maharashtra',  'Parbhani, Maharashtra',  'Patan, Gujarat',
+'Phagwara, Punjab',  'Port Blair, Andaman and Nicobar Islands',  'Puducherry, Puducherry',  'Raichur, Karnataka',
+'Rewa, Madhya Pradesh',  'Rewari, Haryana',  'Rohtak, Haryana',  'Roorkee, Uttarakhand',  'Sagar, Madhya Pradesh',
+'Saharanpur, Uttar Pradesh',  'Sambalpur, Odisha',  'Satara, Maharashtra',  'Satna, Madhya Pradesh',  'Shahjahanpur, Uttar Pradesh',
+'Shimoga, Karnataka',  'Sikar, Rajasthan',  'Sirsa, Haryana',  'Solan, Himachal Pradesh',  'Solapur, Maharashtra',
+'Sonipat, Haryana',  'Sultanpur, Uttar Pradesh',  'Tenali, Andhra Pradesh',  'Thanjavur, Tamil Nadu',  'Tumkur, Karnataka',
+'Udupi, Karnataka',  'Unnao, Uttar Pradesh',  'Valsad, Gujarat',  'Vellore, Tamil Nadu',  'Yamunanagar, Haryana'
 ].sort();
 
 // SEO Page Configurations
@@ -1900,6 +1922,17 @@ const SearchFilters = ({ onSearch }) => {
           <option value="room">Room</option>
           <option value="house">House</option>
           <option value="pg">PG</option>
+          <option value="flat">Flat</option>
+          <option value="apartment">Apartment</option>
+          <option value="studio">Studio</option>
+          <option value="villa">Villa</option>
+          <option value="duplex">Duplex</option>
+          <option value="shared">Shared Accommodation</option>
+          <option value="bungalow">Bungalow</option>
+          <option value="hostel">Hostel</option>
+          <option value="guesthouse">Guest House</option>
+          <option value="farmhouse">Farmhouse</option>
+
         </select >
         <input
           type="number"
@@ -2403,9 +2436,21 @@ const handleSubmit = async (e) => {
               onChange={(e) => setFormData({...formData, property_type: e.target.value})}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
+              
               <option value="room">Room</option>
               <option value="house">House</option>
               <option value="pg">PG</option>
+              <option value="flat">Flat</option>
+              <option value="apartment">Apartment</option>
+              <option value="studio">Studio</option>
+              <option value="villa">Villa</option>
+              <option value="duplex">Duplex</option>
+              <option value="shared">Shared Accommodation</option>
+              <option value="bungalow">Bungalow</option>
+              <option value="hostel">Hostel</option>
+              <option value="guesthouse">Guest House</option>
+              <option value="farmhouse">Farmhouse</option>
+
             </select>
           </div>
           
