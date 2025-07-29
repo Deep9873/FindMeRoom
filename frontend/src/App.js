@@ -389,6 +389,242 @@ const AuthContext = createContext();
 // Context for city selection
 const CityContext = createContext();
 
+// Login/Register Popup Component
+const LoginRegisterPopup = ({ isOpen, onClose, defaultTab = 'login' }) => {
+  const [activeTab, setActiveTab] = useState(defaultTab);
+  const [formData, setFormData] = useState({ email: '', password: '', name: '', phone: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const { login, register } = useAuth();
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError('');
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    
+    const result = await login(formData.email, formData.password);
+    
+    if (result.success) {
+      onClose();
+      setFormData({ email: '', password: '', name: '', phone: '' });
+    } else {
+      setError(result.error);
+    }
+    setLoading(false);
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    
+    const result = await register(formData);
+    
+    if (result.success) {
+      onClose();
+      setFormData({ email: '', password: '', name: '', phone: '' });
+    } else {
+      setError(result.error);
+    }
+    setLoading(false);
+  };
+
+  const resetForm = () => {
+    setFormData({ email: '', password: '', name: '', phone: '' });
+    setError('');
+  };
+
+  const handleTabSwitch = (tab) => {
+    setActiveTab(tab);
+    resetForm();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-xl relative">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold"
+        >
+          ×
+        </button>
+
+        {/* Header */}
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            {activeTab === 'login' ? 'Login to Continue' : 'Create Account'}
+          </h2>
+          <p className="text-gray-600">
+            {activeTab === 'login' 
+              ? 'Please log in to access this feature' 
+              : 'Join GetRentals to get started'}
+          </p>
+        </div>
+
+        {/* Tab buttons */}
+        <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
+          <button
+            onClick={() => handleTabSwitch('login')}
+            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+              activeTab === 'login' 
+                ? 'bg-white text-blue-600 shadow-sm' 
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Login
+          </button>
+          <button
+            onClick={() => handleTabSwitch('register')}
+            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+              activeTab === 'register' 
+                ? 'bg-white text-blue-600 shadow-sm' 
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Register
+          </button>
+        </div>
+
+        {error && (
+          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+            {error}
+          </div>
+        )}
+
+        {/* Login Form */}
+        {activeTab === 'login' && (
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your email"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your password"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium disabled:opacity-50"
+            >
+              {loading ? 'Logging in...' : 'Login'}
+            </button>
+          </form>
+        )}
+
+        {/* Register Form */}
+        {activeTab === 'register' && (
+          <form onSubmit={handleRegister} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your full name"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your email"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your phone number"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your password"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-green-600 text-white px-4 py-3 rounded-md hover:bg-green-700 transition-colors font-medium disabled:opacity-50"
+            >
+              {loading ? 'Creating Account...' : 'Create Account'}
+            </button>
+          </form>
+        )}
+
+        <div className="mt-4 text-center text-sm text-gray-500">
+          {activeTab === 'login' ? (
+            <p>
+              Don't have an account?{' '}
+              <button 
+                onClick={() => handleTabSwitch('register')}
+                className="text-blue-600 hover:text-blue-800 font-medium"
+              >
+                Sign up
+              </button>
+            </p>
+          ) : (
+            <p>
+              Already have an account?{' '}
+              <button 
+                onClick={() => handleTabSwitch('login')}
+                className="text-blue-600 hover:text-blue-800 font-medium"
+              >
+                Log in
+              </button>
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const CityProvider = ({ children }) => {
   const [selectedCity, setSelectedCity] = useState(() => {
     // Get from localStorage if available
