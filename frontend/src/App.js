@@ -2588,6 +2588,8 @@ const RegisterForm = () => {
 };
 
 const PostPropertyForm = () => {
+  const { user } = useAuth();
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -2623,6 +2625,13 @@ const handleImageUpload = (e) => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
+  
+  // Check if user is authenticated before allowing form submission
+  if (!user) {
+    setShowLoginPopup(true);
+    return;
+  }
+  
   setLoading(true);
 
   // Validate image presence
