@@ -1242,13 +1242,13 @@ const Header = () => {
                 Properties
               </button>
               <button 
-                onClick={() => { user ? navigate('/post-property') : navigate('/login'); setMobileMenuOpen(false); }}
+                onClick={() => { navigate('/post-property'); setMobileMenuOpen(false); }}
                 className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
               >
                 Post Property
               </button>
               <button 
-                onClick={() => { user ? navigate('/my-properties') : navigate('/login'); setMobileMenuOpen(false); }}
+                onClick={() => { navigate('/my-properties'); setMobileMenuOpen(false); }}
                 className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
               >
                 My Properties
