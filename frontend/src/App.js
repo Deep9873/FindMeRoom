@@ -1665,6 +1665,11 @@ const EnhancedChatInterface = ({ selectedProperty = null, prefilledMessage = "" 
 
   const sendMessage = async (e) => {
     e.preventDefault();
+    if (!user) {
+      setShowLoginPopup(true);
+      return;
+    }
+    
     if (!newMessage.trim() || !selectedConversation) return;
     
     setLoading(true);
@@ -1710,6 +1715,11 @@ const EnhancedChatInterface = ({ selectedProperty = null, prefilledMessage = "" 
   };
 
   const handleConversationSelect = (conversation) => {
+    if (!user) {
+      setShowLoginPopup(true);
+      return;
+    }
+    
     setSelectedConversation(conversation);
     setError('');
     setShowMobileChat(true); // Show chat view on mobile when conversation is selected
