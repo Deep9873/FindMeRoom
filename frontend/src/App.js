@@ -1981,7 +1981,6 @@ const EnhancedChatInterface = ({ selectedProperty = null, prefilledMessage = "" 
               )}
               
               {!user ? (
-                {/* Login prompt for message input */}
                 <div className="flex items-center justify-center py-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
                   <div className="text-center">
                     <p className="text-gray-600 mb-2">Login to send messages</p>
