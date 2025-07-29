@@ -3438,19 +3438,19 @@ const Footer = () => {
                 🔍 Browse Properties
               </button>
               <button 
-                onClick={() => user ? handleNavigation('/post-property') : handleNavigation('/login')}
+                onClick={() => handleNavigation('/post-property')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 ➕ Post Your Property
               </button>
               <button 
-                onClick={() => user ? handleNavigation('/my-properties') : handleNavigation('/login')}
+                onClick={() => handleNavigation('/my-properties')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 🏘️ My Properties
               </button>
               <button 
-                onClick={() => user ? handleNavigation('/chat') : handleNavigation('/login')}
+                onClick={() => handleNavigation('/chat')}
                 className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
               >
                 💬 Chat & Messages
