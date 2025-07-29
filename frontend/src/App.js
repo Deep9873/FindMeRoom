@@ -1979,23 +1979,39 @@ const EnhancedChatInterface = ({ selectedProperty = null, prefilledMessage = "" 
                   {error}
                 </div>
               )}
-              <form onSubmit={sendMessage} className="flex space-x-2">
-                <input
-                  type="text"
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder="Type a message..."
-                  className="flex-1 px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  disabled={loading}
-                />
-                <button
-                  type="submit"
-                  disabled={loading || !newMessage.trim()}
-                  className="bg-blue-500 text-white px-4 md:px-6 py-2 rounded-full hover:bg-blue-600 transition-colors disabled:opacity-50 text-sm md:text-base"
-                >
-                  {loading ? 'Sending...' : 'Send'}
-                </button>
-              </form>
+              
+              {!user ? (
+                {/* Login prompt for message input */}
+                <div className="flex items-center justify-center py-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                  <div className="text-center">
+                    <p className="text-gray-600 mb-2">Login to send messages</p>
+                    <button
+                      onClick={() => setShowLoginPopup(true)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors text-sm"
+                    >
+                      Login
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={sendMessage} className="flex space-x-2">
+                  <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type a message..."
+                    className="flex-1 px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    disabled={loading}
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading || !newMessage.trim()}
+                    className="bg-blue-500 text-white px-4 md:px-6 py-2 rounded-full hover:bg-blue-600 transition-colors disabled:opacity-50 text-sm md:text-base"
+                  >
+                    {loading ? 'Sending...' : 'Send'}
+                  </button>
+                </form>
+              )}
             </div>
           </>
         ) : (
