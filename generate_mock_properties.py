@@ -329,7 +329,8 @@ async def generate_all_properties():
         print(f"❌ Error generating properties: {str(e)}")
         raise
     finally:
-        await client.close()
+        if client:
+            client.close()
 
 async def main():
     """Main function"""
