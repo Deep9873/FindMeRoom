@@ -3342,8 +3342,8 @@ const MainContent = () => {
         <Route path="/properties" element={<HomePage setChatProperty={setChatProperty} />} />
         <Route path="/login" element={!user ? <LoginForm /> : <HomePage setChatProperty={setChatProperty} />} />
         <Route path="/register" element={!user ? <RegisterForm /> : <HomePage setChatProperty={setChatProperty} />} />
-        <Route path="/post-property" element={user ? <PostPropertyForm /> : <LoginForm />} />
-        <Route path="/my-properties" element={user ? <MyPropertiesPage /> : <LoginForm />} />
+        <Route path="/post-property" element={<PostPropertyForm />} />
+        <Route path="/my-properties" element={<MyPropertiesPage />} />
         <Route path="/chat" element={<EnhancedChatInterface selectedProperty={chatProperty} prefilledMessage={chatProperty?.prefilledMessage || ""} />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/about" element={<AboutUs />} />
