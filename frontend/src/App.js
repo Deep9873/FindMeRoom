@@ -1883,7 +1883,7 @@ const PropertyCard = ({ property, onViewDetails, setChatProperty }) => {
 };
 
 const SearchFilters = ({ onSearch }) => {
-  const { selectedCity } = useCity();
+  const { selectedCity, setSelectedCity } = useCity();
   const [filters, setFilters] = useState({
     city: '',
     property_type: '',
@@ -1898,6 +1898,12 @@ const SearchFilters = ({ onSearch }) => {
     }
   }, [selectedCity]);
 
+  const handleCityChange = (city) => {
+    // Update both local filters state and global city state to keep them in sync
+    setFilters({...filters, city});
+    setSelectedCity(city);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSearch(filters);
@@ -1909,7 +1915,7 @@ const SearchFilters = ({ onSearch }) => {
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <CitySelector
           value={filters.city}
-          onChange={(city) => setFilters({...filters, city})}
+          onChange={handleCityChange}
           placeholder="Select City"
           className=""
         />
