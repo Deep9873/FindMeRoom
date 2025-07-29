@@ -1140,14 +1140,14 @@ const Header = () => {
               Properties
             </button>
             <button 
-              onClick={() => user ? navigate('/post-property') : navigate('/login')}
+              onClick={() => navigate('/post-property')}
               className="text-gray-700 hover:text-blue-600 px-1 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
             >
               <span className="hidden lg:inline">Post Property</span>
               <span className="lg:hidden">Post</span>
             </button>
             <button 
-              onClick={() => user ? navigate('/my-properties') : navigate('/login')}
+              onClick={() => navigate('/my-properties')}
               className="text-gray-700 hover:text-blue-600 px-1 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
             >
               <span className="hidden lg:inline">My Properties</span>
