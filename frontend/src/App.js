@@ -3557,7 +3557,7 @@ const Footer = () => {
                 Post Your Property
               </button>
               <button 
-                onClick={() => user ? handleNavigation('my-properties') : handleNavigation('login')}
+                onClick={() => handleNavigation('/my-properties')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Manage Listings
