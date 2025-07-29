@@ -8,6 +8,8 @@ import AboutUs from './components/AboutUs';
 import ContactUs from './components/ContactUs';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsAndConditions from './components/TermsAndConditions';
+import HowItWorks from './components/HowItWorks';
+import SafetySecurity from './components/SafetySecurity';
 
 // SEO Context for Dynamic Meta Tags
 const SEOContext = createContext();
