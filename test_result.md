@@ -225,6 +225,38 @@ backend:
         agent: "testing"
         comment: "✅ PASSED: My Properties management working correctly. /my-properties endpoint requires authentication and returns only properties owned by current user. Delete functionality properly verifies ownership before allowing deletion. All operations properly secured with authentication middleware."
 
+  - task: "Remove Login Restrictions with Popup Implementation"
+    implemented: true
+    working: "NA"
+    file: "App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "✅ MAJOR UX ENHANCEMENT COMPLETED: Removed login restrictions for viewing post property, chat, and my properties pages while implementing interactive login/register popup system.
+
+🔧 **KEY CHANGES IMPLEMENTED**:
+1. **Login/Register Popup Component**: Created centered modal with both login and register forms, responsive design, and smooth user experience
+2. **Authentication Logic Modified**: Removed authentication guards from /post-property, /chat, /my-properties routes
+3. **Interaction Blocking**: Added popup triggers when unauthenticated users try to interact (submit forms, send messages, delete properties)
+4. **Navigation Updates**: Updated header, mobile, and footer navigation to not redirect to login for these pages
+5. **Page Visibility**: All specified pages now visible without authentication but functionality blocked until login
+
+🎯 **PAGES AFFECTED**:
+- **Post Property Page**: Visible to all, shows popup on form submission if not authenticated
+- **Chat Interface**: Visible to all, shows login prompt in conversations list and message input area if not authenticated  
+- **My Properties Page**: Visible to all, shows login prompt and blocks property management actions if not authenticated
+
+🔄 **POPUP BEHAVIOR**: 
+- Only appears when users try to interact (submit forms, send messages, etc.) - not on page load
+- Centered overlay design with smooth transitions
+- Both login and register functionality in single component
+- Auto-closes on successful authentication
+
+✅ **NAVIGATION CONSISTENCY**: Updated all navigation points (header, mobile menu, footer) to direct to pages without authentication checks, ensuring consistent user experience across all devices."
+
 frontend:
   - task: "User Authentication UI"
     implemented: true
