@@ -2654,6 +2654,127 @@ const HomePage = ({ setChatProperty }) => {
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Publisher Content Section - Rental Guide */}
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-8 mb-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Your Complete Guide to Room & Property Rentals in India</h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Discover thousands of verified rooms, PGs, apartments, and houses across India's major cities. 
+              From budget-friendly accommodations to luxury properties, find your perfect match with zero brokerage.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Smart Search</h3>
+              <p className="text-gray-600 text-sm">Advanced filters for city, property type, rent range, and amenities to find properties that match your exact needs and budget.</p>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Zero Brokerage</h3>
+              <p className="text-gray-600 text-sm">Connect directly with property owners and save thousands on brokerage fees. All listings are free for both tenants and landlords.</p>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Verified Listings</h3>
+              <p className="text-gray-600 text-sm">All property listings are verified for authenticity. Direct chat with property owners ensures transparent communication and quick responses.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Property Types Guide */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Popular Property Types in India</h2>
+          <div className="grid md:grid-cols-4 gap-6">
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-200 transition-colors">
+                <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Single Rooms</h3>
+              <p className="text-sm text-gray-600">Perfect for students and young professionals. Budget-friendly with basic amenities.</p>
+            </div>
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-200 transition-colors">
+                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">PG Accommodations</h3>
+              <p className="text-sm text-gray-600">Shared facilities with meals included. Popular among working professionals and students.</p>
+            </div>
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 transition-colors">
+                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Apartments & Flats</h3>
+              <p className="text-sm text-gray-600">1BHK, 2BHK, and 3BHK apartments for individuals and families with modern amenities.</p>
+            </div>
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-purple-200 transition-colors">
+                <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Independent Houses</h3>
+              <p className="text-sm text-gray-600">Standalone houses with private entrances, gardens, and parking. Ideal for families.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* City-wise Rental Tips */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Rental Market Insights by City</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="border-l-4 border-red-500 pl-4">
+              <h3 className="font-semibold text-gray-900 mb-2">Delhi NCR</h3>
+              <p className="text-sm text-gray-600 mb-2">Average rent: ₹8,000 - ₹25,000</p>
+              <p className="text-sm text-gray-600">Popular areas: Gurgaon, Noida, Dwarka, Laxmi Nagar. High demand for PGs and shared accommodations near metro stations.</p>
+            </div>
+            <div className="border-l-4 border-blue-500 pl-4">
+              <h3 className="font-semibold text-gray-900 mb-2">Bangalore</h3>
+              <p className="text-sm text-gray-600 mb-2">Average rent: ₹10,000 - ₹30,000</p>
+              <p className="text-sm text-gray-600">Popular areas: Koramangala, BTM Layout, Electronic City, Whitefield. IT professionals prefer properties near tech corridors.</p>
+            </div>
+            <div className="border-l-4 border-green-500 pl-4">
+              <h3 className="font-semibold text-gray-900 mb-2">Mumbai</h3>
+              <p className="text-sm text-gray-600 mb-2">Average rent: ₹12,000 - ₹35,000</p>
+              <p className="text-gray-600 text-sm">Popular areas: Andheri, Bandra, Thane, Powai. Proximity to local train stations is crucial for daily commuting.</p>
+            </div>
+            <div className="border-l-4 border-yellow-500 pl-4">
+              <h3 className="font-semibold text-gray-900 mb-2">Pune</h3>
+              <p className="text-sm text-gray-600 mb-2">Average rent: ₹7,000 - ₹20,000</p>
+              <p className="text-sm text-gray-600">Popular areas: Kothrud, Wakad, Baner, Hadapsar. Student-friendly city with many affordable PG options.</p>
+            </div>
+            <div className="border-l-4 border-purple-500 pl-4">
+              <h3 className="font-semibold text-gray-900 mb-2">Chennai</h3>
+              <p className="text-sm text-gray-600 mb-2">Average rent: ₹6,000 - ₹18,000</p>
+              <p className="text-sm text-gray-600">Popular areas: OMR, Velachery, T. Nagar, Anna Nagar. IT corridor properties have higher demand.</p>
+            </div>
+            <div className="border-l-4 border-indigo-500 pl-4">
+              <h3 className="font-semibold text-gray-900 mb-2">Hyderabad</h3>
+              <p className="text-sm text-gray-600 mb-2">Average rent: ₹8,000 - ₹22,000</p>
+              <p className="text-sm text-gray-600">Popular areas: Gachibowli, Madhapur, Jubilee Hills, Banjara Hills. HITEC City proximity increases property value.</p>
+            </div>
+          </div>
+        </div>
+
         <SearchFilters onSearch={fetchProperties} />
         
         {!selectedCity ? (
