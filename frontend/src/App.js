@@ -1089,11 +1089,7 @@ const Header = () => {
   };
 
   const handleChatClick = () => {
-    if (user) {
-      navigate('/chat');
-    } else {
-      navigate('/login');
-    }
+    navigate('/chat');
   };
 
   return (
