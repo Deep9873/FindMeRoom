@@ -2870,11 +2870,7 @@ const HomePage = ({ setChatProperty }) => {
   };
 
   const handlePostProperty = () => {
-    if (user) {
-      navigate('/post-property');
-    } else {
-      navigate('/login');
-    }
+    navigate('/post-property');
   };
 
   return (
