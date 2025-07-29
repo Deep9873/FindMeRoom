@@ -3178,10 +3178,33 @@ const MyPropertiesPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Login/Register Popup */}
+      <LoginRegisterPopup 
+        isOpen={showLoginPopup} 
+        onClose={() => setShowLoginPopup(false)} 
+      />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold mb-8">My Properties</h1>
         
-        {loading ? (
+        {!user ? (
+          <div className="text-center py-16">
+            <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Login to View Your Properties</h2>
+            <p className="text-gray-600 mb-6">Please log in to see and manage your property listings</p>
+            <button
+              onClick={() => setShowLoginPopup(true)}
+              className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
+            >
+              Login
+            </button>
+          </div>
+        ) : loading ? (
           <div className="flex justify-center py-8">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
           </div>
@@ -3241,7 +3264,7 @@ const MyPropertiesPage = () => {
 
         )}
         
-        {!loading && properties.length === 0 && (
+        {user && !loading && properties.length === 0 && (
           <div className="text-center py-8">
             <p className="text-gray-500">You haven't posted any properties yet.</p>
           </div>
