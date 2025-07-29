@@ -1366,6 +1366,7 @@ const EnhancedChatInterface = ({ selectedProperty = null, prefilledMessage = "" 
   const [lastConversationsUpdate, setLastConversationsUpdate] = useState(null);
   const [showMobileChat, setShowMobileChat] = useState(false); // Mobile state management
   const messagesEndRef = useRef(null);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   // Handle selectedProperty prop - automatically set up conversation for mobile/desktop
   useEffect(() => {
