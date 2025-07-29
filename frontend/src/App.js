@@ -3136,12 +3136,18 @@ const HomePage = ({ setChatProperty }) => {
 };
 
 const MyPropertiesPage = () => {
+  const { user } = useAuth();
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchMyProperties();
-  }, []);
+    if (user) {
+      fetchMyProperties();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
 
   const fetchMyProperties = async () => {
     try {
@@ -3155,6 +3161,11 @@ const MyPropertiesPage = () => {
   };
 
   const handleDelete = async (propertyId) => {
+    if (!user) {
+      setShowLoginPopup(true);
+      return;
+    }
+    
     if (window.confirm('Are you sure you want to delete this property?')) {
       try {
         await axios.delete(`${API}/properties/${propertyId}`);
