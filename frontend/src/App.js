@@ -11,6 +11,7 @@ import TermsAndConditions from './components/TermsAndConditions';
 import HowItWorks from './components/HowItWorks';
 import SafetySecurity from './components/SafetySecurity';
 import Blog, { BlogPost } from './components/Blog';
+import RentCalculator from './components/RentCalculator';
 
 // SEO Context for Dynamic Meta Tags
 const SEOContext = createContext();
