@@ -1069,6 +1069,7 @@ const Header = () => {
   const { user, logout } = useAuth();
   const { selectedCity, setSelectedCity } = useCity();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
