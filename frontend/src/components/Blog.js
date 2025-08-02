@@ -3763,7 +3763,10 @@ const Blog = () => {
               </h4>
               <ul className="space-y-3">
                 <li className="flex items-center text-gray-600 hover:text-blue-600 cursor-pointer transition-colors">
-                  <span className="mr-2">📈</span> Property listing optimization
+                  <span className="mr-2">📈</span> 
+                  <button onClick={() => navigate('/resources/property-listing-optimization')}>
+                    Property listing optimization
+                  </button>
                 </li>
                 <li className="flex items-center text-gray-600 hover:text-blue-600 cursor-pointer transition-colors">
                   <span className="mr-2">👥</span> Tenant screening process
