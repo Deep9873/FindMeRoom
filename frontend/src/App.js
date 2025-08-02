@@ -2740,19 +2740,77 @@ const [imageError, setImageError] = useState(false);
 const navigate = useNavigate();
 const handleImageUpload = (e) => {
   const files = Array.from(e.target.files);
-  const fileReaders = [];
+  setImageError(false);
+  
+  // Limit number of files
+  if (files.length > 5) {
+    setImageError('Maximum 5 images allowed');
+    return;
+  }
+  
+  // Check total existing images + new images
+  if (images.length + files.length > 5) {
+    setImageError('Maximum 5 images allowed in total');
+    return;
+  }
 
   files.forEach((file) => {
+    // Check file size (10MB limit per file)
+    if (file.size > 10 * 1024 * 1024) {
+      setImageError(`File ${file.name} is too large (max 10MB per image)`);
+      return;
+    }
+    
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      setImageError(`File ${file.name} is not an image`);
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (event) => {
-      setImages((prevImages) => [...prevImages, event.target.result]);
+      const img = new Image();
+      img.onload = () => {
+        // Create canvas for image compression
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Calculate new dimensions (max 1200px width/height)
+        let { width, height } = img;
+        const maxDim = 1200;
+        
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = (height * maxDim) / width;
+            width = maxDim;
+          } else {
+            width = (width * maxDim) / height;
+            height = maxDim;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Draw and compress image
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Convert to base64 with compression (0.8 quality for JPEG)
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        
+        // Check final size (max 5MB per compressed image)
+        const compressedSize = (compressedDataUrl.length * 0.75) / 1024 / 1024; // Approximate MB
+        if (compressedSize > 5) {
+          setImageError(`Compressed image is still too large (${compressedSize.toFixed(1)}MB). Try a smaller image.`);
+          return;
+        }
+        
+        setImages((prevImages) => [...prevImages, compressedDataUrl]);
+      };
+      img.src = event.target.result;
     };
     reader.readAsDataURL(file);
-    fileReaders.push(reader);
   });
-
-  // Clear any previous error
-  setImageError(false);
 };
 
 
