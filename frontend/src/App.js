@@ -18,6 +18,7 @@ import RentalAgreementTemplates from './components/resources/RentalAgreementTemp
 import SecurityDepositGuidelines from './components/resources/SecurityDepositGuidelines';
 import TenantRightsChecklist from './components/resources/TenantRightsChecklist';
 import PropertyInspectionGuide from './components/resources/PropertyInspectionGuide';
+import PropertyListingOptimization from './components/resources/PropertyListingOptimization';
 
 // SEO Context for Dynamic Meta Tags
 const SEOContext = createContext();
