@@ -3436,8 +3436,6 @@ const blogPosts = [
 const Blog = () => {
   const { updateSEO } = useSEO();
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showSearch, setShowSearch] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
