@@ -1088,6 +1088,18 @@ const Header = () => {
     }
   }, [user]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (moreDropdownOpen && !event.target.closest('.more-dropdown')) {
+        setMoreDropdownOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [moreDropdownOpen]);
+
   const loadUnreadCount = async () => {
     if (!user) return;
     
