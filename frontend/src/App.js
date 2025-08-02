@@ -3460,6 +3460,12 @@ const MainContent = () => {
         <Route path="/rent-calculator" element={<RentCalculator />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+        
+        {/* Resource Pages */}
+        <Route path="/resources/rental-agreement-templates" element={<RentalAgreementTemplates />} />
+        <Route path="/resources/security-deposit-guidelines" element={<SecurityDepositGuidelines />} />
+        <Route path="/resources/tenant-rights-checklist" element={<TenantRightsChecklist />} />
+        <Route path="/resources/property-inspection-guide" element={<PropertyInspectionGuide />} />
       </Routes>
       <Footer />
       <MobileBottomNavigation />
