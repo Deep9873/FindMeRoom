@@ -3467,6 +3467,7 @@ const MainContent = () => {
         <Route path="/resources/security-deposit-guidelines" element={<SecurityDepositGuidelines />} />
         <Route path="/resources/tenant-rights-checklist" element={<TenantRightsChecklist />} />
         <Route path="/resources/property-inspection-guide" element={<PropertyInspectionGuide />} />
+        <Route path="/resources/property-listing-optimization" element={<PropertyListingOptimization />} />
       </Routes>
       <Footer />
       <MobileBottomNavigation />
