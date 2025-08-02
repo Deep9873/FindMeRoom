@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Create a complete, production-ready cross-platform application named 'GetRentals' for Android (Play Store), iOS (App Store), and web browsers. The core features include user authentication, property listings (rooms, houses, PGs), real-time chat, and search functionality. Currently building as a web application with FastAPI + React + MongoDB. LATEST UPDATE: Remove login restrictions to view post property and chat page but add a popup for login/register on those pages which means pages will be visible but a small login/register interface will block from interacting with those pages."
+user_problem_statement: "add about us and contact us btn on navbar also and also add a new blog page which should be fully seo friendly, adsense friendly, should be ranked first on search engines"
 
 backend:
   - task: "User Authentication System"
