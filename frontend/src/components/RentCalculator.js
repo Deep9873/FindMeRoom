@@ -536,6 +536,25 @@ const RentCalculator = () => {
                   </select>
                 </div>
 
+                {/* Number of Rooms (for PG/Shared accommodation) */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Number of Rooms <span className="text-gray-400">(Optional)</span>
+                  </label>
+                  <select
+                    name="rooms"
+                    value={formData.rooms}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors"
+                  >
+                    <option value="">Select Rooms</option>
+                    {roomOptions.map(room => (
+                      <option key={room.value} value={room.value}>{room.label}</option>
+                    ))}
+                  </select>
+                  <p className="text-sm text-gray-500 mt-1">Useful for PG, shared accommodation, or rooms</p>
+                </div>
+
                 {/* Area */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
