@@ -11,7 +11,7 @@ import sys
 def create_large_base64_image(size_mb=2):
     """Create a large base64 image for testing"""
     # Create a simple image data (just repeated pattern)
-    size_bytes = size_mb * 1024 * 1024
+    size_bytes = int(size_mb * 1024 * 1024)
     image_data = b'test_image_data' * (size_bytes // 15 + 1)
     image_data = image_data[:size_bytes]
     
