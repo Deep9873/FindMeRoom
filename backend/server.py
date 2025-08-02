@@ -32,12 +32,13 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Add middleware to handle large request bodies
+# Add middleware to handle large request bodies 
 @app.middleware("http")
 async def limit_upload_size(request: Request, call_next):
     # Allow up to 100MB for property image uploads
     max_size = 100 * 1024 * 1024  # 100MB in bytes
     
+    # Check content-length header if present
     if request.method == "POST" and "content-length" in request.headers:
         content_length = int(request.headers["content-length"])
         if content_length > max_size:
@@ -48,6 +49,14 @@ async def limit_upload_size(request: Request, call_next):
             )
     
     response = await call_next(request)
+    return response
+
+# Additional middleware for CORS and large body handling
+@app.middleware("http")
+async def cors_and_body_handler(request: Request, call_next):
+    response = await call_next(request)
+    # Set additional headers for large file support
+    response.headers["Access-Control-Max-Age"] = "86400"
     return response
 
 # Create a router with the /api prefix
