@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "navbar overflow issue in desktop mode do something to fix that; in rent calculator add field for rooms and pg also; add more cities in list of rent calculator and also link that find properties in that range btn to work actually; and in the last remove the search feature from blog page"
+user_problem_statement: "fix navbar overflow issue in desktop view when logout button is visibled, also update the sitemap.xml file for all pages available in site also of articles at blog page and in blog page's popular resources create pages for those all resources also"
 
 backend:
   - task: "User Authentication System"
