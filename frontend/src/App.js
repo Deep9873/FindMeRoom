@@ -242,6 +242,11 @@ const SEO_PAGES = {
     title: "My Profile - Account Settings | GetRentals",
     description: "Manage your GetRentals profile, update personal information, change preferences and customize your rental experience.",
     keywords: "user profile, account settings, profile management, personal information, account preferences"
+  },
+  blog: {
+    title: "GetRentals Blog - Property Rental Tips, Real Estate Advice & Housing Insights",
+    description: "Discover expert property rental tips, real estate insights, apartment hunting guides, and housing market trends on GetRentals blog. Your ultimate resource for rental property advice in India.",
+    keywords: "property rental blog, real estate tips, apartment hunting, housing market, rental advice, property investment, tenant tips, landlord advice, Indian real estate, property blog"
   }
 };
 
