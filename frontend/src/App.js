@@ -212,9 +212,9 @@ const MAJOR_INDIAN_CITIES = [
 // SEO Page Configurations
 const SEO_PAGES = {
   home: {
-    title: "GetRentals - Find & Post Rooms, PG, Apartments for Free | Zero Brokerage",
-    description: "Discover and post rented rooms, PGs, flats & apartments on GetRentals. Zero brokerage rooms & flats for rent in Delhi, Mumbai, Bangalore, Pune, Chennai, Hyderabad. List free & find your perfect match.",
-    keywords: "GetRentals, room for rent, pg near me, flat for rent, shared accommodation, hostel, rent a room, roommate finder, co-living spaces, furnished room, rooms on rent delhi, mumbai rooms, bangalore pg, pune flats, zero brokerage"
+    title: "GetRentals - Find & Post Rooms, PG, Apartments for Free | Zero Brokerage + Rent Calculator",
+    description: "Discover and post rented rooms, PGs, flats & apartments on GetRentals. Zero brokerage rooms & flats for rent in Delhi, Mumbai, Bangalore, Pune, Chennai, Hyderabad. Use our advanced rent calculator for 180+ Indian cities. List free & find your perfect match.",
+    keywords: "GetRentals, room for rent, pg near me, flat for rent, shared accommodation, hostel, rent a room, roommate finder, co-living spaces, furnished room, rooms on rent delhi, mumbai rooms, bangalore pg, pune flats, zero brokerage, rent calculator, budget planning, property search"
   },
   properties: {
     title: "Search Properties - Rooms, PG, Flats for Rent | GetRentals",
@@ -235,6 +235,11 @@ const SEO_PAGES = {
     title: "Messages & Chat - Connect with Property Owners | GetRentals",
     description: "Chat directly with property owners and tenants on GetRentals. Get instant responses, schedule visits, negotiate rent and finalize your rental agreement seamlessly.",
     keywords: "chat messages, contact property owner, rental inquiries, tenant communication, property chat, real-time messaging, rental communication"
+  },
+  'rent-calculator': {
+    title: "Rent Calculator India - Calculate Rental Costs for 180+ Cities | GetRentals",
+    description: "Advanced rent calculator for India covering 180+ cities. Calculate accurate rental costs for rooms, 1BHK, 2BHK, 3BHK, PGs & houses. Factor in rent, deposit, utilities & maintenance. Plan your rental budget with precision for Delhi, Mumbai, Bangalore, Pune, Chennai, Hyderabad and more Indian cities.",
+    keywords: "rent calculator india, rental cost calculator, budget planning tool, property rent estimator, rental budget calculator, rent estimation tool, apartment rent calculator, pg rent calculator, house rent calculator, rental affordability calculator, indian cities rent, delhi rent calculator, mumbai rent calculator, bangalore rent calculator, rental cost estimation, property budget planner"
   },
   login: {
     title: "Login to GetRentals - Access Your Account",
