@@ -1442,39 +1442,39 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="relative h-96 bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
+    <div className="relative h-auto min-h-96 bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center py-8 md:py-0 md:h-96">
       <div 
         className="absolute inset-0 bg-cover bg-center opacity-20"
         style={{
           backgroundImage: `url('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688')`
         }}
       />
-      <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
-        <h1 className="text-5xl md:text-6xl font-bold mb-4">Find Your Perfect Room</h1>
-        <p className="text-xl md:text-2xl mb-6">Discover amazing rooms, houses, and PGs in your city with zero brokerage</p>
+      <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4 pt-4 md:pt-0">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">Find Your Perfect Room</h1>
+        <p className="text-lg sm:text-xl md:text-2xl mb-6 leading-relaxed">Discover amazing rooms, houses, and PGs in your city with zero brokerage</p>
         
         {/* Enhanced description with rent calculator feature */}
-        <div className="mb-8 bg-black bg-opacity-30 rounded-lg p-4">
-          <p className="text-lg mb-2">🧮 <strong>New Feature:</strong> Use our advanced Rent Calculator to estimate accurate rental costs</p>
-          <p className="text-base opacity-90">Calculate rent for 180+ Indian cities • Budget planning • Property comparison</p>
+        <div className="mb-6 md:mb-8 bg-black bg-opacity-30 rounded-lg p-3 md:p-4">
+          <p className="text-base md:text-lg mb-2">🧮 <strong>New Feature:</strong> Use our advanced Rent Calculator to estimate accurate rental costs</p>
+          <p className="text-sm md:text-base opacity-90">Calculate rent for 180+ Indian cities • Budget planning • Property comparison</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center max-w-3xl mx-auto">
           <button 
             onClick={scrollToSearch}
-            className="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg"
+            className="w-full sm:w-auto bg-white text-blue-600 px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg text-sm md:text-base"
           >
             🔍 Start Searching
           </button>
           <button 
             onClick={handleRentCalculator}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full font-semibold hover:from-purple-600 hover:to-pink-600 transition-colors shadow-lg border-2 border-purple-300"
+            className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:from-purple-600 hover:to-pink-600 transition-colors shadow-lg border-2 border-purple-300 text-sm md:text-base"
           >
             🧮 Rent Calculator
           </button>
           <button 
             onClick={handlePostProperty}
-            className="bg-green-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition-colors border-2 border-green-400 shadow-lg"
+            className="w-full sm:w-auto bg-green-500 text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition-colors border-2 border-green-400 shadow-lg text-sm md:text-base"
           >
             ➕ Post Property
           </button>
