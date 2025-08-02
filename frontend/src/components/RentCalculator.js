@@ -842,7 +842,19 @@ const RentCalculator = () => {
                   {/* Action Buttons */}
                   <div className="mt-6 space-y-3">
                     <button 
-                      onClick={() => window.location.href = '/'}
+                      onClick={() => {
+                        // Navigate to properties page with calculated rent range as filters
+                        const minRent = calculatedRent.minRent;
+                        const maxRent = calculatedRent.maxRent;
+                        const city = formData.city;
+                        const params = new URLSearchParams({
+                          min_rent: minRent.toString(),
+                          max_rent: maxRent.toString(),
+                          ...(city && { city: city }),
+                          ...(formData.propertyType && { property_type: formData.propertyType })
+                        });
+                        window.location.href = `/properties?${params.toString()}`;
+                      }}
                       className="w-full bg-green-500 text-white py-3 rounded-xl font-semibold hover:bg-green-600 transition-colors"
                     >
                       🔍 Find Properties in This Range
