@@ -1160,6 +1160,24 @@ const Header = () => {
                 </span>
               )}
             </button>
+            <button 
+              onClick={() => navigate('/blog')}
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
+            >
+              Blog
+            </button>
+            <button 
+              onClick={() => navigate('/about')}
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
+            >
+              About Us
+            </button>
+            <button 
+              onClick={() => navigate('/contact')}
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
+            >
+              Contact Us
+            </button>
           </nav>
 
           {/* Auth Buttons - Responsive */}
