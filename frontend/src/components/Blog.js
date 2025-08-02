@@ -3516,24 +3516,6 @@ const Blog = () => {
           <p className="text-xl md:text-2xl mb-8 max-w-4xl mx-auto leading-relaxed">
             Your ultimate resource for property rental tips, real estate insights, and housing market trends across India
           </p>
-          
-          {/* Enhanced Search Bar */}
-          <div className="max-w-2xl mx-auto mb-8">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search articles, tips, locations..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-6 py-4 text-gray-900 text-lg rounded-full border-0 shadow-lg focus:outline-none focus:ring-4 focus:ring-white/30 placeholder-gray-500"
-              />
-              <div className="absolute inset-y-0 right-0 pr-6 flex items-center">
-                <svg className="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-            </div>
-          </div>
 
           {/* Rent Calculator CTA */}
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto">
