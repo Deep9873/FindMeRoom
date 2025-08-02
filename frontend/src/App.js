@@ -13,6 +13,12 @@ import SafetySecurity from './components/SafetySecurity';
 import Blog, { BlogPost } from './components/Blog';
 import RentCalculator from './components/RentCalculator';
 
+// Import resource pages
+import RentalAgreementTemplates from './components/resources/RentalAgreementTemplates';
+import SecurityDepositGuidelines from './components/resources/SecurityDepositGuidelines';
+import TenantRightsChecklist from './components/resources/TenantRightsChecklist';
+import PropertyInspectionGuide from './components/resources/PropertyInspectionGuide';
+
 // SEO Context for Dynamic Meta Tags
 const SEOContext = createContext();
 
