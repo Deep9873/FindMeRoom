@@ -1124,7 +1124,7 @@ const Header = () => {
           </div>
           
           {/* Desktop & Tablet Navigation */}
-          <nav className="hidden md:flex items-center space-x-0.5 lg:space-x-1 xl:space-x-2 overflow-x-auto">
+          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
             {/* City Selector - Hide on smaller tablets */}
             <div className="hidden xl:block flex-shrink-0">
               <div className="flex items-center space-x-2">
@@ -1141,36 +1141,36 @@ const Header = () => {
               </div>
             </div>
             
-            {/* Navigation Buttons with better responsive design */}
+            {/* Navigation Buttons */}
             <button 
               onClick={() => navigate('/')}
-              className="text-gray-700 hover:text-blue-600 px-1 md:px-2 lg:px-3 py-2 rounded-md text-xs md:text-sm font-medium whitespace-nowrap flex-shrink-0"
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
             >
               Home
             </button>
             <button 
               onClick={() => navigate('/properties')}
-              className="text-gray-700 hover:text-blue-600 px-1 md:px-2 lg:px-3 py-2 rounded-md text-xs md:text-sm font-medium whitespace-nowrap flex-shrink-0"
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
             >
               Properties
             </button>
             <button 
               onClick={() => navigate('/post-property')}
-              className="text-gray-700 hover:text-blue-600 px-1 md:px-2 lg:px-3 py-2 rounded-md text-xs md:text-sm font-medium whitespace-nowrap flex-shrink-0"
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
             >
               <span className="hidden lg:inline">Post Property</span>
               <span className="lg:hidden">Post</span>
             </button>
             <button 
               onClick={() => navigate('/my-properties')}
-              className="text-gray-700 hover:text-blue-600 px-1 md:px-2 lg:px-3 py-2 rounded-md text-xs md:text-sm font-medium whitespace-nowrap flex-shrink-0"
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
             >
               <span className="hidden lg:inline">My Properties</span>
               <span className="lg:hidden">My Props</span>
             </button>
             <button 
               onClick={handleChatClick}
-              className="text-gray-700 hover:text-blue-600 px-1 md:px-2 lg:px-3 py-2 rounded-md text-xs md:text-sm font-medium relative whitespace-nowrap flex-shrink-0"
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium relative whitespace-nowrap"
             >
               Chat
               {user && unreadCount > 0 && (
@@ -1181,31 +1181,53 @@ const Header = () => {
             </button>
             <button 
               onClick={() => navigate('/blog')}
-              className="text-gray-700 hover:text-blue-600 px-1 md:px-2 lg:px-3 py-2 rounded-md text-xs md:text-sm font-medium whitespace-nowrap flex-shrink-0"
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
             >
               Blog
             </button>
             <button 
               onClick={() => navigate('/rent-calculator')}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-1 md:px-2 lg:px-3 py-1 md:py-2 rounded-md hover:from-blue-600 hover:to-purple-700 text-xs md:text-sm font-medium whitespace-nowrap transition-all flex-shrink-0"
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 lg:px-3 py-1 lg:py-2 rounded-md hover:from-blue-600 hover:to-purple-700 text-sm font-medium whitespace-nowrap transition-all"
             >
               <span className="hidden lg:inline">Calculator</span>
               <span className="lg:hidden">Calc</span>
             </button>
-            <button 
-              onClick={() => navigate('/about')}
-              className="text-gray-700 hover:text-blue-600 px-1 md:px-2 lg:px-3 py-2 rounded-md text-xs md:text-sm font-medium whitespace-nowrap flex-shrink-0"
-            >
-              <span className="hidden lg:inline">About</span>
-              <span className="lg:hidden">About</span>
-            </button>
-            <button 
-              onClick={() => navigate('/contact')}
-              className="text-gray-700 hover:text-blue-600 px-1 md:px-2 lg:px-3 py-2 rounded-md text-xs md:text-sm font-medium whitespace-nowrap flex-shrink-0"
-            >
-              <span className="hidden lg:inline">Contact</span>
-              <span className="lg:hidden">Contact</span>
-            </button>
+            
+            {/* More Dropdown */}
+            <div className="relative">
+              <button 
+                onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
+                className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap flex items-center"
+              >
+                More
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              {moreDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border">
+                  <button
+                    onClick={() => {
+                      navigate('/about');
+                      setMoreDropdownOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    About Us
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/contact');
+                      setMoreDropdownOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Contact Us
+                  </button>
+                </div>
+              )}
+            </div>
           </nav>
 
           {/* Auth Buttons - Responsive */}
