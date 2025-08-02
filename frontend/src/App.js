@@ -1174,6 +1174,13 @@ const Header = () => {
               Blog
             </button>
             <button 
+              onClick={() => navigate('/rent-calculator')}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 lg:px-3 py-1 lg:py-2 rounded-md hover:from-blue-600 hover:to-purple-700 text-xs lg:text-sm font-medium whitespace-nowrap transition-all"
+            >
+              <span className="hidden lg:inline">Rent Calculator</span>
+              <span className="lg:hidden">Calculator</span>
+            </button>
+            <button 
               onClick={() => navigate('/about')}
               className="text-gray-700 hover:text-blue-600 px-1 lg:px-2 py-2 rounded-md text-xs lg:text-sm font-medium whitespace-nowrap"
             >
