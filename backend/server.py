@@ -41,9 +41,12 @@ async def limit_upload_size(request: Request, call_next):
     # Check content-length header if present
     if request.method == "POST" and "content-length" in request.headers:
         content_length = int(request.headers["content-length"])
+        logger.info(f"POST request to {request.url.path} with content-length: {content_length} bytes ({content_length/1024/1024:.2f} MB)")
+        
         if content_length > max_size:
+            logger.warning(f"Request rejected - content too large: {content_length} bytes ({content_length/1024/1024:.2f} MB) from {request.client.host if request.client else 'unknown'}")
             return Response(
-                content="Request entity too large. Maximum file size is 100MB.",
+                content=f"Request entity too large. Received {content_length/1024/1024:.2f}MB, maximum allowed is 100MB. Please compress your images.",
                 status_code=413,
                 media_type="text/plain"
             )
