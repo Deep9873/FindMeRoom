@@ -23,9 +23,9 @@ const RentCalculator = () => {
 
   useEffect(() => {
     updateSEO(
-      'Rent Calculator - Calculate Fair Property Rent in India | GetRentals',
-      'Calculate accurate rental prices for properties across India. Use our advanced rent calculator based on location, property type, amenities, and market data for fair rent estimation.',
-      'rent calculator, property rent calculator, rental price calculator, rent estimation tool, property valuation, fair rent calculator india, rental market rates'
+      'Rent Calculator India - Calculate Rental Costs for 180+ Cities | GetRentals',
+      'Advanced rent calculator for India covering 180+ cities. Calculate accurate rental costs for rooms, 1BHK, 2BHK, 3BHK, PGs & houses. Factor in rent, deposit, utilities & maintenance. Plan your rental budget with precision for Delhi, Mumbai, Bangalore, Pune, Chennai, Hyderabad and more Indian cities.',
+      'rent calculator india, rental cost calculator, budget planning tool, property rent estimator, rental budget calculator, rent estimation tool, apartment rent calculator, pg rent calculator, house rent calculator, rental affordability calculator, indian cities rent, delhi rent calculator, mumbai rent calculator, bangalore rent calculator, rental cost estimation, property budget planner'
     );
   }, [updateSEO]);
 
