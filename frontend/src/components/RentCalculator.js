@@ -7,6 +7,7 @@ const RentCalculator = () => {
     city: '',
     propertyType: '',
     bhkType: '',
+    rooms: '',
     furnishingStatus: '',
     areaSquareFeet: '',
     amenities: [],
