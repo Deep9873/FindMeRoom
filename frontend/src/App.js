@@ -3013,6 +3013,58 @@ const HomePage = ({ setChatProperty }) => {
     <div className="min-h-screen bg-gray-50">
       <HeroSection />
       
+      {/* Rent Calculator Feature Section */}
+      <div className="bg-gradient-to-r from-purple-600 to-pink-600 border-b shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center text-white">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-center justify-center mb-6">
+                <div className="bg-white bg-opacity-20 rounded-full p-4">
+                  <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+              
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">🧮 Advanced Rent Calculator</h2>
+              <p className="text-xl mb-6 opacity-95">
+                Plan your rental budget with precision! Calculate accurate rent estimates for 180+ Indian cities
+              </p>
+              
+              <div className="grid md:grid-cols-3 gap-6 mb-8">
+                <div className="bg-white bg-opacity-10 rounded-lg p-4 backdrop-blur-sm">
+                  <h3 className="font-semibold text-lg mb-2">🏙️ 180+ Cities</h3>
+                  <p className="text-sm opacity-90">From metros like Delhi, Mumbai to tier-2 cities like Indore, Coimbatore</p>
+                </div>
+                <div className="bg-white bg-opacity-10 rounded-lg p-4 backdrop-blur-sm">
+                  <h3 className="font-semibold text-lg mb-2">🏠 All Property Types</h3>
+                  <p className="text-sm opacity-90">Rooms, 1BHK, 2BHK, 3BHK, PGs, Houses with accurate rates</p>
+                </div>
+                <div className="bg-white bg-opacity-10 rounded-lg p-4 backdrop-blur-sm">
+                  <h3 className="font-semibold text-lg mb-2">💰 Budget Planning</h3>
+                  <p className="text-sm opacity-90">Factor in rent, deposit, utilities & maintenance costs</p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button 
+                  onClick={() => navigate('/rent-calculator')}
+                  className="bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg flex items-center space-x-2"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                  <span>Calculate Rent Now</span>
+                </button>
+                <div className="text-sm opacity-90 max-w-sm">
+                  <p>✨ New Feature: Find properties in your calculated budget range instantly!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       {/* Post Property CTA Section */}
       <div className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
