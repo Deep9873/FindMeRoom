@@ -1138,6 +1138,75 @@ const RentCalculator = () => {
             </div>
           </div>
         </div>
+
+        {/* Cities Coverage Section for SEO */}
+        <div className="mt-16 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl shadow-xl p-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">180+ Indian Cities Covered</h2>
+          <p className="text-lg text-gray-600 text-center mb-8 max-w-3xl mx-auto">
+            Our rent calculator provides accurate rental cost estimates for major metros, tier-2, and tier-3 cities across India
+          </p>
+          
+          <div className="grid md:grid-cols-4 gap-6">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">🏙️ Metro Cities</h3>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• Delhi & New Delhi</li>
+                <li>• Mumbai & Thane</li>
+                <li>• Bangalore & Bengaluru</li>
+                <li>• Chennai & Coimbatore</li>
+                <li>• Pune & Pimpri-Chinchwad</li>
+                <li>• Hyderabad & Secunderabad</li>
+                <li>• Kolkata & Howrah</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">🏢 Tier-2 Cities</h3>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• Jaipur & Jodhpur</li>
+                <li>• Lucknow & Kanpur</li>
+                <li>• Indore & Bhopal</li>
+                <li>• Nagpur & Nashik</li>
+                <li>• Surat & Ahmedabad</li>
+                <li>• Kochi & Thiruvananthapuram</li>
+                <li>• Patna & Gaya</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">🏘️ IT Hubs</h3>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• Gurgaon & Noida</li>
+                <li>• Faridabad & Ghaziabad</li>
+                <li>• Mysore & Mangalore</li>
+                <li>• Chandigarh & Mohali</li>
+                <li>• Bhubaneswar & Cuttack</li>
+                <li>• Dehradun & Roorkee</li>
+                <li>• Gandhinagar & Vadodara</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">🌆 Emerging Cities</h3>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• Agra & Aligarh</li>
+                <li>• Raipur & Bhilai</li>
+                <li>• Visakhapatnam & Vijayawada</li>
+                <li>• Coimbatore & Salem</li>
+                <li>• Jalandhar & Ludhiana</li>
+                <li>• Ranchi & Jamshedpur</li>
+                <li>• Many more cities...</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-600">
+              <strong>Coverage includes:</strong> All major metros, state capitals, IT hubs, industrial cities, educational centers, and emerging urban areas across India. 
+              Updated regularly with latest market data for accurate rent estimation.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
