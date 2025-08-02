@@ -3022,7 +3022,7 @@ const handleSubmit = async (e) => {
     accept="image/*"
   />
   {imageError && (
-    <p className="text-red-500 text-sm mt-1">* At least one image is required.</p>
+    <p className="text-red-500 text-sm mt-1">{imageError}</p>
   )}
   {images.length > 0 && (
     <div className="mt-2 grid grid-cols-3 gap-2">
