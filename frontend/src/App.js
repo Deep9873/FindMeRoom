@@ -3338,6 +3338,7 @@ const MainContent = () => {
       '/my-properties': 'my-properties',
       '/chat': 'chat',
       '/profile': 'profile',
+      '/blog': 'blog',
       '/about': 'home',
       '/contact': 'home',
       '/privacy-policy': 'home',
