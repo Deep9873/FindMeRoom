@@ -1278,6 +1278,24 @@ const Header = () => {
                   </span>
                 )}
               </button>
+              <button 
+                onClick={() => { navigate('/blog'); setMobileMenuOpen(false); }}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
+              >
+                Blog
+              </button>
+              <button 
+                onClick={() => { navigate('/about'); setMobileMenuOpen(false); }}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
+              >
+                About Us
+              </button>
+              <button 
+                onClick={() => { navigate('/contact'); setMobileMenuOpen(false); }}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
+              >
+                Contact Us
+              </button>
               
               {/* Mobile Auth Buttons */}
               <div className="border-t pt-4">
