@@ -2813,6 +2813,11 @@ const handleImageUpload = (e) => {
   });
 };
 
+const removeImage = (index) => {
+  setImages(prevImages => prevImages.filter((_, i) => i !== index));
+  setImageError(false); // Clear error when removing images
+};
+
 
 const handleSubmit = async (e) => {
   e.preventDefault();
