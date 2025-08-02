@@ -1246,30 +1246,34 @@ const Header = () => {
             </div>
           </nav>
 
-          {/* Auth Buttons - Responsive */}
-          <div className="hidden md:flex items-center space-x-2 flex-shrink-0">
+          {/* Auth Buttons - Optimized Responsive Layout */}
+          <div className="hidden md:flex items-center flex-shrink-0">
             {user ? (
-              <div className="flex items-center space-x-2 lg:space-x-4">
-                <span className="text-gray-700 text-xs lg:text-sm hidden lg:inline">Welcome, {user.name}!</span>
-                <span className="text-gray-700 text-xs lg:hidden">{user.name}</span>
+              <div className="flex items-center space-x-1 lg:space-x-2">
+                <span className="text-gray-700 text-xs lg:text-sm hidden lg:inline truncate max-w-24 xl:max-w-32">
+                  Welcome, {user.name}!
+                </span>
+                <span className="text-gray-700 text-xs lg:hidden truncate max-w-16">
+                  {user.name.split(' ')[0]}
+                </span>
                 <button 
                   onClick={logout}
-                  className="bg-red-500 text-white px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-red-600 transition-colors text-xs lg:text-sm"
+                  className="bg-red-500 text-white px-2 lg:px-3 py-1 lg:py-2 rounded-md hover:bg-red-600 transition-colors text-xs lg:text-sm flex-shrink-0"
                 >
                   Logout
                 </button>
               </div>
             ) : (
-              <div className="flex space-x-1 lg:space-x-2">
+              <div className="flex space-x-1">
                 <button 
                   onClick={() => navigate('/login')}
-                  className="bg-blue-500 text-white px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-blue-600 transition-colors text-xs lg:text-sm"
+                  className="bg-blue-500 text-white px-2 lg:px-3 py-1 lg:py-2 rounded-md hover:bg-blue-600 transition-colors text-xs lg:text-sm flex-shrink-0"
                 >
                   Login
                 </button>
                 <button 
                   onClick={() => navigate('/register')}
-                  className="bg-green-500 text-white px-2 lg:px-4 py-1 lg:py-2 rounded-md hover:bg-green-600 transition-colors text-xs lg:text-sm"
+                  className="bg-green-500 text-white px-2 lg:px-3 py-1 lg:py-2 rounded-md hover:bg-green-600 transition-colors text-xs lg:text-sm flex-shrink-0"
                 >
                   Register
                 </button>
