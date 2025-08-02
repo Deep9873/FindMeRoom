@@ -3032,7 +3032,17 @@ const handleSubmit = async (e) => {
   {images.length > 0 && (
     <div className="mt-2 grid grid-cols-3 gap-2">
       {images.map((image, index) => (
-        <img key={index} src={image} alt={`Preview ${index}`} className="w-full h-20 object-cover rounded" />
+        <div key={index} className="relative">
+          <img src={image} alt={`Preview ${index}`} className="w-full h-20 object-cover rounded" />
+          <button
+            type="button"
+            onClick={() => removeImage(index)}
+            className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+            title="Remove image"
+          >
+            ×
+          </button>
+        </div>
       ))}
     </div>
   )}
