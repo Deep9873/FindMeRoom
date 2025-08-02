@@ -3728,16 +3728,28 @@ const Blog = () => {
               </h4>
               <ul className="space-y-3">
                 <li className="flex items-center text-gray-600 hover:text-blue-600 cursor-pointer transition-colors">
-                  <span className="mr-2">📋</span> Rental agreement templates
+                  <span className="mr-2">📋</span> 
+                  <button onClick={() => navigate('/resources/rental-agreement-templates')}>
+                    Rental agreement templates
+                  </button>
                 </li>
                 <li className="flex items-center text-gray-600 hover:text-blue-600 cursor-pointer transition-colors">
-                  <span className="mr-2">💰</span> Security deposit guidelines
+                  <span className="mr-2">💰</span> 
+                  <button onClick={() => navigate('/resources/security-deposit-guidelines')}>
+                    Security deposit guidelines
+                  </button>
                 </li>
                 <li className="flex items-center text-gray-600 hover:text-blue-600 cursor-pointer transition-colors">
-                  <span className="mr-2">⚖️</span> Tenant rights checklist
+                  <span className="mr-2">⚖️</span> 
+                  <button onClick={() => navigate('/resources/tenant-rights-checklist')}>
+                    Tenant rights checklist
+                  </button>
                 </li>
                 <li className="flex items-center text-gray-600 hover:text-blue-600 cursor-pointer transition-colors">
-                  <span className="mr-2">🔍</span> Property inspection guide
+                  <span className="mr-2">🔍</span> 
+                  <button onClick={() => navigate('/resources/property-inspection-guide')}>
+                    Property inspection guide
+                  </button>
                 </li>
                 <li className="flex items-center text-blue-600 font-semibold cursor-pointer">
                   <span className="mr-2">🧮</span> 
