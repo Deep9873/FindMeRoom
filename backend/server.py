@@ -25,8 +25,30 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Create the main app without a prefix
-app = FastAPI()
+# Create the main app without a prefix with increased request size limits
+app = FastAPI(
+    title="GetRentals API",
+    description="Property rental platform API with support for large image uploads",
+    version="1.0.0"
+)
+
+# Add middleware to handle large request bodies
+@app.middleware("http")
+async def limit_upload_size(request: Request, call_next):
+    # Allow up to 100MB for property image uploads
+    max_size = 100 * 1024 * 1024  # 100MB in bytes
+    
+    if request.method == "POST" and "content-length" in request.headers:
+        content_length = int(request.headers["content-length"])
+        if content_length > max_size:
+            return Response(
+                content="Request entity too large. Maximum file size is 100MB.",
+                status_code=413,
+                media_type="text/plain"
+            )
+    
+    response = await call_next(request)
+    return response
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
