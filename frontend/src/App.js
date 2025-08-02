@@ -3404,6 +3404,11 @@ const MainContent = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Scroll to top functionality when route changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, [location.pathname]);
+
   // Update SEO based on current route
   useEffect(() => {
     const routeToSEOMap = {
