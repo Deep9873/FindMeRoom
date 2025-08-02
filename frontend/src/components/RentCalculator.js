@@ -628,12 +628,36 @@ const RentCalculator = () => {
         {/* Header Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            🏠 Smart Rent Calculator
+            🧮 Advanced Rent Calculator for India
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Calculate accurate rental prices for properties across India based on location, 
-            amenities, property type, and current market trends. Make informed rental decisions!
+          <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-6">
+            Calculate accurate rental prices for properties across 180+ Indian cities based on location, 
+            amenities, property type, and current market trends. Make informed rental decisions with our comprehensive budget planning tool!
           </p>
+          
+          {/* SEO-friendly features highlight */}
+          <div className="grid md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8">
+            <div className="bg-blue-100 rounded-lg p-4">
+              <div className="text-2xl mb-2">🏙️</div>
+              <h3 className="font-semibold text-sm">180+ Cities</h3>
+              <p className="text-xs text-gray-600">All major Indian cities</p>
+            </div>
+            <div className="bg-green-100 rounded-lg p-4">
+              <div className="text-2xl mb-2">🏠</div>
+              <h3 className="font-semibold text-sm">All Property Types</h3>
+              <p className="text-xs text-gray-600">Rooms, BHK, PG, Houses</p>
+            </div>
+            <div className="bg-purple-100 rounded-lg p-4">
+              <div className="text-2xl mb-2">💰</div>
+              <h3 className="font-semibold text-sm">Complete Budget</h3>
+              <p className="text-xs text-gray-600">Rent + Utilities + Deposit</p>
+            </div>
+            <div className="bg-orange-100 rounded-lg p-4">
+              <div className="text-2xl mb-2">📊</div>
+              <h3 className="font-semibold text-sm">Market Data</h3>
+              <p className="text-xs text-gray-600">Real-time rental rates</p>
+            </div>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
