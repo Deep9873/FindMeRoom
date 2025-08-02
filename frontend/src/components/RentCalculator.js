@@ -22,11 +22,45 @@ const RentCalculator = () => {
   const [showComparison, setShowComparison] = useState(false);
 
   useEffect(() => {
+    // Update SEO immediately when component mounts
     updateSEO(
       'Rent Calculator India - Calculate Rental Costs for 180+ Cities | GetRentals',
       'Advanced rent calculator for India covering 180+ cities. Calculate accurate rental costs for rooms, 1BHK, 2BHK, 3BHK, PGs & houses. Factor in rent, deposit, utilities & maintenance. Plan your rental budget with precision for Delhi, Mumbai, Bangalore, Pune, Chennai, Hyderabad and more Indian cities.',
       'rent calculator india, rental cost calculator, budget planning tool, property rent estimator, rental budget calculator, rent estimation tool, apartment rent calculator, pg rent calculator, house rent calculator, rental affordability calculator, indian cities rent, delhi rent calculator, mumbai rent calculator, bangalore rent calculator, rental cost estimation, property budget planner'
     );
+    
+    // Also update Open Graph and Twitter tags for social sharing consistency
+    const updateSocialTags = () => {
+      // Update Open Graph title
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) {
+        ogTitle.setAttribute('content', 'Rent Calculator India - Calculate Rental Costs for 180+ Cities | GetRentals');
+      }
+      
+      // Update Twitter title
+      const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+      if (twitterTitle) {
+        twitterTitle.setAttribute('content', 'Rent Calculator India - Calculate Rental Costs for 180+ Cities | GetRentals');
+      }
+      
+      // Update Open Graph description
+      const ogDescription = document.querySelector('meta[property="og:description"]');
+      if (ogDescription) {
+        ogDescription.setAttribute('content', 'Advanced rent calculator for India covering 180+ cities. Calculate accurate rental costs for rooms, 1BHK, 2BHK, 3BHK, PGs & houses with precision.');
+      }
+      
+      // Update Twitter description
+      const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+      if (twitterDescription) {
+        twitterDescription.setAttribute('content', 'Advanced rent calculator for India covering 180+ cities. Calculate accurate rental costs for rooms, 1BHK, 2BHK, 3BHK, PGs & houses with precision.');
+      }
+    };
+    
+    // Update social tags immediately and after a small delay to ensure consistency
+    updateSocialTags();
+    const timeoutId = setTimeout(updateSocialTags, 100);
+    
+    return () => clearTimeout(timeoutId);
   }, [updateSEO]);
 
   const cities = [
