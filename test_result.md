@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "fix navbar overflow issue in desktop view when logout button is visibled, also update the sitemap.xml file for all pages available in site also of articles at blog page and in blog page's popular resources create pages for those all resources also"
+user_problem_statement: "first tell me the all pages in the whole webpage i want to add them in google search console for indexing; second improve the seo of whole website add tell about new feautre of rent calculator in homepage content and also improve specifically of rent calculator page; and also whenever any page is switched it should scroll to top"
 
 backend:
   - task: "User Authentication System"
