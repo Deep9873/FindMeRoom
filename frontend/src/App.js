@@ -1191,12 +1191,7 @@ const Header = () => {
                 </span>
               )}
             </button>
-            <button 
-              onClick={() => navigate('/blog')}
-              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
-            >
-              Blog
-            </button>
+
             <button 
               onClick={() => navigate('/rent-calculator')}
               className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 lg:px-3 py-1 lg:py-2 rounded-md hover:from-blue-600 hover:to-purple-700 text-sm font-medium whitespace-nowrap transition-all"
