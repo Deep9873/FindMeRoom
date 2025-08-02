@@ -1206,7 +1206,7 @@ const Header = () => {
             </button>
             
             {/* More Dropdown */}
-            <div className="relative more-dropdown-container">
+            <div className="relative more-dropdown">
               <button 
                 onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
                 className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap flex items-center"
