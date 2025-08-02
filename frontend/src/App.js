@@ -1091,7 +1091,7 @@ const Header = () => {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (moreDropdownOpen && !event.target.closest('.more-dropdown')) {
+      if (moreDropdownOpen && !event.target.closest('.relative')) {
         setMoreDropdownOpen(false);
       }
     };
