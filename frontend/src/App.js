@@ -10,6 +10,7 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsAndConditions from './components/TermsAndConditions';
 import HowItWorks from './components/HowItWorks';
 import SafetySecurity from './components/SafetySecurity';
+import Blog from './components/Blog';
 
 // SEO Context for Dynamic Meta Tags
 const SEOContext = createContext();
