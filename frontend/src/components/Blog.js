@@ -3460,15 +3460,9 @@ const Blog = () => {
     'Property Comparison'
   ];
 
-  // Enhanced filtering with search functionality
+  // Enhanced filtering without search functionality
   const filteredArticles = blogPosts.filter(article => {
-    const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory;
-    const matchesSearch = searchTerm === '' || 
-      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    return matchesCategory && matchesSearch;
+    return selectedCategory === 'all' || article.category === selectedCategory;
   });
 
   const featuredArticles = blogPosts.filter(article => article.featured);
