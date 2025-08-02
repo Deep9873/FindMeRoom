@@ -281,13 +281,42 @@ async def get_property(property_id: str):
 
 @api_router.post("/properties", response_model=Property)
 async def create_property(property_data: PropertyCreate, current_user: dict = Depends(get_current_user)):
-    property_dict = property_data.dict()
-    property_dict["user_id"] = current_user["id"]
-    
-    property_obj = Property(**property_dict)
-    await db.properties.insert_one(property_obj.dict())
-    
-    return property_obj
+    try:
+        property_dict = property_data.dict()
+        property_dict["user_id"] = current_user["id"]
+        
+        # Validate image sizes to prevent overly large requests
+        if property_dict.get("images"):
+            total_size = 0
+            for i, image in enumerate(property_dict["images"]):
+                # Estimate base64 image size (base64 adds ~33% overhead)
+                image_size = len(image) * 0.75  # Approximate original size
+                total_size += image_size
+                
+                # Limit single image to 10MB
+                if image_size > 10 * 1024 * 1024:
+                    raise HTTPException(
+                        status_code=413, 
+                        detail=f"Image {i+1} is too large. Maximum size per image is 10MB."
+                    )
+            
+            # Limit total images size to 50MB
+            if total_size > 50 * 1024 * 1024:
+                raise HTTPException(
+                    status_code=413, 
+                    detail="Total images size too large. Maximum total size is 50MB."
+                )
+        
+        property_obj = Property(**property_dict)
+        await db.properties.insert_one(property_obj.dict())
+        
+        return property_obj
+        
+    except Exception as e:
+        if isinstance(e, HTTPException):
+            raise e
+        else:
+            raise HTTPException(status_code=500, detail=f"Error creating property: {str(e)}")
 
 @api_router.put("/properties/{property_id}", response_model=Property)
 async def update_property(property_id: str, property_data: PropertyUpdate, current_user: dict = Depends(get_current_user)):
