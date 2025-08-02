@@ -2824,10 +2824,19 @@ const handleSubmit = async (e) => {
   }
   
   setLoading(true);
+  setImageError(false); // Clear any previous errors
 
   // Validate image presence
   if (images.length === 0) {
-    setImageError(true);
+    setImageError('Please add at least one image');
+    setLoading(false);
+    return;
+  }
+
+  // Calculate approximate payload size
+  const totalImageSize = images.reduce((total, img) => total + (img.length * 0.75), 0) / (1024 * 1024); // MB
+  if (totalImageSize > 45) {
+    setImageError(`Total image size too large (${totalImageSize.toFixed(1)}MB). Please reduce image sizes or remove some images.`);
     setLoading(false);
     return;
   }
@@ -2854,7 +2863,6 @@ const handleSubmit = async (e) => {
       amenities: ''
     });
     setImages([]);
-    setImageError(false); // clear error
 
     // Redirect to home after successful post
     setTimeout(() => {
@@ -2862,6 +2870,17 @@ const handleSubmit = async (e) => {
     }, 2000);
   } catch (error) {
     console.error('Error creating property:', error);
+    
+    // Handle specific error types
+    if (error.response?.status === 413) {
+      setImageError('Request too large. Please reduce image sizes or remove some images.');
+    } else if (error.response?.status === 422) {
+      setImageError('Please check all required fields are filled correctly.');
+    } else if (error.response?.data?.detail) {
+      setImageError(error.response.data.detail);
+    } else {
+      setImageError('Failed to post property. Please try again.');
+    }
   } finally {
     setLoading(false);
   }
