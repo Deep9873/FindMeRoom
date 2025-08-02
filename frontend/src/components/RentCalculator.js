@@ -237,9 +237,19 @@ const RentCalculator = () => {
     { value: 'apartment', label: 'Apartment', multiplier: 1.0 },
     { value: 'independent_house', label: 'Independent House', multiplier: 1.2 },
     { value: 'villa', label: 'Villa', multiplier: 1.5 },
-    { value: 'pg', label: 'PG Accommodation', multiplier: 0.6 },
+    { value: 'pg', label: 'PG (Paying Guest)', multiplier: 0.6 },
     { value: 'studio', label: 'Studio Apartment', multiplier: 0.8 },
+    { value: 'room', label: 'Single Room', multiplier: 0.5 },
     { value: 'penthouse', label: 'Penthouse', multiplier: 2.0 }
+  ];
+
+  const roomOptions = [
+    { value: '1', label: '1 Room' },
+    { value: '2', label: '2 Rooms' },
+    { value: '3', label: '3 Rooms' },
+    { value: '4', label: '4 Rooms' },
+    { value: '5', label: '5 Rooms' },
+    { value: '6+', label: '6+ Rooms' }
   ];
 
   const bhkTypes = [
