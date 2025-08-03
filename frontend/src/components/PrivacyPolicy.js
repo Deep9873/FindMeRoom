@@ -196,7 +196,7 @@ const PrivacyPolicy = () => {
 
           {/* Data Retention */}
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Data Retention</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">8. Data Retention</h2>
             <p className="text-gray-700 leading-relaxed">
               We retain your personal information for as long as necessary to provide our services and comply with 
               legal obligations. When you delete your account, we will remove or anonymize your personal information 
@@ -207,7 +207,7 @@ const PrivacyPolicy = () => {
 
           {/* Your Rights */}
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">8. Your Privacy Rights</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">9. Your Privacy Rights</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
               You have certain rights regarding your personal information:
             </p>
@@ -227,7 +227,7 @@ const PrivacyPolicy = () => {
 
           {/* Third-Party Services */}
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">9. Third-Party Services</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">10. Third-Party Services</h2>
             <p className="text-gray-700 leading-relaxed">
               Our platform may contain links to third-party websites or services that are not operated by us. 
               We have no control over and assume no responsibility for the content, privacy policies, or practices 
@@ -238,7 +238,7 @@ const PrivacyPolicy = () => {
 
           {/* Children's Privacy */}
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">10. Children's Privacy</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">11. Children's Privacy</h2>
             <p className="text-gray-700 leading-relaxed">
               Our services are not intended for children under the age of 18. We do not knowingly collect personal 
               information from children under 18. If you are a parent or guardian and believe your child has provided 
@@ -248,7 +248,7 @@ const PrivacyPolicy = () => {
 
           {/* International Transfers */}
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">11. International Data Transfers</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">12. International Data Transfers</h2>
             <p className="text-gray-700 leading-relaxed">
               Your information may be transferred to and processed in countries other than your own. 
               We ensure that such transfers comply with applicable data protection laws and implement 
@@ -258,7 +258,7 @@ const PrivacyPolicy = () => {
 
           {/* Changes to Privacy Policy */}
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">12. Changes to This Privacy Policy</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">13. Changes to This Privacy Policy</h2>
             <p className="text-gray-700 leading-relaxed">
               We may update this Privacy Policy from time to time. We will notify you of any material changes by 
               posting the updated policy on our platform and updating the "Last updated" date. Your continued use 
@@ -268,7 +268,7 @@ const PrivacyPolicy = () => {
 
           {/* Contact Information */}
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">13. Contact Us</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">14. Contact Us</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
               If you have any questions about this Privacy Policy or our privacy practices, please contact us:
             </p>
