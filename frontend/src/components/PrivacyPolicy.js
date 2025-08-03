@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Your privacy is important to us. This policy explains how we collect, use, and protect your information.
           </p>
-          <p className="text-sm text-gray-500 mt-4">Last updated: January 2025</p>
+          <p className="text-sm text-gray-500 mt-4">Last updated: August 2025</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-8 space-y-8">
