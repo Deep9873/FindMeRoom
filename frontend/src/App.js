@@ -212,7 +212,7 @@ const MAJOR_INDIAN_CITIES = [
 // SEO Page Configurations
 const SEO_PAGES = {
   home: {
-    title: "GetRentals - Find & Post Rooms, PG, Apartments for Free | Zero Brokerage + Rent Calculator",
+    title: "Find & Post Flats, Rooms, PG, Apartments for FREE | Flatmate / Roommate Finder with Rent Calculator",
     description: "Discover and post rented rooms, PGs, flats & apartments on GetRentals. Zero brokerage rooms & flats for rent in Delhi, Mumbai, Bangalore, Pune, Chennai, Hyderabad. Use our advanced rent calculator for 180+ Indian cities. List free & find your perfect match.",
     keywords: "GetRentals, room for rent, pg near me, flat for rent, shared accommodation, hostel, rent a room, roommate finder, co-living spaces, furnished room, rooms on rent delhi, mumbai rooms, bangalore pg, pune flats, zero brokerage, rent calculator, budget planning, property search"
   },
@@ -222,9 +222,9 @@ const SEO_PAGES = {
     keywords: "search properties, browse rooms, find accommodation, pg listings, flat for rent, room search, property listings, rental properties, accommodation search"
   },
   post: {
-    title: "Post Your Property for Free - List Rooms, PG, Flats | GetRentals",
+    title: "Post Your Property for Free - List Rooms, PG, Flats, Apartments & more | GetRentals",
     description: "List your room, PG, or flat for rent on GetRentals for free. Reach thousands of verified tenants, students and working professionals. Zero listing fees, maximum visibility.",
-    keywords: "post property, list room for rent, advertise pg, rent out flat, property listing, free listing, landlord, property owner, rent out room"
+    keywords: "post property, post pg, post apartment for free, post apartment, post room, post room for free, post free, post property, property on rent, list room for rent, advertise pg, rent out flat, property listing, free listing, landlord, property owner, rent out room"
   },
   'my-properties': {
     title: "My Properties - Manage Your Listings | GetRentals",
@@ -257,7 +257,7 @@ const SEO_PAGES = {
     keywords: "user profile, account settings, profile management, personal information, account preferences"
   },
   blog: {
-    title: "GetRentals Blog - Property Rental Tips, Real Estate Advice & Housing Insights",
+    title: "Property Rental Tips, Real Estate Advice & Housing Insights - GetRentals Blog",
     description: "Discover expert property rental tips, real estate insights, apartment hunting guides, and housing market trends on GetRentals blog. Your ultimate resource for rental property advice in India.",
     keywords: "property rental blog, real estate tips, apartment hunting, housing market, rental advice, property investment, tenant tips, landlord advice, Indian real estate, property blog"
   }
