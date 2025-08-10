@@ -117,7 +117,7 @@ const blogPosts = [
     title: "How to Negotiate Rent Like a Pro: Money-Saving Strategies",
     excerpt: "Master the art of rent negotiation with proven techniques that can save you thousands annually. Build better relationships with landlords while reducing costs.",
     category: "Financial Tips",
-    author: "Real Estate Advisor",
+    author: "GetRentals Team",
     date: "December 10, 2024",
     readTime: "7 min read",
     image: "https://images.unsplash.com/photo-1605146769289-440113cc3d00?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxyZWFsJTIwZXN0YXRlfGVufDB8fHx8MTc1NDEzMDA2Nnww&ixlib=rb-4.1.0&q=85",
