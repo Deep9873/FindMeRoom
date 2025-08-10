@@ -116,8 +116,95 @@ const AboutUs = () => {
           </div>
         </div>
 
-        
+        {/* Team Section */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Meet the GetRentals Team</h2>
+          <p className="text-gray-700 leading-relaxed mb-6">
+            Our dedicated team of real estate professionals, technology experts, and customer service specialists work 
+            tirelessly to provide you with the best rental experience in India. Every article and guide on our platform 
+            is carefully crafted by the GetRentals Team, combining years of industry experience with deep market insights.
+          </p>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-2m-2 0H7m5 0v-5a2 2 0 00-2-2H8a2 2 0 00-2 2v5m5 0V9a1 1 0 00-1-1H8a1 1 0 00-1 1v10m5 0h2" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Real Estate Experts</h3>
+              <p className="text-gray-600 text-sm">10+ years combined experience in Indian property markets</p>
+            </div>
+            
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Content Specialists</h3>
+              <p className="text-gray-600 text-sm">Creating valuable, original content for renters and property owners</p>
+            </div>
+            
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 110 19.5 9.75 9.75 0 010-19.5z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Customer Success</h3>
+              <p className="text-gray-600 text-sm">Ensuring excellent user experience and customer satisfaction</p>
+            </div>
+          </div>
+          
+          <div className="mt-8 p-6 bg-blue-50 rounded-lg">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Our Editorial Standards</h3>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Every piece of content published on GetRentals undergoes rigorous review by our team of experts. We are committed to:
+            </p>
+            <ul className="space-y-2 text-gray-700">
+              <li>• <strong>Accuracy:</strong> All information is fact-checked and verified with current market data</li>
+              <li>• <strong>Originality:</strong> We create unique, valuable content based on real market insights</li>
+              <li>• <strong>Relevance:</strong> Content is updated regularly to reflect current market conditions</li>
+              <li>• <strong>Expertise:</strong> Written by professionals with deep knowledge of Indian rental markets</li>
+              <li>• <strong>User Value:</strong> Every article aims to solve real problems faced by renters and property owners</li>
+            </ul>
+          </div>
+        </div>
 
+        {/* Achievements & Trust Signals */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Why Trust GetRentals</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+            <div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">10,000+</div>
+              <div className="text-gray-600">Properties Listed</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-green-600 mb-2">25,000+</div>
+              <div className="text-gray-600">Happy Users</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-purple-600 mb-2">180+</div>
+              <div className="text-gray-600">Cities Covered</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-orange-600 mb-2">₹0</div>
+              <div className="text-gray-600">Brokerage Fee</div>
+            </div>
+          </div>
+          
+          <div className="mt-8 grid md:grid-cols-2 gap-6">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Verified Platform</h3>
+              <p className="text-gray-700">All properties and users undergo verification processes to ensure authenticity and safety.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Customer Support</h3>
+              <p className="text-gray-700">Dedicated support team available to help with any queries or issues you may encounter.</p>
+            </div>
+          </div>
+        </div>
 
         {/* Contact CTA */}
         <div className="text-center mt-12">
