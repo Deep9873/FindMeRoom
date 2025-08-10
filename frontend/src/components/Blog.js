@@ -2206,7 +2206,7 @@ const blogPosts = [
     title: "Essential Tenant Rights Every Renter Should Know in India",
     excerpt: "Know your rights as a tenant in India. From security deposit protection to eviction laws, understand your legal protections and how to enforce them effectively.",
     category: "Legal Advice",
-    author: "Legal Rights Expert",
+    author: "GetRentals Team",
     date: "November 18, 2024",
     readTime: "8 min read",
     image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHx0ZW5hbnQlMjByaWdodHN8ZW58MHx8fHwxNzU0MTMwMTI3fDA&ixlib=rb-4.1.0&q=85",
