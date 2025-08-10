@@ -3692,7 +3692,7 @@ const Footer = () => {
   
   // Function for city navigation with scroll to top
   const handleCityNavigation = (city) => {
-    localStorage.setItem('selectedCity', city);
+    versionedStorage.setItem('selectedCity', city);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     navigate('/properties');
   };
