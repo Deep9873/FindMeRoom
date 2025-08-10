@@ -4350,6 +4350,11 @@ const Blog = () => {
           </div>
         </section>
 
+        {/* Adcash Banner */}
+        <section className="mb-16 text-center">
+          <AdcashBanner className="inline-block" />
+        </section>
+
         {/* Category Filter */}
         <section className="mb-8">
           <div className="flex items-center justify-between mb-6">
