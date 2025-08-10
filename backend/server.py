@@ -32,6 +32,26 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Add cache control headers middleware to prevent caching issues
+@app.middleware("http")
+async def add_cache_control_headers(request: Request, call_next):
+    response = await call_next(request)
+    
+    # Add cache control headers to prevent aggressive caching
+    if request.url.path.startswith('/api'):
+        # For API endpoints, prevent caching
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+    else:
+        # For static files, allow short-term caching
+        response.headers["Cache-Control"] = "public, max-age=300"
+    
+    # Add versioning header to help with cache busting
+    response.headers["X-App-Version"] = "1.0.0"
+    
+    return response
+
 # Add middleware to handle large request bodies 
 @app.middleware("http")
 async def limit_upload_size(request: Request, call_next):
