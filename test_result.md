@@ -1619,3 +1619,20 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "✅ COMPREHENSIVE SITEMAP.XML UPDATED AND OPTIMIZED: Successfully updated sitemap.xml with all 32 pages for Google Search Console indexing. Key improvements: 1) Enhanced Rent Calculator Priority: Increased rent calculator page priority to 0.9 (from 0.8) reflecting its importance as a key feature, 2) Complete Page Coverage: Included all main application pages (9), content pages (6), blog articles (13), and resource pages (5), 3) Proper Organization: Organized URLs into logical sections with appropriate comments and priorities, 4) Updated Timestamps: Updated lastmod dates to 2025-01-03 for current relevance, 5) Cross-Platform Sync: Copied updated sitemap to both root directory and frontend/public directory for proper accessibility."
+
+
+agent_communication:
+  - agent: "main"
+    message: |
+      🔄 Implemented robust cache-busting and BFCache handling to fix "changes only visible after reloading blog" issue.
+      - Backend: Added dynamic X-App-Version header and /api root now returns { version } so frontend can detect new deploys. Prevent-caching headers already set for all /api routes.
+      - Frontend: Added BFCache detector (pageshow) to force reload when navigating back/forward, added initCacheControl() to poll /api for version and reload when changed, and kept no-cache meta tags.
+      Please verify that homepage shows latest changes immediately and no longer reverts after navigating back from Blog.
+
+test_plan:
+  current_focus:
+    - "Verify /api/ returns version and X-App-Version header"
+    - "Verify BFCache navigation back from /blog does not show stale content"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
