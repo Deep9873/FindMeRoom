@@ -1648,7 +1648,7 @@ const EnhancedChatInterface = ({ selectedProperty = null, prefilledMessage = "" 
       const url = `${BACKEND_URL}/api/chat/conversations`;
       const response = await fetch(url, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${versionedStorage.getItem('token')}`
         }
       });
       
