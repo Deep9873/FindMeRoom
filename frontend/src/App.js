@@ -1755,7 +1755,7 @@ const EnhancedChatInterface = ({ selectedProperty = null, prefilledMessage = "" 
     try {
       const response = await fetch(`${BACKEND_URL}/api/chat/${propertyId}?other_user_id=${otherUserId}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${versionedStorage.getItem('token')}`
         }
       });
       
