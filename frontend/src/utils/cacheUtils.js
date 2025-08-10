@@ -147,6 +147,22 @@ export const handleCacheReload = () => {
 };
 
 // Add meta tags to prevent caching
+// One-time localStorage sanitizer to migrate legacy keys before React mounts
+export const sanitizeLocalStorage = () => {
+  try {
+    const v = localStorage.getItem('selectedCity');
+    if (v && typeof v === 'string') {
+      const trimmed = v.trim();
+      // If it doesn't look like our envelope JSON, migrate it directly
+      if (trimmed && !trimmed.startsWith('{') && !trimmed.startsWith('[')) {
+        versionedStorage.setItem('selectedCity', v);
+      }
+    }
+  } catch (e) {
+    // noop
+  }
+};
+
 export const addNoCacheMetaTags = () => {
   const metaTags = [
     { httpEquiv: 'Cache-Control', content: 'no-cache, no-store, must-revalidate' },
