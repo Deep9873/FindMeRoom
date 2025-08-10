@@ -170,16 +170,20 @@ export const initCacheControl = (backendUrl) => {
   const KEY = 'app_version';
   const fetchVersion = async () => {
     try {
-      const res = await fetch(`${backendUrl}/api/`, { cache: 'no-store', method: 'GET' });
+      // Ensure backendUrl does not have trailing slash
+      const base = (backendUrl || '').replace(/\/+$/, '');
+      const res = await fetch(`${base}/api/`, { cache: 'no-store', method: 'GET' });
+      if (!res.ok) return null;
       // Prefer header, fallback to JSON body property
       const headerVersion = res.headers.get('X-App-Version');
       let bodyVersion = null;
       try {
         const data = await res.clone().json().catch(() => null);
-        bodyVersion = data && (data.version || data.X_App_Version || data.message);
+        bodyVersion = data && (data.version || data.X_App_Version);
       } catch (e) {}
       return headerVersion || bodyVersion || null;
     } catch (e) {
+      // Network failures should not crash the app – just skip
       return null;
     }
   };
