@@ -335,7 +335,7 @@ const blogPosts = [
     title: "PG vs Apartment: Complete Comparison Guide for Renters",
     excerpt: "Confused between renting a PG or an independent apartment? Compare costs, benefits, lifestyle impacts, and make the right choice for your situation.",
     category: "Property Comparison",
-    author: "Housing Consultant",
+    author: "GetRentals Team",
     date: "December 5, 2024",
     readTime: "9 min read",
     image: "https://images.unsplash.com/photo-1555636222-cae831e670b3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxhcGFydG1lbnR8ZW58MHx8fHwxNzU0MTMwMDgyfDA&ixlib=rb-4.1.0&q=85",
