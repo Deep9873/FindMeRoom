@@ -1731,7 +1731,7 @@ const EnhancedChatInterface = ({ selectedProperty = null, prefilledMessage = "" 
     try {
       const response = await fetch(`${BACKEND_URL}/api/chat/unread-count`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${versionedStorage.getItem('token')}`
         }
       });
       
