@@ -16,32 +16,36 @@ const RentalAgreementTemplates = () => {
 
   // Function to handle PDF downloads
   const downloadPDF = (templateType, stateName) => {
-    // Create a sample PDF content (in a real scenario, you would have actual PDF URLs)
-    const generateSamplePDF = (type, state) => {
-      const content = `
-RENTAL AGREEMENT TEMPLATE
-${type.toUpperCase()} - ${state.toUpperCase()} FORMAT
+    // Map template types to actual file names
+    const templateFiles = {
+      'Leave_License': {
+        'Maharashtra': 'Maharashtra_Leave_License_Agreement.txt',
+        'Delhi_NCR': 'Delhi_NCR_Leave_License_Agreement.txt',
+        'Karnataka': 'Karnataka_Leave_License_Agreement.txt'
+      },
+      'Residential_Lease': {
+        'General': 'Residential_Lease_Agreement.txt'
+      },
+      'Commercial_Lease': {
+        'General': 'Commercial_Lease_Agreement.txt'
+      },
+      'PG_Agreement': {
+        'General': 'PG_Agreement.txt'
+      }
+    };
 
-This is a sample rental agreement template for ${state}. 
-This template includes all necessary clauses for ${type} in ${state}.
-
-IMPORTANT: This is a downloadable template. For actual use, please consult with a legal expert and customize according to your specific requirements.
-
-Downloaded from GetRentals.online
-      `;
-      
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = window.URL.createObjectURL(blob);
+    const fileName = templateFiles[templateType]?.[stateName];
+    if (fileName) {
+      // Create download link for the actual template file
       const link = document.createElement('a');
-      link.href = url;
-      link.download = `${type}_${state}_Template.txt`;
+      link.href = `/templates/${fileName}`;
+      link.download = fileName;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    };
-
-    generateSamplePDF(templateType, stateName);
+    } else {
+      alert('Template not found. Please try again.');
+    }
   };
 
   return (
