@@ -4,7 +4,7 @@ import './App.css';
 import axios from 'axios';
 
 // Import cache utilities
-import { versionedStorage, handleCacheReload, addNoCacheMetaTags } from './utils/cacheUtils';
+import { versionedStorage, handleCacheReload, addNoCacheMetaTags, initCacheControl } from './utils/cacheUtils';
 
 // Import new AdSense compliance pages
 import AboutUs from './components/AboutUs';
