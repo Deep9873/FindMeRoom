@@ -1054,7 +1054,7 @@ const blogPosts = [
     title: "Property Investment 101: Buy vs Rent Analysis for Smart Decisions",
     excerpt: "Should you buy or rent? Make informed property investment decisions with our comprehensive analysis of costs, benefits, and market factors affecting Indian real estate.",
     category: "Investment",
-    author: "Investment Advisor",
+    author: "GetRentals Team",
     date: "November 28, 2024",
     readTime: "11 min read",
     image: "https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxwcm9wZXJ0eSUyMGludmVzdG1lbnR8ZW58MHx8fHwxNzU0MTMwMTA1fDA&ixlib=rb-4.1.0&q=85",
