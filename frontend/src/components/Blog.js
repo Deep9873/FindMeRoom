@@ -4360,7 +4360,7 @@ const Blog = () => {
         <section className="mb-16 text-center">
           <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-500">
             <p className="text-xs text-gray-500 mb-2">Advertisement</p>
-            <NativeAd className="inline-block" />
+
           </div>
         </section>
 
