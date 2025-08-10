@@ -14,6 +14,36 @@ const RentalAgreementTemplates = () => {
     );
   }, [updateSEO]);
 
+  // Function to handle PDF downloads
+  const downloadPDF = (templateType, stateName) => {
+    // Create a sample PDF content (in a real scenario, you would have actual PDF URLs)
+    const generateSamplePDF = (type, state) => {
+      const content = `
+RENTAL AGREEMENT TEMPLATE
+${type.toUpperCase()} - ${state.toUpperCase()} FORMAT
+
+This is a sample rental agreement template for ${state}. 
+This template includes all necessary clauses for ${type} in ${state}.
+
+IMPORTANT: This is a downloadable template. For actual use, please consult with a legal expert and customize according to your specific requirements.
+
+Downloaded from GetRentals.online
+      `;
+      
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${type}_${state}_Template.txt`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    };
+
+    generateSamplePDF(templateType, stateName);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
