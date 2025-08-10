@@ -3171,6 +3171,16 @@ const HomePage = ({ setChatProperty }) => {
         </div>
       </div>
       
+      {/* Native Ad */}
+      <div className="bg-white py-8 border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-green-500">
+            <p className="text-xs text-gray-500 mb-2">Advertisement</p>
+            <NativeAd />
+          </div>
+        </div>
+      </div>
+      
       {/* Post Property CTA Section */}
       <div className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
