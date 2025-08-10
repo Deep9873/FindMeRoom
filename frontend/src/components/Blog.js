@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSEO } from '../App';
 import { useNavigate, useParams } from 'react-router-dom';
 
-// Enhanced blog posts data with 13 comprehensive articles
+// Enhanced blog posts data with 15 comprehensive articles
 const blogPosts = [
   {
     id: 1,
