@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSEO } from '../App';
 import { useNavigate, useParams } from 'react-router-dom';
+import AdcashBanner from './AdcashBanner';
 
 // Enhanced blog posts data with 15 comprehensive articles
 const blogPosts = [
