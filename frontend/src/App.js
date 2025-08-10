@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, Link 
 import './App.css';
 import axios from 'axios';
 
+// Import cache utilities
+import { versionedStorage, handleCacheReload, addNoCacheMetaTags } from './utils/cacheUtils';
+
 // Import new AdSense compliance pages
 import AboutUs from './components/AboutUs';
 import ContactUs from './components/ContactUs';
