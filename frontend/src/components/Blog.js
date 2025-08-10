@@ -157,7 +157,7 @@ const blogPosts = [
     title: "Best Areas to Rent in Delhi NCR: Complete Location Guide 2024",
     excerpt: "Discover the top residential areas in Delhi NCR for renters. From budget-friendly neighborhoods to premium localities, find the perfect location for your lifestyle and budget.",
     category: "Location Guide",
-    author: "Delhi Real Estate Expert",
+    author: "GetRentals Team",
     date: "December 8, 2024",
     readTime: "10 min read",
     image: "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxkZWxoaSUyMGNpdHl8ZW58MHx8fHwxNzU0MTMwMDc0fDA&ixlib=rb-4.1.0&q=85",
