@@ -167,6 +167,22 @@ export const addNoCacheMetaTags = () => {
 export const initCacheControl = (backendUrl) => {
   if (!backendUrl) return;
 
+  // Disable version polling when backend origin differs from current origin (prevents CORS/extension errors in previews)
+  try {
+    const backend = new URL((backendUrl || '').replace(/\/+$/, ''));
+    const here = new URL(window.location.origin);
+    const isLocal = here.hostname === 'localhost' || here.hostname === '127.0.0.1';
+    const sameHost = backend.hostname === here.hostname;
+    const sameProto = backend.protocol === here.protocol;
+    if (!isLocal && (!sameHost || !sameProto)) {
+      // In cross-origin preview environments, skip polling gracefully
+      return;
+    }
+  } catch (e) {
+    // If URL parsing fails, skip silently
+    return;
+  }
+
   const KEY = 'app_version';
   const fetchVersion = async () => {
     try {
