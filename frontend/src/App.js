@@ -12,6 +12,7 @@ import HowItWorks from './components/HowItWorks';
 import SafetySecurity from './components/SafetySecurity';
 import Blog, { BlogPost } from './components/Blog';
 import RentCalculator from './components/RentCalculator';
+import AdcashBanner from './components/AdcashBanner';
 
 // Import resource pages
 import RentalAgreementTemplates from './components/resources/RentalAgreementTemplates';
