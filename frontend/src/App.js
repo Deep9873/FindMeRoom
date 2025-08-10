@@ -651,8 +651,9 @@ const LoginRegisterPopup = ({ isOpen, onClose, defaultTab = 'login' }) => {
 
 const CityProvider = ({ children }) => {
   const [selectedCity, setSelectedCity] = useState(() => {
-    // Get from versioned localStorage if available
-    return versionedStorage.getItem('selectedCity') || '';
+    // Get city from versioned storage; if it was legacy string, migration in cacheUtils already handles it
+    const city = versionedStorage.getItem('selectedCity');
+    return typeof city === 'string' ? city : '';
   });
   const [showCityPopup, setShowCityPopup] = useState(() => {
     // Show popup if no city is selected
