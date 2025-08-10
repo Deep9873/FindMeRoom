@@ -538,7 +538,7 @@ const blogPosts = [
     title: "Complete Guide to Rental Agreements in India: Legal Requirements & Tips",
     excerpt: "Everything you need to know about rental agreements in India. Understand legal requirements, clauses, registration process, and protect your rights as a tenant or landlord.",
     category: "Legal Advice",
-    author: "Legal Property Expert",
+    author: "GetRentals Team",
     date: "December 3, 2024",
     readTime: "12 min read",
     image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxsZWdhbCUyMGRvY3VtZW50c3xlbnwwfHx8fDE3NTQxMzAwOTF8MA&ixlib=rb-4.1.0&q=85",
