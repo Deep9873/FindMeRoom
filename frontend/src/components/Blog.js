@@ -773,7 +773,7 @@ const blogPosts = [
     title: "Student Housing Guide: Finding Affordable PGs and Hostels in India",
     excerpt: "Complete guide for students to find budget-friendly accommodation. From hostel hunting to PG selection, discover the best housing options for your college years.",
     category: "Student Housing",
-    author: "Student Housing Expert",
+    author: "GetRentals Team",
     date: "December 1, 2024",
     readTime: "8 min read",
     image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxzdHVkZW50JTIwaG9zdGVsfGVufDB8fHx8MTc1NDEzMDA5OXww&ixlib=rb-4.1.0&q=85",
