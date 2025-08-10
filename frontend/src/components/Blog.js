@@ -3003,7 +3003,7 @@ const blogPosts = [
     title: "Bangalore Rental Hotspots: Complete Guide for IT Professionals",
     excerpt: "Find the perfect Bangalore rental for tech professionals. Explore IT corridors, startup hubs, and residential areas with the best connectivity and amenities for developers and engineers.",
     category: "Location Guide",
-    author: "Bangalore Tech Expert",
+    author: "GetRentals Team",
     date: "November 12, 2024",
     readTime: "11 min read",
     image: "https://images.unsplash.com/photo-1582650625119-3a31f8fa2699?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxiYW5nYWxvcmUlMjBpdCUyMGh1YnxlbnwwfHx8fDE3NTQxMzAxNDJ8MA&ixlib=rb-4.1.0&q=85",
