@@ -32,6 +32,9 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# App version for cache-busting (changes on each backend restart unless explicitly set)
+APP_VERSION = os.environ.get('APP_VERSION', datetime.utcnow().strftime('%Y%m%d%H%M%S'))
+
 # Add cache control headers middleware to prevent caching issues
 @app.middleware("http")
 async def add_cache_control_headers(request: Request, call_next):
@@ -48,7 +51,7 @@ async def add_cache_control_headers(request: Request, call_next):
         response.headers["Cache-Control"] = "public, max-age=300"
     
     # Add versioning header to help with cache busting
-    response.headers["X-App-Version"] = "1.0.0"
+    response.headers["X-App-Version"] = APP_VERSION
     
     return response
 
