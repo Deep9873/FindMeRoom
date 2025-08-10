@@ -16,7 +16,7 @@ import SafetySecurity from './components/SafetySecurity';
 import Blog, { BlogPost } from './components/Blog';
 import RentCalculator from './components/RentCalculator';
 // AdcashBanner removed as per request
-import NativeAd from './components/NativeAd';
+// NativeAd removed as per request
 
 // Import resource pages
 import RentalAgreementTemplates from './components/resources/RentalAgreementTemplates';
