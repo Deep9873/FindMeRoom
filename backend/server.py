@@ -523,7 +523,7 @@ async def get_chat_messages(property_id: str, other_user_id: str, current_user: 
 # Basic test route
 @api_router.get("/")
 async def root():
-    return {"message": "GetRentals API is running"}
+    return {"message": "GetRentals API is running", "version": APP_VERSION}
 
 # Include the router in the main app
 app.include_router(api_router) 
