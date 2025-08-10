@@ -701,6 +701,8 @@ const AuthProvider = ({ children }) => {
     handleCacheReload();
     addNoCacheMetaTags();
     
+    initCacheControl(BACKEND_URL);
+
     const token = versionedStorage.getItem('token');
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
