@@ -76,7 +76,7 @@ const blogPosts = [
     title: "10 Red Flags to Avoid When Renting a Property",
     excerpt: "Learn to identify common warning signs and avoid rental scams. Protect yourself from fraudulent landlords and problematic properties with these essential tips.",
     category: "Safety Tips",
-    author: "Property Expert",
+    author: "GetRentals Team",
     date: "December 12, 2024",
     readTime: "6 min read",
     image: "https://images.unsplash.com/photo-1693948458360-c05c436177a8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njd8MHwxfHNlYXJjaHwzfHxwcm9wZXJ0eSUyMHJlbnRhbHxlbnwwfHx8fDE3NTQxMzAwNTd8MA&ixlib=rb-4.1.0&q=85",
