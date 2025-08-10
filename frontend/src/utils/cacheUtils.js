@@ -97,7 +97,8 @@ export const versionedStorage = {
 
       return parsed.data;
     } catch (e) {
-      console.warn('Unable to get localStorage item:', e);
+      // Downgrade to debug to avoid noisy console in production
+      console.debug('versionedStorage: unable to parse item, will migrate if possible');
       return null;
     }
   },
