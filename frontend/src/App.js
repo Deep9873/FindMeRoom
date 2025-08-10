@@ -1828,7 +1828,7 @@ const EnhancedChatInterface = ({ selectedProperty = null, prefilledMessage = "" 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${versionedStorage.getItem('token')}`
         },
         body: JSON.stringify({
           property_id: selectedConversation.property_id,
