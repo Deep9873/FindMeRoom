@@ -4353,7 +4353,7 @@ const Blog = () => {
 
         {/* Adcash Banner */}
         <section className="mb-16 text-center">
-          <AdcashBanner className="inline-block" />
+
         </section>
 
         {/* Native Ad */}
