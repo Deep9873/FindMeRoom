@@ -89,19 +89,38 @@ export const versionedStorage = {
   }
 };
 
-// Detect if page was loaded from cache
-export const isLoadedFromCache = () => {
-  return window.performance && 
-         window.performance.navigation && 
-         window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD;
+// Detect if page was loaded from BFCache using modern API
+export const isLoadedFromCache = (event = null) => {
+  // Prefer pageshow event persisted flag
+  if (event && typeof event.persisted === 'boolean') return event.persisted;
+  // Fallback to PerformanceNavigationTiming
+  try {
+    const nav = performance.getEntriesByType('navigation')[0];
+    if (nav && nav.type) {
+      return nav.type === 'back_forward';
+    }
+  } catch (e) {}
+  // Legacy fallback (deprecated in modern browsers)
+  return (
+    window.performance &&
+    window.performance.navigation &&
+    window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD
+  );
 };
 
-// Force refresh if loaded from cache
+// Force refresh if loaded from cache and set up listeners for BFCache restores
 export const handleCacheReload = () => {
-  if (isLoadedFromCache()) {
-    console.log('Page loaded from cache, forcing refresh...');
-    window.location.reload(true);
-  }
+  const reloadIfNeeded = (e) => {
+    if (isLoadedFromCache(e)) {
+      console.log('Page restored from cache (BFCache). Forcing hard reload to fetch latest assets.');
+      window.location.reload();
+    }
+  };
+
+  // Run on first load as well
+  reloadIfNeeded();
+  // Listen for bfcache restores
+  window.addEventListener('pageshow', reloadIfNeeded);
 };
 
 // Add meta tags to prevent caching
@@ -121,4 +140,45 @@ export const addNoCacheMetaTags = () => {
       document.head.appendChild(metaTag);
     }
   });
+};
+
+// Check backend app version and force reload when version changes
+export const initCacheControl = (backendUrl) => {
+  if (!backendUrl) return;
+
+  const KEY = 'app_version';
+  const fetchVersion = async () => {
+    try {
+      const res = await fetch(`${backendUrl}/api/`, { cache: 'no-store', method: 'GET' });
+      // Prefer header, fallback to JSON body property
+      const headerVersion = res.headers.get('X-App-Version');
+      let bodyVersion = null;
+      try {
+        const data = await res.clone().json().catch(() => null);
+        bodyVersion = data && (data.version || data.X_App_Version || data.message);
+      } catch (e) {}
+      return headerVersion || bodyVersion || null;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const checkAndReload = async () => {
+    const latest = await fetchVersion();
+    if (!latest) return;
+    const current = localStorage.getItem(KEY);
+    if (current && current !== latest) {
+      console.log(`Detected new app version (${current} -> ${latest}). Clearing caches and reloading...`);
+      try { localStorage.clear(); sessionStorage.clear(); } catch (e) {}
+      localStorage.setItem(KEY, latest);
+      window.location.reload();
+    } else if (!current && latest) {
+      localStorage.setItem(KEY, latest);
+    }
+  };
+
+  // Run immediately and then every 60s for the session
+  checkAndReload();
+  const interval = setInterval(checkAndReload, 60000);
+  window.addEventListener('beforeunload', () => clearInterval(interval));
 };
