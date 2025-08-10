@@ -143,7 +143,10 @@ Downloaded from GetRentals.online
                 <p className="text-gray-600 text-sm mb-3">For residential properties with family occupation</p>
                 <div className="flex justify-between items-center">
                   <span className="text-green-600 font-medium">Free Download</span>
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                  <button 
+                    onClick={() => downloadPDF('Residential_Lease', 'General')}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+                  >
                     Download PDF
                   </button>
                 </div>
@@ -154,7 +157,10 @@ Downloaded from GetRentals.online
                 <p className="text-gray-600 text-sm mb-3">For office, shop, or business purposes</p>
                 <div className="flex justify-between items-center">
                   <span className="text-green-600 font-medium">Free Download</span>
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                  <button 
+                    onClick={() => downloadPDF('Commercial_Lease', 'General')}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+                  >
                     Download PDF
                   </button>
                 </div>
@@ -165,7 +171,10 @@ Downloaded from GetRentals.online
                 <p className="text-gray-600 text-sm mb-3">Specially designed for paying guest arrangements</p>
                 <div className="flex justify-between items-center">
                   <span className="text-green-600 font-medium">Free Download</span>
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                  <button 
+                    onClick={() => downloadPDF('PG_Agreement', 'General')}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+                  >
                     Download PDF
                   </button>
                 </div>
