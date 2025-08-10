@@ -89,7 +89,10 @@ Downloaded from GetRentals.online
                 <p className="text-gray-600 text-sm mb-3">Compliant with Maharashtra Rent Control Act</p>
                 <div className="flex justify-between items-center">
                   <span className="text-green-600 font-medium">Free Download</span>
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                  <button 
+                    onClick={() => downloadPDF('Leave_License', 'Maharashtra')}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+                  >
                     Download PDF
                   </button>
                 </div>
