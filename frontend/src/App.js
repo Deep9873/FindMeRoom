@@ -697,7 +697,11 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    // Handle cache reload on component mount
+    handleCacheReload();
+    addNoCacheMetaTags();
+    
+    const token = versionedStorage.getItem('token');
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       fetchUserInfo();
@@ -710,9 +714,12 @@ const AuthProvider = ({ children }) => {
     try {
       const response = await axios.get(`${API}/auth/me`);
       setUser(response.data);
+      // Store user info with versioning
+      versionedStorage.setItem('user', response.data);
     } catch (error) {
       console.error('Error fetching user info:', error);
-      localStorage.removeItem('token');
+      versionedStorage.removeItem('token');
+      versionedStorage.removeItem('user');
       delete axios.defaults.headers.common['Authorization'];
     } finally {
       setLoading(false);
@@ -723,7 +730,8 @@ const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post(`${API}/auth/login`, { email, password });
       const { access_token, user } = response.data;
-      localStorage.setItem('token', access_token);
+      versionedStorage.setItem('token', access_token);
+      versionedStorage.setItem('user', user);
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       setUser(user);
       return { success: true };
@@ -736,7 +744,8 @@ const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post(`${API}/auth/register`, userData);
       const { access_token, user } = response.data;
-      localStorage.setItem('token', access_token);
+      versionedStorage.setItem('token', access_token);
+      versionedStorage.setItem('user', user);
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
       setUser(user);
       return { success: true };
@@ -746,7 +755,8 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    versionedStorage.removeItem('token');
+    versionedStorage.removeItem('user');
     delete axios.defaults.headers.common['Authorization'];
     setUser(null);
   };
