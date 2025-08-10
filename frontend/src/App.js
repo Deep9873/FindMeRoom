@@ -1703,7 +1703,7 @@ const EnhancedChatInterface = ({ selectedProperty = null, prefilledMessage = "" 
       console.log('Fetching conversations from URL:', url);
       const response = await fetch(url, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${versionedStorage.getItem('token')}`
         }
       });
       
