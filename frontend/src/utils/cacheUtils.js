@@ -55,24 +55,45 @@ export const versionedStorage = {
   
   getItem: (key) => {
     try {
-      const item = localStorage.getItem(key);
-      if (!item) return null;
+      const raw = localStorage.getItem(key);
+      if (raw === null || raw === undefined) return null;
+
+      // Try parse JSON; if it fails, treat as legacy plain string and migrate
+      let parsed;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (jsonErr) {
+        // Legacy value (e.g., "Agartala, Tripura"). Migrate to versioned format.
+        versionedStorage.setItem(key, raw);
+        return raw;
+      }
+
+      // If parsed is a primitive (e.g., string), also migrate
+      if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+        versionedStorage.setItem(key, parsed);
+        return parsed;
+      }
       
-      const parsed = JSON.parse(item);
-      
-      // Check version compatibility
+      // Parsed is an object but might not be our versioned envelope
+      if (!('version' in parsed) || !('timestamp' in parsed) || !('data' in parsed)) {
+        // Unknown shape; migrate the value as-is
+        versionedStorage.setItem(key, parsed);
+        return parsed;
+      }
+
+      // Envelope checks
       if (parsed.version !== versionedStorage.version) {
+        // Version mismatch – drop and return null
         localStorage.removeItem(key);
         return null;
       }
-      
-      // Check if data is older than 24 hours
+
       const hoursDiff = (Date.now() - parsed.timestamp) / (1000 * 60 * 60);
       if (hoursDiff > 24) {
         localStorage.removeItem(key);
         return null;
       }
-      
+
       return parsed.data;
     } catch (e) {
       console.warn('Unable to get localStorage item:', e);
