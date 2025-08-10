@@ -172,40 +172,6 @@ const AboutUs = () => {
           </div>
         </div>
 
-        {/* Achievements & Trust Signals */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Why Trust GetRentals</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">10,000+</div>
-              <div className="text-gray-600">Properties Listed</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-green-600 mb-2">25,000+</div>
-              <div className="text-gray-600">Happy Users</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-purple-600 mb-2">180+</div>
-              <div className="text-gray-600">Cities Covered</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-orange-600 mb-2">₹0</div>
-              <div className="text-gray-600">Brokerage Fee</div>
-            </div>
-          </div>
-          
-          <div className="mt-8 grid md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Verified Platform</h3>
-              <p className="text-gray-700">All properties and users undergo verification processes to ensure authenticity and safety.</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Customer Support</h3>
-              <p className="text-gray-700">Dedicated support team available to help with any queries or issues you may encounter.</p>
-            </div>
-          </div>
-        </div>
-
         {/* Contact CTA */}
         <div className="text-center mt-12">
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">Get in Touch</h2>
