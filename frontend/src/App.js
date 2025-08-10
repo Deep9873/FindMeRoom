@@ -651,21 +651,21 @@ const LoginRegisterPopup = ({ isOpen, onClose, defaultTab = 'login' }) => {
 
 const CityProvider = ({ children }) => {
   const [selectedCity, setSelectedCity] = useState(() => {
-    // Get from localStorage if available
-    return localStorage.getItem('selectedCity') || '';
+    // Get from versioned localStorage if available
+    return versionedStorage.getItem('selectedCity') || '';
   });
   const [showCityPopup, setShowCityPopup] = useState(() => {
     // Show popup if no city is selected
-    return !localStorage.getItem('selectedCity');
+    return !versionedStorage.getItem('selectedCity');
   });
 
   const updateSelectedCity = (city) => {
     setSelectedCity(city);
     setShowCityPopup(false);
     if (city) {
-      localStorage.setItem('selectedCity', city);
+      versionedStorage.setItem('selectedCity', city);
     } else {
-      localStorage.removeItem('selectedCity');
+      versionedStorage.removeItem('selectedCity');
       setShowCityPopup(true);
     }
   };
