@@ -102,7 +102,30 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "first tell me the all pages in the whole webpage i want to add them in google search console for indexing; second improve the seo of whole website add tell about new feautre of rent calculator in homepage content and also improve specifically of rent calculator page; and also whenever any page is switched it should scroll to top"
+user_problem_statement: "rental agreement template download button not working in resources; image not showing on article 'Smart Home Features That Add Value to Rental Properties: and 'Complete Moving Guide: Essential Checklist for Changing Apartments' and edit the 13+ articles text to 15 articles; remove 'Why Trust GetRentals' container from about us page; and in last if credits left install ad using this: Banner 468x60
+|
+10269738
+ 
+
+Step 1: Include Adcash library
+Place the following JS script inside <head></head> of your page as high as possible.
+
+
+
+<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+
+Step 2: Put the tag script on the page
+Copy the following JS code and paste it into the source code of your page below first library script.
+
+Note: banner will be rendered inside the parent element of the script that calls the runBanner function. We recommend you enclose it in a <div> element.
+
+<div>
+    <script type="text/javascript">
+        aclib.runBanner({
+            zoneId: '10269738',
+        });
+    </script>
+</div>"
 
 backend:
   - task: "User Authentication System"
