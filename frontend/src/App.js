@@ -3957,7 +3957,12 @@ const Footer = () => {
               Sitemap
             </button> */}
             <a href="https://getrentals.online/sitemap.xml" className="hover:text-white transition-colors">Sitemap</a>
-            <a href="#cookies" className="hover:text-white transition-colors">Cookie Policy</a>
+            <button 
+              onClick={() => handleNavigation('/privacy-policy')}
+              className="hover:text-white transition-colors"
+            >
+              Privacy Policy
+            </button>
           </div>
         </div>
       </div>
