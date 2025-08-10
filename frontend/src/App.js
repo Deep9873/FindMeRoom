@@ -3163,6 +3163,13 @@ const HomePage = ({ setChatProperty }) => {
         </div>
       </div>
       
+      {/* Adcash Banner */}
+      <div className="bg-gray-100 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <AdcashBanner />
+        </div>
+      </div>
+      
       {/* Post Property CTA Section */}
       <div className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
