@@ -701,7 +701,7 @@ const AuthProvider = ({ children }) => {
     handleCacheReload();
     addNoCacheMetaTags();
     
-    initCacheControl(BACKEND_URL);
+    try { initCacheControl(BACKEND_URL); } catch (e) { console.debug('initCacheControl disabled due to environment:', e); }
 
     const token = versionedStorage.getItem('token');
     if (token) {
