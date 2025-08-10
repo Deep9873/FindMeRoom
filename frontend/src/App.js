@@ -13,6 +13,7 @@ import SafetySecurity from './components/SafetySecurity';
 import Blog, { BlogPost } from './components/Blog';
 import RentCalculator from './components/RentCalculator';
 import AdcashBanner from './components/AdcashBanner';
+import NativeAd from './components/NativeAd';
 
 // Import resource pages
 import RentalAgreementTemplates from './components/resources/RentalAgreementTemplates';
