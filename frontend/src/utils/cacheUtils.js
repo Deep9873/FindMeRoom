@@ -64,6 +64,7 @@ export const versionedStorage = {
         parsed = JSON.parse(raw);
       } catch (jsonErr) {
         // Legacy value (e.g., "Agartala, Tripura"). Migrate to versioned format.
+        // Safeguard: if raw is a plain string or number, store as-is and return
         versionedStorage.setItem(key, raw);
         return raw;
       }
