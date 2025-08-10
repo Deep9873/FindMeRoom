@@ -1359,7 +1359,7 @@ const blogPosts = [
     title: "Smart Home Features That Add Value to Rental Properties",
     excerpt: "Discover which smart home technologies increase rental value and tenant satisfaction. From security systems to energy efficiency, learn what tech features matter most.",
     category: "Technology",
-    author: "PropTech Specialist",
+    author: "GetRentals Team",
     date: "November 25, 2024",
     readTime: "9 min read",
     image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxzbWFydCUyMGhvbWV8ZW58MHx8fHwxNzU0MTMwMTEyfDA&ixlib=rb-4.1.0&q=85",
