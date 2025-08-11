@@ -3123,9 +3123,23 @@ const HomePage = ({ setChatProperty }) => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
+      
+      // Handle each filter parameter
       Object.entries(filters).forEach(([key, value]) => {
-        if (value) params.append(key, value);
+        if (value) {
+          // Special handling for city to ensure consistent search
+          if (key === 'city') {
+            params.append(key, value.trim());
+          } else {
+            params.append(key, value);
+          }
+        }
       });
+      
+      // If no city in filters, use selectedCity
+      if (!filters.city && selectedCity) {
+        params.append('city', selectedCity.trim());
+      }
       
       const response = await axios.get(`${API}/properties?${params}`);
       setProperties(response.data);
