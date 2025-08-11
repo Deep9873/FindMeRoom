@@ -3180,18 +3180,23 @@ const HomePage = ({ setChatProperty }) => {
         </div>
       </div>
       
-      {/* Adcash Banner */}
-      <div className="bg-gray-100 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div>
-                <script type="text/javascript">
-                    aclib.runBanner({
-                        zoneId: '10269738',
-                    });
-                </script>
-            </div>
-        </div>
-      </div>
+    {/* Adcash Banner */}
+<div className="bg-gray-100 py-8">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div
+      dangerouslySetInnerHTML={{
+        __html: `
+          <script type="text/javascript">
+            aclib.runBanner({
+              zoneId: '10269738',
+            });
+          </script>
+        `
+      }}
+    />
+  </div>
+</div>
+
       
       {/* Native Ad */}
       <div className="bg-white py-8 border-b">
