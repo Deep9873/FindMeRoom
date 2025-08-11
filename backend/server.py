@@ -285,7 +285,19 @@ async def get_properties(
     query = {"available": True}
     
     if city:
-        query["city"] = {"$regex": city, "$options": "i"}
+        # Enhanced city search: Support multiple formats and partial matches
+        # Handle variations like "Delhi", "New Delhi", "delhi", "DELHI" etc.
+        city_variations = [
+            city.strip(),  # Exact search
+            f".*{city.strip()}.*",  # Contains search
+        ]
+        
+        # Create OR query to match any variation
+        city_queries = []
+        for variation in city_variations:
+            city_queries.append({"city": {"$regex": variation, "$options": "i"}})
+        
+        query["$or"] = city_queries
     if property_type:
         query["property_type"] = property_type
     if min_rent is not None:
