@@ -1471,11 +1471,7 @@ const HeroSection = () => {
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">Find Your Perfect Room or Flat</h1>
         <p className="text-lg sm:text-xl md:text-2xl mb-6 leading-relaxed">Discover amazing rooms, houses, PGs, Flats and more in your city with zero brokerage</p>
         
-        {/* Enhanced description with rent calculator feature */}
-        <div className="mb-6 md:mb-8 bg-black bg-opacity-30 rounded-lg p-3 md:p-4">
-          <p className="text-base md:text-lg mb-2">🧮 <strong>New Feature:</strong> Use our advanced Rent Calculator to estimate accurate rental costs</p>
-          <p className="text-sm md:text-base opacity-90">Calculate rent for 180+ Indian cities • Budget planning • Property comparison</p>
-        </div>
+    
         
         <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center max-w-3xl mx-auto">
           <button 
