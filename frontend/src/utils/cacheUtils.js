@@ -208,40 +208,54 @@ export const addNoCacheMetaTags = () => {
 
 // Check backend app version and force reload when version changes
 export const initCacheControl = (backendUrl) => {
-  if (!backendUrl) return;
+  // Early return if no backend URL provided
+  if (!backendUrl) {
+    console.debug('No backend URL provided for cache control');
+    return;
+  }
 
   // Enhanced cross-origin detection to prevent CORS errors in preview environments
   try {
     const backend = new URL((backendUrl || '').replace(/\/+$/, ''));
     const here = new URL(window.location.origin);
     const isLocal = here.hostname === 'localhost' || here.hostname === '127.0.0.1';
-    const isPreview = here.hostname.includes('preview') || here.hostname.includes('emergentagent');
+    const isPreview = here.hostname.includes('preview') || here.hostname.includes('emergentagent') || 
+                      here.hostname.includes('netlify') || here.hostname.includes('vercel') ||
+                      here.hostname.includes('surge') || here.hostname.includes('github.io');
     const sameHost = backend.hostname === here.hostname;
     const sameProto = backend.protocol === here.protocol;
     
     // Skip version polling in cross-origin environments to prevent errors
     if (!isLocal && (!sameHost || !sameProto || isPreview)) {
-      console.log('Cross-origin environment detected, skipping cache version polling');
+      console.debug('Cross-origin or preview environment detected, skipping cache version polling');
       return;
     }
   } catch (e) {
-    console.warn('URL parsing failed for cache control, skipping version polling');
+    console.debug('URL parsing failed for cache control, skipping version polling:', e.message);
     return;
   }
 
   const KEY = 'app_version';
+  
   const fetchVersion = async () => {
     try {
       const base = (backendUrl || '').replace(/\/+$/, '');
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
       const res = await fetch(`${base}/api/?nocache=${Date.now()}`, { 
         cache: 'no-store', 
         method: 'GET',
+        signal: controller.signal,
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
           'Pragma': 'no-cache',
           'Expires': '0'
         }
       });
+      
+      clearTimeout(timeoutId);
+      
       if (!res.ok) return null;
       
       // Get version from multiple possible sources
@@ -257,25 +271,39 @@ export const initCacheControl = (backendUrl) => {
       return headerVersion || etag || bodyVersion || null;
     } catch (e) {
       // Silently fail for network errors to avoid console spam
+      if (e.name !== 'AbortError') {
+        console.debug('Cache version check failed:', e.message);
+      }
       return null;
     }
   };
 
   const checkAndReload = async () => {
-    const latest = await fetchVersion();
-    if (!latest) return;
-    
-    const current = localStorage.getItem(KEY);
-    if (current && current !== latest) {
-      console.log(`🔄 New version detected (${current} → ${latest}). Clearing caches and reloading...`);
-      clearBrowserCache();
-    } else if (!current) {
-      localStorage.setItem(KEY, latest);
+    try {
+      const latest = await fetchVersion();
+      if (!latest) return;
+      
+      const current = localStorage.getItem(KEY);
+      if (current && current !== latest) {
+        console.log(`🔄 New version detected (${current} → ${latest}). Clearing caches and reloading...`);
+        clearBrowserCache();
+      } else if (!current) {
+        localStorage.setItem(KEY, latest);
+      }
+    } catch (e) {
+      console.debug('Version check failed:', e.message);
     }
   };
 
-  // Run immediately and then every 60s (reduced from 30s to avoid excessive requests)
+  // Run immediately and then every 60s (reasonable interval)
   checkAndReload();
   const interval = setInterval(checkAndReload, 60000);
-  window.addEventListener('beforeunload', () => clearInterval(interval));
+  
+  // Clean up on page unload
+  const cleanup = () => {
+    if (interval) clearInterval(interval);
+  };
+  
+  window.addEventListener('beforeunload', cleanup);
+  window.addEventListener('pagehide', cleanup);
 };
