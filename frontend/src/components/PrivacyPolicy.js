@@ -142,9 +142,6 @@ const PrivacyPolicy = () => {
             </p>
           </section>
 
-
-
-
           {/* Data Retention */}
           <section>
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Data Retention</h2>
