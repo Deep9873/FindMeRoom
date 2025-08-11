@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GetRentals Cache Test Utility</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+        .test-card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 20px 0; }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #17a2b8; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        .clear-all { background: #dc3545; }
+        .clear-all:hover { background: #c82333; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 GetRentals Cache Test Utility</h1>
+    <p>This utility helps diagnose and clear caching issues on the GetRentals website.</p>
+
+    <div class="test-card">
+        <h3>📊 Cache Status Check</h3>
+        <button onclick="checkCacheHeaders()">Check Cache Headers</button>
+        <button onclick="checkAppVersion()">Check App Version</button>
+        <div id="cacheStatus"></div>
+    </div>
+
+    <div class="test-card">
+        <h3>🧽 Cache Clearing Options</h3>
+        <button onclick="clearBrowserData()">Clear Browser Data</button>
+        <button onclick="clearVersionedStorage()">Clear Versioned Storage</button>
+        <button onclick="clearAllCaches()" class="clear-all">🚨 CLEAR ALL CACHES & RELOAD</button>
+        <div id="clearStatus"></div>
+    </div>
+
+    <div class="test-card">
+        <h3>📈 Real-time Version Monitoring</h3>
+        <button onclick="startVersionMonitoring()">Start Monitoring</button>
+        <button onclick="stopVersionMonitoring()">Stop Monitoring</button>
+        <div id="versionMonitor"></div>
+    </div>
+
+    <script>
+        let monitoringInterval = null;
+
+        async function checkCacheHeaders() {
+            const status = document.getElementById('cacheStatus');
+            status.innerHTML = '<p class="info">Checking cache headers...</p>';
+            
+            try {
+                const response = await fetch('/api/', { 
+                    cache: 'no-store',
+                    headers: { 'Cache-Control': 'no-cache' }
+                });
+                
+                const cacheControl = response.headers.get('Cache-Control');
+                const pragma = response.headers.get('Pragma');
+                const expires = response.headers.get('Expires');
+                const appVersion = response.headers.get('X-App-Version');
+                const etag = response.headers.get('ETag');
+                
+                status.innerHTML = `
+                    <h4>Response Headers:</h4>
+                    <pre>Cache-Control: ${cacheControl || 'Not set'}
+Pragma: ${pragma || 'Not set'}
+Expires: ${expires || 'Not set'}
+X-App-Version: ${appVersion || 'Not set'}
+ETag: ${etag || 'Not set'}</pre>
+                    <p class="${cacheControl && cacheControl.includes('no-cache') ? 'success' : 'error'}">
+                        ${cacheControl && cacheControl.includes('no-cache') ? '✅ Cache headers configured correctly' : '❌ Cache headers may be misconfigured'}
+                    </p>
+                `;
+            } catch (error) {
+                status.innerHTML = `<p class="error">❌ Error checking headers: ${error.message}</p>`;
+            }
+        }
+
+        function checkAppVersion() {
+            const status = document.getElementById('cacheStatus');
+            const stored = localStorage.getItem('app_version');
+            const versionedCity = localStorage.getItem('selectedCity');
+            
+            status.innerHTML += `
+                <h4>Stored Versions:</h4>
+                <pre>Stored App Version: ${stored || 'Not set'}
+Versioned Storage Example: ${versionedCity ? 'Set' : 'Not set'}
+Current Timestamp: ${Date.now()}
+Storage Version: ${getStorageVersion()}</pre>
+            `;
+        }
+
+        function getStorageVersion() {
+            try {
+                const raw = localStorage.getItem('selectedCity');
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    return parsed.version || 'Legacy format';
+                }
+            } catch (e) {
+                return 'Legacy format';
+            }
+            return 'Not set';
+        }
+
+        function clearBrowserData() {
+            const status = document.getElementById('clearStatus');
+            try {
+                localStorage.clear();
+                sessionStorage.clear();
+                status.innerHTML = '<p class="success">✅ Browser data cleared successfully</p>';
+            } catch (error) {
+                status.innerHTML = `<p class="error">❌ Error clearing data: ${error.message}</p>`;
+            }
+        }
+
+        function clearVersionedStorage() {
+            const status = document.getElementById('clearStatus');
+            try {
+                // Clear specific versioned items
+                const keys = Object.keys(localStorage);
+                let cleared = 0;
+                keys.forEach(key => {
+                    try {
+                        const value = localStorage.getItem(key);
+                        const parsed = JSON.parse(value);
+                        if (parsed && parsed.version) {
+                            localStorage.removeItem(key);
+                            cleared++;
+                        }
+                    } catch (e) {
+                        // Not a versioned item
+                    }
+                });
+                status.innerHTML = `<p class="success">✅ Cleared ${cleared} versioned storage items</p>`;
+            } catch (error) {
+                status.innerHTML = `<p class="error">❌ Error clearing versioned storage: ${error.message}</p>`;
+            }
+        }
+
+        async function clearAllCaches() {
+            const status = document.getElementById('clearStatus');
+            status.innerHTML = '<p class="info">🧽 Clearing all caches...</p>';
+            
+            try {
+                // Clear browser storage
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                // Clear cache API if available
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    await Promise.all(cacheNames.map(name => caches.delete(name)));
+                }
+                
+                // Unregister service workers
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    await Promise.all(registrations.map(reg => reg.unregister()));
+                }
+                
+                status.innerHTML = '<p class="success">✅ All caches cleared! Reloading in 2 seconds...</p>';
+                
+                setTimeout(() => {
+                    window.location.reload(true);
+                }, 2000);
+                
+            } catch (error) {
+                status.innerHTML = `<p class="error">❌ Error clearing caches: ${error.message}</p>`;
+            }
+        }
+
+        async function startVersionMonitoring() {
+            const monitor = document.getElementById('versionMonitor');
+            if (monitoringInterval) {
+                monitor.innerHTML = '<p class="info">Monitoring already active</p>';
+                return;
+            }
+            
+            monitor.innerHTML = '<p class="info">🔄 Starting version monitoring...</p>';
+            
+            monitoringInterval = setInterval(async () => {
+                try {
+                    const response = await fetch('/api/?t=' + Date.now(), { cache: 'no-store' });
+                    const version = response.headers.get('X-App-Version');
+                    const stored = localStorage.getItem('app_version');
+                    
+                    const time = new Date().toLocaleTimeString();
+                    const status = stored === version ? '✅ Same' : '🔄 Changed';
+                    
+                    monitor.innerHTML = `
+                        <p class="info">📡 Monitoring active (updates every 10s)</p>
+                        <pre>Last Check: ${time}
+Current Version: ${version || 'Not available'}
+Stored Version: ${stored || 'Not set'}
+Status: ${status}</pre>
+                    `;
+                    
+                    if (stored && stored !== version) {
+                        monitor.innerHTML += '<p class="error">⚠️ Version change detected! Consider clearing cache.</p>';
+                    }
+                    
+                } catch (error) {
+                    monitor.innerHTML += `<p class="error">❌ Monitor error: ${error.message}</p>`;
+                }
+            }, 10000);
+        }
+
+        function stopVersionMonitoring() {
+            if (monitoringInterval) {
+                clearInterval(monitoringInterval);
+                monitoringInterval = null;
+                document.getElementById('versionMonitor').innerHTML = '<p class="success">✅ Monitoring stopped</p>';
+            }
+        }
+
+        // Auto-check on load
+        setTimeout(checkCacheHeaders, 1000);
+    </script>
+</body>
+</html>
