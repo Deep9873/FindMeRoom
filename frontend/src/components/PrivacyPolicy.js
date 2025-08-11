@@ -196,7 +196,7 @@ const PrivacyPolicy = () => {
 
           {/* Data Retention */}
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">8. Data Retention</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Data Retention</h2>
             <p className="text-gray-700 leading-relaxed">
               We retain your personal information for as long as necessary to provide our services and comply with 
               legal obligations. When you delete your account, we will remove or anonymize your personal information 
