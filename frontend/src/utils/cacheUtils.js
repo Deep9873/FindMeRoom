@@ -8,8 +8,10 @@ export const getCacheBusterParam = () => {
   return `_cb=${Date.now()}`;
 };
 
-// Clear browser cache programmatically
+// Clear browser cache programmatically with enhanced clearing
 export const clearBrowserCache = () => {
+  console.log("Clearing all browser caches...");
+  
   // Clear localStorage
   try {
     localStorage.clear();
@@ -24,10 +26,33 @@ export const clearBrowserCache = () => {
     console.warn('Unable to clear sessionStorage:', e);
   }
 
-  // Force reload without cache
-  if (window.location.reload) {
-    window.location.reload(true);
+  // Clear service worker caches if available
+  if ('caches' in window) {
+    caches.keys().then(function(names) {
+      for (let name of names) {
+        caches.delete(name);
+      }
+    }).catch(e => console.warn('Unable to clear cache storage:', e));
   }
+
+  // Unregister service workers
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for(let registration of registrations) {
+        registration.unregister();
+      }
+    }).catch(e => console.warn('Unable to unregister service workers:', e));
+  }
+
+  // Force reload without cache
+  setTimeout(() => {
+    if (window.location.reload) {
+      window.location.reload(true);
+    } else {
+      // Fallback method
+      window.location.href = window.location.href + '?cache_bust=' + Date.now();
+    }
+  }, 500);
 };
 
 // Add cache busting to URLs
