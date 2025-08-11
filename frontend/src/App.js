@@ -3177,17 +3177,17 @@ const HomePage = ({ setChatProperty }) => {
         </div>
       </div>
       
-    {/* Adcash Banner */}
-<div className="bg-gray-100 py-8">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-   
-</div>
+      {/* Adcash Banner */}
+      <div className="bg-gray-100 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <AdcashBanner className="mx-auto" />
+        </div>
+      </div>
 
-      
       {/* Native Ad */}
       <div className="bg-white py-8 border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-       
+          <NativeAd borderColor="green" className="max-w-4xl mx-auto" />
         </div>
       </div>
       
