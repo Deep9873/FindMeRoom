@@ -210,7 +210,25 @@ export const addNoCacheMetaTags = () => {
 export const initCacheControl = (backendUrl) => {
   if (!backendUrl) return;
 
-  // Enhanced version checking with better error handling
+  // Enhanced cross-origin detection to prevent CORS errors in preview environments
+  try {
+    const backend = new URL((backendUrl || '').replace(/\/+$/, ''));
+    const here = new URL(window.location.origin);
+    const isLocal = here.hostname === 'localhost' || here.hostname === '127.0.0.1';
+    const isPreview = here.hostname.includes('preview') || here.hostname.includes('emergentagent');
+    const sameHost = backend.hostname === here.hostname;
+    const sameProto = backend.protocol === here.protocol;
+    
+    // Skip version polling in cross-origin environments to prevent errors
+    if (!isLocal && (!sameHost || !sameProto || isPreview)) {
+      console.log('Cross-origin environment detected, skipping cache version polling');
+      return;
+    }
+  } catch (e) {
+    console.warn('URL parsing failed for cache control, skipping version polling');
+    return;
+  }
+
   const KEY = 'app_version';
   const fetchVersion = async () => {
     try {
@@ -238,7 +256,7 @@ export const initCacheControl = (backendUrl) => {
       
       return headerVersion || etag || bodyVersion || null;
     } catch (e) {
-      console.warn('Cache version check failed:', e);
+      // Silently fail for network errors to avoid console spam
       return null;
     }
   };
@@ -256,8 +274,8 @@ export const initCacheControl = (backendUrl) => {
     }
   };
 
-  // Run immediately and then every 30s for more frequent checks
+  // Run immediately and then every 60s (reduced from 30s to avoid excessive requests)
   checkAndReload();
-  const interval = setInterval(checkAndReload, 30000);
+  const interval = setInterval(checkAndReload, 60000);
   window.addEventListener('beforeunload', () => clearInterval(interval));
 };
