@@ -210,39 +210,35 @@ export const addNoCacheMetaTags = () => {
 export const initCacheControl = (backendUrl) => {
   if (!backendUrl) return;
 
-  // Disable version polling when backend origin differs from current origin (prevents CORS/extension errors in previews)
-  try {
-    const backend = new URL((backendUrl || '').replace(/\/+$/, ''));
-    const here = new URL(window.location.origin);
-    const isLocal = here.hostname === 'localhost' || here.hostname === '127.0.0.1';
-    const sameHost = backend.hostname === here.hostname;
-    const sameProto = backend.protocol === here.protocol;
-    if (!isLocal && (!sameHost || !sameProto)) {
-      // In cross-origin preview environments, skip polling gracefully
-      return;
-    }
-  } catch (e) {
-    // If URL parsing fails, skip silently
-    return;
-  }
-
+  // Enhanced version checking with better error handling
   const KEY = 'app_version';
   const fetchVersion = async () => {
     try {
-      // Ensure backendUrl does not have trailing slash
       const base = (backendUrl || '').replace(/\/+$/, '');
-      const res = await fetch(`${base}/api/`, { cache: 'no-store', method: 'GET' });
+      const res = await fetch(`${base}/api/?nocache=${Date.now()}`, { 
+        cache: 'no-store', 
+        method: 'GET',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      });
       if (!res.ok) return null;
-      // Prefer header, fallback to JSON body property
-      const headerVersion = res.headers.get('X-App-Version');
+      
+      // Get version from multiple possible sources
+      const headerVersion = res.headers.get('X-App-Version') || res.headers.get('x-app-version');
+      const etag = res.headers.get('ETag') || res.headers.get('etag');
+      
       let bodyVersion = null;
       try {
         const data = await res.clone().json().catch(() => null);
         bodyVersion = data && (data.version || data.X_App_Version);
       } catch (e) {}
-      return headerVersion || bodyVersion || null;
+      
+      return headerVersion || etag || bodyVersion || null;
     } catch (e) {
-      // Network failures should not crash the app – just skip
+      console.warn('Cache version check failed:', e);
       return null;
     }
   };
@@ -250,19 +246,18 @@ export const initCacheControl = (backendUrl) => {
   const checkAndReload = async () => {
     const latest = await fetchVersion();
     if (!latest) return;
+    
     const current = localStorage.getItem(KEY);
     if (current && current !== latest) {
-      console.log(`Detected new app version (${current} -> ${latest}). Clearing caches and reloading...`);
-      try { localStorage.clear(); sessionStorage.clear(); } catch (e) {}
-      localStorage.setItem(KEY, latest);
-      window.location.reload();
-    } else if (!current && latest) {
+      console.log(`🔄 New version detected (${current} → ${latest}). Clearing caches and reloading...`);
+      clearBrowserCache();
+    } else if (!current) {
       localStorage.setItem(KEY, latest);
     }
   };
 
-  // Run immediately and then every 60s for the session
+  // Run immediately and then every 30s for more frequent checks
   checkAndReload();
-  const interval = setInterval(checkAndReload, 60000);
+  const interval = setInterval(checkAndReload, 30000);
   window.addEventListener('beforeunload', () => clearInterval(interval));
 };
