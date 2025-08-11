@@ -1468,8 +1468,8 @@ const HeroSection = () => {
         }}
       />
       <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4 pt-4 md:pt-0">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">Find Your Perfect Room</h1>
-        <p className="text-lg sm:text-xl md:text-2xl mb-6 leading-relaxed">Discover amazing rooms, houses, and PGs in your city with zero brokerage</p>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">Find Your Perfect Room or Flat</h1>
+        <p className="text-lg sm:text-xl md:text-2xl mb-6 leading-relaxed">Discover amazing rooms, houses, PGs, Flats and more in your city with zero brokerage</p>
         
         {/* Enhanced description with rent calculator feature */}
         <div className="mb-6 md:mb-8 bg-black bg-opacity-30 rounded-lg p-3 md:p-4">
