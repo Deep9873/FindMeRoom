@@ -54,9 +54,6 @@ async def add_cache_control_headers(request: Request, call_next):
     response.headers["Last-Modified"] = datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT')
     response.headers["ETag"] = f'"{APP_VERSION}"'
     
-    # Add versioning header to help with cache busting
-    response.headers["X-App-Version"] = APP_VERSION
-    
     return response
 
 # Add middleware to handle large request bodies 
