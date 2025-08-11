@@ -279,10 +279,25 @@ const CitySelector = ({ value, onChange, placeholder = "Select City", className 
   const [isCustomCity, setIsCustomCity] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Filter cities based on search term
-  const filteredCities = MAJOR_INDIAN_CITIES.filter(city =>
-    city.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter cities based on search term with enhanced fuzzy matching
+  const filteredCities = MAJOR_INDIAN_CITIES.filter(city => {
+    const searchLower = searchTerm.toLowerCase().trim();
+    const cityLower = city.toLowerCase();
+    
+    // Return if empty search
+    if (!searchLower) return true;
+    
+    // Exact match or starts with
+    if (cityLower.includes(searchLower)) return true;
+    
+    // Check if search term matches any word in city name
+    const searchWords = searchLower.split(/\s+/);
+    const cityWords = cityLower.split(/[\s,]+/);
+    
+    return searchWords.some(searchWord => 
+      cityWords.some(cityWord => cityWord.startsWith(searchWord))
+    );
+  });
 
   // Handle click outside to close dropdown
   useEffect(() => {
