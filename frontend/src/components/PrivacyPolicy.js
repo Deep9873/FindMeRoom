@@ -155,7 +155,7 @@ const PrivacyPolicy = () => {
 
           {/* Your Rights */}
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">9. Your Privacy Rights</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">8. Your Privacy Rights</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
               You have certain rights regarding your personal information:
             </p>
