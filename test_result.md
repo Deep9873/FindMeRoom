@@ -126,6 +126,40 @@ Copy and paste this script tag on your website. If your webpage is already using
 <noscript>
     <a href="https://onclickalgo.com/al/visit.php?al=1,6"
        style="position:absolute;top:-1000px;left:-1000px;width:1px;height:1px;visibility:hidden;display:none;border:medium none;background-color:transparent;"></a>
+
+  - task: "Remove Ezoic Integration and Clean Up Privacy Policy"
+    implemented: true
+    working: true
+    file: "components/PrivacyPolicy.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "✅ EZOIC COMPLETELY REMOVED: Successfully removed all Ezoic integration and references from the website as requested by user who no longer wants to use Ezoic services.
+
+🧹 **CLEANUP COMPLETED**:
+
+**1. Privacy Policy Updated**:
+- Removed entire 'Ezoic Services' section from Privacy Policy
+- Renumbered all subsequent sections (7-13 instead of 8-14)  
+- Eliminated all references to Ezoic advertising, cookies, and data collection
+- Removed links to Ezoic privacy policy and advertising partners
+
+**2. Ezoic Integration Removed**:
+- No Ezoic tracking code found in application files ✅
+- No Ezoic scripts or tags in HTML ✅
+- Privacy policy cleaned of all Ezoic-related content ✅
+
+**3. DNS/CDN Action Required**:
+User needs to:
+- Update DNS settings to remove Ezoic nameservers
+- Point domain directly to their server
+- Remove Ezoic integration from their Ezoic dashboard
+
+🎯 **IMPACT**: Once DNS changes propagate, this will resolve the caching issue completely since Ezoic was overriding backend no-cache headers with aggressive 30-day caching headers. The website will then serve content directly with proper no-cache headers."
+
 backend:
   - task: "CRITICAL FIX: Website Caching Problem - Inconsistent Content Updates"
     implemented: true
