@@ -196,7 +196,7 @@ const PrivacyPolicy = () => {
 
           {/* International Transfers */}
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">12. International Data Transfers</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">11. International Data Transfers</h2>
             <p className="text-gray-700 leading-relaxed">
               Your information may be transferred to and processed in countries other than your own. 
               We ensure that such transfers comply with applicable data protection laws and implement 
