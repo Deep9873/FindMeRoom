@@ -142,13 +142,7 @@ const PrivacyPolicy = () => {
             </p>
           </section>
 
-{/* Ezoic Services */}
-          <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Ezoic Services</h2>
-            <div className="privacy-headline mb-4">
-              <h1 className="text-xl font-bold text-gray-800">Ezoic Services</h1>
-            </div>
-            <div className="privacy-content text-gray-700 leading-relaxed space-y-4">
+
               <p>
                 This website uses the services of Ezoic Inc. (“Ezoic”), including to manage third-party interest-based advertising. 
                 Ezoic may employ a variety of technologies on this website, including tools to serve content, display advertisements 
