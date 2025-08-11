@@ -3080,9 +3080,28 @@ const HomePage = ({ setChatProperty }) => {
   const { selectedCity } = useCity();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
+
+  // Auto-scroll to search section when visiting /properties page
+  useEffect(() => {
+    if (location.pathname === '/properties') {
+      // Small delay to ensure the page is rendered
+      const timer = setTimeout(() => {
+        const searchSection = document.getElementById('search-section');
+        if (searchSection) {
+          searchSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname]);
 
   // Only fetch properties when a city is selected (performance optimization)
   useEffect(() => {
