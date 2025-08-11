@@ -4274,8 +4274,8 @@ const Blog = () => {
               <div className="text-gray-600">Expert Articles</div>
             </div>
             <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-              <div className="text-3xl font-bold text-green-600 mb-2">50K+</div>
-              <div className="text-gray-600">Readers Monthly</div>
+              <div className="text-3xl font-bold text-green-600 mb-2">Expert</div>
+              <div className="text-gray-600">Content Only</div>
             </div>
             <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
               <div className="text-3xl font-bold text-purple-600 mb-2">120+</div>
