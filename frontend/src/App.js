@@ -3456,7 +3456,21 @@ const HomePage = ({ setChatProperty }) => {
         
         {!loading && selectedCity && properties.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-gray-500">No properties found in {selectedCity}. Try adjusting your search filters.</p>
+            <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.467-.881-6.065-2.328.147-.146.319-.264.485-.38C7.773 11.404 9.77 11 12 11c2.23 0 4.227.404 5.58 1.292.166.116.338.234.485.38A7.962 7.962 0 0115 15c-2.34 0-4.467-.881-6.065-2.328M15 9a6 6 0 11-12 0 6 6 0 0112 0z" />
+              </svg>
+            </div>
+            <p className="text-gray-500 mb-2">No properties found in "{selectedCity}"</p>
+            <p className="text-sm text-gray-400">Try adjusting your search filters or search for nearby areas.</p>
+            <div className="mt-4">
+              <p className="text-xs text-gray-400 mb-2">Suggestions:</p>
+              <div className="flex flex-wrap gap-2 justify-center">
+                <span className="text-xs bg-gray-100 px-2 py-1 rounded">Check spelling</span>
+                <span className="text-xs bg-gray-100 px-2 py-1 rounded">Try broader search terms</span>
+                <span className="text-xs bg-gray-100 px-2 py-1 rounded">Search nearby cities</span>
+              </div>
+            </div>
           </div>
         )}
       </div>
