@@ -32,8 +32,9 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# App version for cache-busting (changes on each backend restart unless explicitly set)
-APP_VERSION = os.environ.get('APP_VERSION', datetime.utcnow().strftime('%Y%m%d%H%M%S'))
+# App version for cache-busting (generate unique version for each restart)
+import time
+APP_VERSION = os.environ.get('APP_VERSION', f"{datetime.utcnow().strftime('%Y%m%d%H%M%S')}-{int(time.time())}")
 
 # Add cache control headers middleware to prevent caching issues
 @app.middleware("http")
