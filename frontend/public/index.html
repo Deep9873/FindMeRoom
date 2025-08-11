@@ -234,6 +234,33 @@
         <link rel="dns-prefetch" href="//getrentals.online/api" />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3708796769447102"
      crossorigin="anonymous"></script>
+        <!-- Global error handling for ads and scripts -->
+        <script>
+          // Global error handler to catch and suppress ad-related errors
+          window.addEventListener('error', function(e) {
+            // Check if error is from ad-related scripts
+            if (e.filename && (
+              e.filename.includes('acscdn.com') ||
+              e.filename.includes('onclickalgo.com') ||
+              e.filename.includes('superonclick.com') ||
+              e.filename.includes('geniusonclick.com') ||
+              e.filename.includes('pagead2.googlesyndication.com')
+            )) {
+              console.warn('Ad script error suppressed:', e.message);
+              e.preventDefault();
+              return true;
+            }
+          });
+          
+          // Handle unhandled promise rejections from ad scripts
+          window.addEventListener('unhandledrejection', function(e) {
+            if (e.reason && e.reason.toString && e.reason.toString().includes('adcash')) {
+              console.warn('Ad promise rejection suppressed:', e.reason);
+              e.preventDefault();
+            }
+          });
+        </script>
+        
         <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-434420550"></script>
 <script>
