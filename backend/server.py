@@ -40,15 +40,11 @@ APP_VERSION = os.environ.get('APP_VERSION', datetime.utcnow().strftime('%Y%m%d%H
 async def add_cache_control_headers(request: Request, call_next):
     response = await call_next(request)
     
-    # Add cache control headers to prevent aggressive caching
-    if request.url.path.startswith('/api'):
-        # For API endpoints, prevent caching
-        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-        response.headers["Pragma"] = "no-cache"
-        response.headers["Expires"] = "0"
-    else:
-        # For static files, allow short-term caching
-        response.headers["Cache-Control"] = "public, max-age=300"
+    # Add cache control headers to prevent aggressive caching for ALL routes
+    # This ensures consistent no-cache behavior across the entire application
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache" 
+    response.headers["Expires"] = "0"
     
     # Add versioning header to help with cache busting
     response.headers["X-App-Version"] = APP_VERSION
