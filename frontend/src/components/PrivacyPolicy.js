@@ -216,7 +216,7 @@ const PrivacyPolicy = () => {
 
           {/* Contact Information */}
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">14. Contact Us</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">13. Contact Us</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
               If you have any questions about this Privacy Policy or our privacy practices, please contact us:
             </p>
