@@ -127,6 +127,63 @@ Copy and paste this script tag on your website. If your webpage is already using
     <a href="https://onclickalgo.com/al/visit.php?al=1,6"
        style="position:absolute;top:-1000px;left:-1000px;width:1px;height:1px;visibility:hidden;display:none;border:medium none;background-color:transparent;"></a>
 backend:
+  - task: "CRITICAL FIX: Website Caching Problem - Inconsistent Content Updates"
+    implemented: true
+    working: true
+    file: "server.py, utils/cacheUtils.js"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "🎯 **CRITICAL CACHING ISSUE RESOLVED**: Identified and fixed the root cause of inconsistent website updates where changes weren't reflecting properly after GitHub/nginx updates.
+
+🔍 **ROOT CAUSE DISCOVERED**:
+The backend cache control middleware (server.py lines 44-52) had a **FATAL FLAW**:
+- API routes (`/api/*`): Got no-cache headers ✅
+- **ALL OTHER ROUTES** (including main website): Got **5-minute caching headers** ❌
+
+This explained why updates showed inconsistently - users sometimes hit the 5-minute cache window, sometimes didn't.
+
+🛠️ **COMPREHENSIVE SOLUTION IMPLEMENTED**:
+
+**1. Backend Cache Headers Fixed**:
+- Changed server.py middleware to apply no-cache headers to ALL routes
+- Removed problematic `max-age=300` that was enabling 5-minute caching
+- Added enhanced cache-busting with ETag and Last-Modified headers
+- Implemented unique app version generation with timestamp + epoch
+
+**2. Enhanced Cache Prevention**:
+- Upgraded versioned storage from v1.0.0 to v2.0.0 (forces cache clear for existing users)
+- Added comprehensive cache clearing including service workers and caches API
+- Implemented more aggressive version checking every 30 seconds
+- Added multiple cache-busting headers and techniques
+
+**3. Headers Now Applied**:
+```
+Cache-Control: no-cache, no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-App-Version: [unique-timestamp]
+Last-Modified: [current-GMT-time]
+ETag: [version-string]
+```
+
+**4. Multi-Layer Cache Clearing**:
+- localStorage/sessionStorage clearing
+- Service Worker cache clearing
+- Service Worker unregistration
+- Browser cache bypass on reload
+
+✅ **VERIFICATION COMPLETED**:
+- Backend now serves consistent no-cache headers: `curl -I localhost:8001/` ✅
+- Version-based cache busting active: X-App-Version header present ✅
+- Frontend cache utilities enhanced with v2.0.0 versioning ✅
+- All routes protected from browser caching ✅
+
+🎉 **IMPACT**: This fix resolves the core issue where website changes weren't reflecting consistently. Users will now see updates immediately without the problematic cache behavior that required page switching and reloading."
+
   - task: "Fix Browser Caching and State Persistence Issues"
     implemented: true
     working: true
