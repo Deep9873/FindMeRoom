@@ -175,7 +175,7 @@ const PrivacyPolicy = () => {
 
           {/* Third-Party Services */}
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">10. Third-Party Services</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">9. Third-Party Services</h2>
             <p className="text-gray-700 leading-relaxed">
               Our platform may contain links to third-party websites or services that are not operated by us. 
               We have no control over and assume no responsibility for the content, privacy policies, or practices 
