@@ -4392,61 +4392,72 @@ const Blog = () => {
 
         {/* Articles Grid */}
         <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {filteredArticles.map((article) => (
-            <article key={article.id} className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="relative overflow-hidden">
-                <img 
-                  src={article.image} 
-                  alt={article.title}
-                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
-                <div className="absolute top-4 right-4">
-                  <span className="bg-white/90 backdrop-blur-sm text-gray-700 px-3 py-1 rounded-full text-sm font-medium">
-                    {article.readTime}
-                  </span>
-                </div>
-              </div>
-              
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
-                    {article.category}
-                  </span>
-                </div>
-                
-                <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                  {article.title}
-                </h3>
-                
-                <p className="text-gray-600 mb-4 line-clamp-3">
-                  {article.excerpt}
-                </p>
-                
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {article.tags.slice(0, 3).map((tag, tagIndex) => (
-                    <span key={tagIndex} className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">
-                      #{tag}
+          {filteredArticles.map((article, index) => (
+            <React.Fragment key={article.id}>
+              <article className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                <div className="relative overflow-hidden">
+                  <img 
+                    src={article.image} 
+                    alt={article.title}
+                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-white/90 backdrop-blur-sm text-gray-700 px-3 py-1 rounded-full text-sm font-medium">
+                      {article.readTime}
                     </span>
-                  ))}
+                  </div>
                 </div>
                 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center text-sm text-gray-500">
-                    <span className="font-medium">{article.author}</span>
-                    <span className="mx-2">•</span>
-                    <span>{article.date}</span>
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                      {article.category}
+                    </span>
                   </div>
-                  <button 
-                    onClick={() => handleReadMore(article.slug)}
-                    className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:from-blue-600 hover:to-purple-600 transition-all transform hover:scale-105"
-                  >
-                    Read More →
-                  </button>
+                  
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                    {article.title}
+                  </h3>
+                  
+                  <p className="text-gray-600 mb-4 line-clamp-3">
+                    {article.excerpt}
+                  </p>
+                  
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {article.tags.slice(0, 3).map((tag, tagIndex) => (
+                      <span key={tagIndex} className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center text-sm text-gray-500">
+                      <span className="font-medium">{article.author}</span>
+                      <span className="mx-2">•</span>
+                      <span>{article.date}</span>
+                    </div>
+                    <button 
+                      onClick={() => handleReadMore(article.slug)}
+                      className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:from-blue-600 hover:to-purple-600 transition-all transform hover:scale-105"
+                    >
+                      Read More →
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </article>
+              </article>
+
+              {/* Insert Banner Ad after every 6 articles */}
+              {(index + 1) % 6 === 0 && index < filteredArticles.length - 1 && (
+                <div className="md:col-span-2 lg:col-span-3 my-8">
+                  <div className="bg-gradient-to-r from-orange-100 to-red-100 rounded-xl p-6 border-l-4 border-orange-500">
+                    <AdcashBanner className="mx-auto" />
+                  </div>
+                </div>
+              )}
+            </React.Fragment>
           ))}
         </section>
 
