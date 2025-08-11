@@ -1364,7 +1364,7 @@ const blogPosts = [
     author: "GetRentals Team",
     date: "November 25, 2024",
     readTime: "9 min read",
-    image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxzbWFydCUyMGhvbWV8ZW58MHx8fHwxNzU0MTMwMTEyfDA&ixlib=rb-4.1.0&q=85",
+    image: "https://images.unsplash.com/photo-1558002038-1055907df827?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwxfHxzbWFydCUyMGhvbWV8ZW58MHx8fHwxNzU0OTI5MDIwfDA&ixlib=rb-4.1.0&q=85",
     tags: ["smart home", "property technology", "rental value", "home automation"],
     featured: false,
     content: `
