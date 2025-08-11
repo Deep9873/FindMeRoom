@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "i did some changes in the site but they aren't reflected, only updates when reloaded and than if opened again the changes reset again, fix that, and also add this ad Native
+user_problem_statement: "i made changes in my github repository and updated them on nginx server also but still it is not updating on website, it only updates if we switch to another page on site and than reload than it gets update but if go back to mainpage and again reloads than it get back to previous version i tried caching methods but they aren't working as those features also not gets implement in the site due to this issue, and in your preview the site loads to its updated version"
 |
 10269814
 Settings
