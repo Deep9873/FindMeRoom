@@ -329,7 +329,7 @@ const RentalAgreementTemplates = () => {
             onClick={() => navigate('/rent-calculator')}
             className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
           >
-            🧮 Use Rent Calculator
+            Use Rent Calculator
           </button>
         </div>
       </div>
