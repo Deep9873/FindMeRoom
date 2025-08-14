@@ -954,7 +954,7 @@ const RentCalculator = () => {
                       Calculating...
                     </span>
                   ) : (
-                    '🧮 Calculate Rent'
+                    'Calculate Rent'
                   )}
                 </button>
                 
