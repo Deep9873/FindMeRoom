@@ -65,15 +65,17 @@ export default function NativeBannerAd() {
 
   return (
     <div>
+      {/* Keep the ad container empty so React doesn't manage vendor DOM children */}
       <div
         ref={containerRef}
         id="container-72acf036ac9f4321793bffe13ce035a5"
         style={{ width: "100%", minHeight: "90px", background: "#f0f0f0" }}
-      >
-        {!adLoaded && (
-          <p style={{ textAlign: "center", lineHeight: "90px" }}>Loading ad...</p>
-        )}
-      </div>
+      />
+      {!adLoaded && (
+        <p style={{ textAlign: "center", lineHeight: "24px", marginTop: 8, color: "#666" }}>
+          Loading ad...
+        </p>
+      )}
     </div>
   );
 }
