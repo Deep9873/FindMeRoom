@@ -4355,7 +4355,7 @@ const Blog = () => {
         <section className="mb-16 text-center">
           <div className="flex justify-center items-center bg-[#f3f8fe]">
           <AdcashBanner className="mx-auto" />
-          </div?
+          </div>
         </section>
 
        
