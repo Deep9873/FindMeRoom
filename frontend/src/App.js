@@ -3713,7 +3713,8 @@ const MainContent = () => {
       <Header />
       <Routes>
         <Route path="/" element={<HomePage setChatProperty={setChatProperty} />} />
-        <Route path="/properties" element={<HomePage setChatProperty={setChatProperty} />} />
+        <Route path="/properties" element={<PropertiesSitemap />} />
+        <Route path="/properties/:cityName" element={<CityPropertyPage />} />
         <Route path="/login" element={!user ? <LoginForm /> : <HomePage setChatProperty={setChatProperty} />} />
         <Route path="/register" element={!user ? <RegisterForm /> : <HomePage setChatProperty={setChatProperty} />} />
         <Route path="/post-property" element={<PostPropertyForm />} />
