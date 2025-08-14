@@ -3,6 +3,7 @@ import { useSEO } from '../App';
 import { useNavigate, useParams } from 'react-router-dom';
 import AdcashBanner from './AdcashBanner';
 import NativeAd from './NativeAd';
+import ErrorBoundary from './ErrorBoundary';
 
 // Enhanced blog posts data with 15 comprehensive articles
 const blogPosts = [
