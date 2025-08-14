@@ -1408,7 +1408,7 @@ const Header = () => {
                 onClick={() => { navigate('/rent-calculator'); setMobileMenuOpen(false); }}
                 className="block w-full text-left px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 rounded-md text-base font-medium transition-all"
               >
-                🧮 Rent Calculator
+                Rent Calculator
               </button>
               <button 
                 onClick={() => { navigate('/about'); setMobileMenuOpen(false); }}
