@@ -3943,7 +3943,7 @@ const Footer = () => {
             <h5 className="text-white font-medium">For Property Owners</h5>
             <div className="space-y-2 text-sm">
               <button 
-                onClick={() => user ? handleNavigation('post') : handleNavigation('login')}
+                onClick={() => user ? handleNavigation('/post-property') : handleNavigation('/login')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Post Your Property
