@@ -36,28 +36,16 @@ export default function NativeBannerAd() {
     }
 
     return () => {
-      // Cleanup defensively: the container may already be gone or moved by the vendor script
+      // Cleanup defensively: only detach our injected script tag, never mutate vendor-created children
       try {
-        const c = containerRef.current || document.getElementById("container-72acf036ac9f4321793bffe13ce035a5");
         if (scriptRef.current && scriptRef.current.parentNode) {
           scriptRef.current.parentNode.removeChild(scriptRef.current);
         }
+        const c = containerRef.current || document.getElementById("container-72acf036ac9f4321793bffe13ce035a5");
         if (c) {
-          // Do not blindly set innerHTML; some ad scripts move nodes around
-          // Only clear if the node still exists and is safe to mutate
           c.removeAttribute("data-ad-injected");
-          // Soft clear children that were created by our script if they are still attached
-          // This avoids NotFoundError when nodes were already detached
-          while (c.firstChild) {
-            try {
-              c.removeChild(c.firstChild);
-            } catch (_) {
-              break;
-            }
-          }
         }
       } catch (err) {
-        // Swallow cleanup errors to avoid crashing the app
         console.warn("NativeAd cleanup warning:", err);
       }
     };
