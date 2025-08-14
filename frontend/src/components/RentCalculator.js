@@ -662,7 +662,7 @@ const RentCalculator = () => {
         {/* Header Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            🧮 Advanced Rent Calculator for India
+            Advanced Rent Calculator for India
           </h1>
           <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-6">
             Calculate accurate rental prices for properties across 180+ Indian cities based on location, 
