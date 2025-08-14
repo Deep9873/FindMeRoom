@@ -18,6 +18,7 @@ import RentCalculator from './components/RentCalculator';
 // Import ad components
 import AdcashBanner from './components/AdcashBanner';
 import NativeAd from './components/NativeAd';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Import resource pages
 import RentalAgreementTemplates from './components/resources/RentalAgreementTemplates';
