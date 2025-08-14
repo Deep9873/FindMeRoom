@@ -383,7 +383,7 @@ const blogPosts = [
       </table>
       
       <div class="cta-box">
-        <h3>🧮 Calculate Your Exact Costs</h3>
+        <h3>Calculate Your Exact Costs</h3>
         <p>Get precise cost estimates for both PG and apartment options in your preferred city and area. <a href="/rent-calculator" class="cta-link">Compare Costs →</a></p>
       </div>
       
