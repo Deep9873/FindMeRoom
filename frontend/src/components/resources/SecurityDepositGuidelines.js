@@ -408,7 +408,7 @@ const SecurityDepositGuidelines = () => {
               onClick={() => navigate('/rent-calculator')}
               className="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
             >
-              🧮 Calculate Fair Rent
+              Calculate Fair Rent
             </button>
           </div>
         </div>
