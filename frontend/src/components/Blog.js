@@ -4353,15 +4353,12 @@ const Blog = () => {
 
         {/* Adcash Banner */}
         <section className="mb-16 text-center">
+          <div className="flex justify-center items-center bg-[#f3f8fe]">
           <AdcashBanner className="mx-auto" />
+          </div?
         </section>
 
-        {/* Native Ad */}
-        <section className="mb-16 text-center">
-          <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-500">
-            <NativeAd borderColor="blue" className="max-w-4xl mx-auto" />
-          </div>
-        </section>
+       
 
         {/* Category Filter */}
         <section className="mb-8">
@@ -4448,15 +4445,14 @@ const Blog = () => {
                   </div>
                 </div>
               </article>
-
+               {/* Native Ad */}
+        <section className="mb-16 text-center">
+          <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-500">
+            <NativeAd borderColor="blue" className="max-w-4xl mx-auto" />
+          </div>
+        </section>
               {/* Insert Banner Ad after every 6 articles */}
-              {(index + 1) % 6 === 0 && index < filteredArticles.length - 1 && (
-                <div className="md:col-span-2 lg:col-span-3 my-8">
-                  <div className="bg-gradient-to-r from-orange-100 to-red-100 rounded-xl p-6 border-l-4 border-orange-500">
-                    <AdcashBanner className="mx-auto" />
-                  </div>
-                </div>
-              )}
+              
             </React.Fragment>
           ))}
         </section>
