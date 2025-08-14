@@ -4041,7 +4041,7 @@ const Footer = () => {
           </div>
           <div className="flex flex-wrap gap-4">
             <button 
-              onClick={() => handleNavigation('home')}
+              onClick={() => handleNavigation('/about')}
               className="hover:text-white transition-colors"
             >
               Accessibility
