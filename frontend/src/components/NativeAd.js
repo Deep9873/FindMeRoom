@@ -1,63 +1,40 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
+import AdFrame from "./AdFrame";
 
+// Profitablerate CPM native ad sandboxed
 export default function NativeBannerAd() {
   const [adLoaded, setAdLoaded] = useState(false);
-  const containerRef = useRef(null);
-  const scriptRef = useRef(null);
 
-  useEffect(() => {
-    // Guard: ensure DOM container exists before injecting script
-    const container = containerRef.current || document.getElementById("container-72acf036ac9f4321793bffe13ce035a5");
-    if (!container) {
-      console.warn("NativeAd container not found. Skipping script injection.");
-      return () => {};
-    }
-
-    // Avoid duplicate loads if effect re-runs (e.g., StrictMode in dev)
-    if (container.dataset.adInjected === "true") {
-      setAdLoaded(true);
-      return () => {};
-    }
-
-    const script = document.createElement("script");
-    script.async = true;
-    script.setAttribute("data-cfasync", "false");
-    script.src = "//pl27416512.profitableratecpm.com/72acf036ac9f4321793bffe13ce035a5/invoke.js";
-
-    script.onload = () => setAdLoaded(true);
-    script.onerror = () => console.warn("NativeAd script failed to load.");
-
+  const handleReady = useCallback(({ win, doc }) => {
     try {
-      container.appendChild(script);
-      container.dataset.adInjected = "true";
-      scriptRef.current = script;
-    } catch (e) {
-      console.warn("Failed to append NativeAd script:", e);
-    }
+      // Container required by vendor script
+      const container = doc.createElement("div");
+      container.id = "container-72acf036ac9f4321793bffe13ce035a5";
+      container.style.width = "100%";
+      doc.body.appendChild(container);
 
-    return () => {
-      // Cleanup defensively: only detach our injected script tag, never mutate vendor-created children
-      try {
-        if (scriptRef.current && scriptRef.current.parentNode) {
-          scriptRef.current.parentNode.removeChild(scriptRef.current);
-        }
-        const c = containerRef.current || document.getElementById("container-72acf036ac9f4321793bffe13ce035a5");
-        if (c) {
-          c.removeAttribute("data-ad-injected");
-        }
-      } catch (err) {
-        console.warn("NativeAd cleanup warning:", err);
-      }
-    };
+      const script = doc.createElement("script");
+      script.async = true;
+      script.setAttribute("data-cfasync", "false");
+      script.src = "//pl27416512.profitableratecpm.com/72acf036ac9f4321793bffe13ce035a5/invoke.js";
+      script.onload = () => setAdLoaded(true);
+      script.onerror = () => {
+        // eslint-disable-next-line no-console
+        console.warn("NativeAd (iframe) script failed to load.");
+      };
+      doc.body.appendChild(script);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn("NativeAd (iframe) injection error", e);
+    }
   }, []);
 
   return (
     <div>
-      {/* Keep the ad container empty so React doesn't manage vendor DOM children */}
-      <div
-        ref={containerRef}
-        id="container-72acf036ac9f4321793bffe13ce035a5"
-        style={{ width: "100%", minHeight: "90px", background: "#f0f0f0" }}
+      <AdFrame
+        title="native-ad-sandbox"
+        height={120}
+        onReady={handleReady}
       />
       {!adLoaded && (
         <p style={{ textAlign: "center", lineHeight: "24px", marginTop: 8, color: "#666" }}>

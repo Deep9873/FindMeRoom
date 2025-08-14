@@ -1,70 +1,43 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
+import AdFrame from "./AdFrame";
 
 export default function BannerAd() {
   const [adLoaded, setAdLoaded] = useState(false);
-  const slotRef = useRef(null);
-  const scriptRef = useRef(null);
 
-  useEffect(() => {
-    const container = slotRef.current || document.getElementById("banner-ad-slot");
-    if (!container) {
-      console.warn("Banner ad container not found. Skipping script injection.");
-      return () => {};
-    }
-
-    // Create the atOptions global variable for the vendor script
-    window.atOptions = {
-      key: "b7d32cc67e74ff67735ed16f9ea69688",
-      format: "iframe",
-      height: 250,
-      width: 300,
-      params: {}
-    };
-
-    // Avoid duplicate injection
-    if (container.dataset.adInjected === "true") {
-      setAdLoaded(true);
-      return () => {};
-    }
-
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = "//www.highperformanceformat.com/b7d32cc67e74ff67735ed16f9ea69688/invoke.js";
-    script.async = true;
-
-    script.onload = () => setAdLoaded(true);
-    script.onerror = () => console.warn("Banner ad script failed to load.");
-
+  const handleReady = useCallback(({ win, doc }) => {
     try {
-      container.appendChild(script);
-      container.dataset.adInjected = "true";
-      scriptRef.current = script;
-    } catch (e) {
-      console.warn("Failed to append banner ad script:", e);
-    }
+      // Set global options inside iframe for the vendor script
+      win.atOptions = {
+        key: "b7d32cc67e74ff67735ed16f9ea69688",
+        format: "iframe",
+        height: 250,
+        width: 300,
+        params: {}
+      };
 
-    return () => {
-      try {
-        if (scriptRef.current && scriptRef.current.parentNode) {
-          scriptRef.current.parentNode.removeChild(scriptRef.current);
-        }
-        const c = slotRef.current || document.getElementById("banner-ad-slot");
-        if (c) {
-          c.removeAttribute("data-ad-injected");
-        }
-      } catch (err) {
-        console.warn("Banner ad cleanup warning:", err);
-      }
-    };
+      const script = doc.createElement("script");
+      script.type = "text/javascript";
+      script.async = true;
+      script.src = "//www.highperformanceformat.com/b7d32cc67e74ff67735ed16f9ea69688/invoke.js";
+      script.onload = () => setAdLoaded(true);
+      script.onerror = () => {
+        // eslint-disable-next-line no-console
+        console.warn("Adcash banner (iframe) script failed to load.");
+      };
+      doc.body.appendChild(script);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn("Adcash banner (iframe) injection error", e);
+    }
   }, []);
 
   return (
-    <div>
-      {/* Keep vendor container empty to avoid React managing its children */}
-      <div
-        ref={slotRef}
-        id="banner-ad-slot"
-        style={{ width: 300, height: 250, background: "#f0f0f0" }}
+    <div className="inline-block">
+      <AdFrame
+        title="adcash-banner-sandbox"
+        width={300}
+        height={250}
+        onReady={handleReady}
       />
       {!adLoaded && (
         <p style={{ textAlign: "center", lineHeight: "24px", marginTop: 8, color: "#666" }}>
