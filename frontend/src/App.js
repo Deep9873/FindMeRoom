@@ -3756,9 +3756,9 @@ const Footer = () => {
   
   // Function for city navigation with scroll to top
   const handleCityNavigation = (city) => {
-    versionedStorage.setItem('selectedCity', city);
+    const citySlug = city.toLowerCase();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    navigate('/properties');
+    navigate(`/properties/${citySlug}`);
   };
   
   const popularCities = [
