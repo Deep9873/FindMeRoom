@@ -6,6 +6,12 @@
         <meta http-equiv="Pragma" content="no-cache">
         <meta http-equiv="Expires" content="0">
         
+        <!-- GPP stub to prevent race-condition errors if other scripts call __gpp before CMP initializes -->
+        <script>
+          window.__gpp = window.__gpp || function() {
+            (window.__gpp.q = window.__gpp.q || []).push(arguments);
+          };
+        </script>
         <script src="https://cmp.gatekeeperconsent.com/min.js" data-cfasync="false"></script>
         <script src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
         <meta charset="utf-8" />
