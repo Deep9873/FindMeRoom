@@ -45,19 +45,12 @@ export default function BannerAd() {
 
     return () => {
       try {
-        const c = slotRef.current || document.getElementById("banner-ad-slot");
         if (scriptRef.current && scriptRef.current.parentNode) {
           scriptRef.current.parentNode.removeChild(scriptRef.current);
         }
+        const c = slotRef.current || document.getElementById("banner-ad-slot");
         if (c) {
           c.removeAttribute("data-ad-injected");
-          while (c.firstChild) {
-            try {
-              c.removeChild(c.firstChild);
-            } catch (_) {
-              break;
-            }
-          }
         }
       } catch (err) {
         console.warn("Banner ad cleanup warning:", err);
