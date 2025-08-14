@@ -4355,7 +4355,9 @@ const Blog = () => {
         {/* Adcash Banner */}
         <section className="mb-16 text-center">
           <div className="flex justify-center items-center bg-[#f3f8fe]">
-          <AdcashBanner className="mx-auto" />
+          <ErrorBoundary componentName="AdcashBanner">
+            <AdcashBanner className="mx-auto" />
+          </ErrorBoundary>
           </div>
         </section>
 
