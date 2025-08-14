@@ -31,6 +31,27 @@
             };
           })();
         </script>
+        <!-- Dev-only: patch console.error to ignore generic cross-origin "Script error." messages -->
+        <script>
+          (function(){
+            var isDevHost = /localhost|127\.0\.0\.1|preview\.emergentagent\.com/.test(location.hostname);
+            if(!isDevHost) return;
+            var origError = console.error;
+            console.error = function(){
+              try{
+                if(arguments && arguments.length){
+                  var first = arguments[0];
+                  var msg = (first && first.message) || (typeof first === 'string' ? first : (first && first.toString())) || '';
+                  if(typeof msg === 'string' && msg.toLowerCase().indexOf('script error')>-1){
+                    // Swallow only this noisy generic error from 3P scripts in dev/preview
+                    return;
+                  }
+                }
+              }catch(_){}
+              return origError.apply(console, arguments);
+            };
+          })();
+        </script>
         <!-- GPP stub to prevent race-condition errors if other scripts call __gpp before CMP initializes -->
         <script>
           window.__gpp = window.__gpp || function() {
