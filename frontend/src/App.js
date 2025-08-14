@@ -3967,7 +3967,7 @@ const Footer = () => {
                 Rental Agreements
               </button>
               <button 
-                onClick={() => user ? handleNavigation('post') : handleNavigation('login')}
+                onClick={() => user ? handleNavigation('/post-property') : handleNavigation('/login')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Promote Property
