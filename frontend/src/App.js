@@ -222,7 +222,7 @@ const MAJOR_INDIAN_CITIES = [
 // SEO Page Configurations
 const SEO_PAGES = {
   home: {
-    title: "Find & Post Flats, Rooms, PG, Apartments for FREE | Flatmate / Roommate Finder with Rent Calculator",
+    title: "Rent Rooms, Flats, PGs & Apartments – Zero Brokerage + Free Property Listing | GetRentals",
     description: "Discover and post rented rooms, PGs, flats & apartments on GetRentals. Zero brokerage rooms & flats for rent in Delhi, Mumbai, Bangalore, Pune, Chennai, Hyderabad. Use our advanced rent calculator for 180+ Indian cities. List free & find your perfect match.",
     keywords: "GetRentals, room for rent, pg near me, flat for rent, shared accommodation, hostel, rent a room, roommate finder, co-living spaces, furnished room, rooms on rent delhi, mumbai rooms, bangalore pg, pune flats, zero brokerage, rent calculator, budget planning, property search"
   },
