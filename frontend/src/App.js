@@ -26,6 +26,10 @@ import TenantRightsChecklist from './components/resources/TenantRightsChecklist'
 import PropertyInspectionGuide from './components/resources/PropertyInspectionGuide';
 import PropertyListingOptimization from './components/resources/PropertyListingOptimization';
 
+// Import new city and sitemap components
+import CityPropertyPage from './components/CityPropertyPage';
+import PropertiesSitemap from './components/PropertiesSitemap';
+
 // SEO Context for Dynamic Meta Tags
 const SEOContext = createContext();
 
