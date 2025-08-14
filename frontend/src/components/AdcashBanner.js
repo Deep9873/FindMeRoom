@@ -67,15 +67,17 @@ export default function BannerAd() {
 
   return (
     <div>
+      {/* Keep vendor container empty to avoid React managing its children */}
       <div
         ref={slotRef}
         id="banner-ad-slot"
         style={{ width: 300, height: 250, background: "#f0f0f0" }}
-      >
-        {!adLoaded && (
-          <p style={{ textAlign: "center", lineHeight: "250px" }}>Loading ad...</p>
-        )}
-      </div>
+      />
+      {!adLoaded && (
+        <p style={{ textAlign: "center", lineHeight: "24px", marginTop: 8, color: "#666" }}>
+          Loading ad...
+        </p>
+      )}
     </div>
   );
 }
