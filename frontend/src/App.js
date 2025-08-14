@@ -1504,7 +1504,7 @@ const HeroSection = () => {
             onClick={handleRentCalculator}
             className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:from-purple-600 hover:to-pink-600 transition-colors shadow-lg border-2 border-purple-300 text-sm md:text-base"
           >
-            🧮 Rent Calculator
+            Rent Calculator
           </button>
           <button 
             onClick={handlePostProperty}
