@@ -1783,6 +1783,23 @@ frontend:
         comment: "✅ COMPREHENSIVE SITEMAP.XML UPDATED AND OPTIMIZED: Successfully updated sitemap.xml with all 32 pages for Google Search Console indexing. Key improvements: 1) Enhanced Rent Calculator Priority: Increased rent calculator page priority to 0.9 (from 0.8) reflecting its importance as a key feature, 2) Complete Page Coverage: Included all main application pages (9), content pages (6), blog articles (13), and resource pages (5), 3) Proper Organization: Organized URLs into logical sections with appropriate comments and priorities, 4) Updated Timestamps: Updated lastmod dates to 2025-01-03 for current relevance, 5) Cross-Platform Sync: Copied updated sitemap to both root directory and frontend/public directory for proper accessibility."
 
 
+
+frontend:
+  - task: "Fix NativeAd and Banner ad DOM errors + Add GPP stub"
+    implemented: true
+    working: true
+    file: "components/NativeAd.js, components/AdcashBanner.js, public/index.html"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "Reported runtime errors: Cannot set properties of null (setting 'innerHTML') in NativeAd.js, NotFoundError removeChild not a child, and vendor invoke.js 'Z3 is not a function'."
+      - working: true
+        agent: "main"
+        comment: "Implemented robust null-guards and lifecycle-safe script injection for ad widgets. Key fixes: (1) Use refs for container and script, (2) Skip innerHTML mutation on cleanup to avoid NotFoundError, (3) Prevent duplicate loads (React 19 StrictMode) using data-adInjected flag, (4) Keep vendor container empty so React never reconciles vendor-added nodes, (5) Added window.__gpp stub before CMP scripts to stop 'window.__gpp is not a function' race error. Verified via screenshots that homepage and blog render without runtime exceptions; vendor network requests failing in headless are expected and benign."
+
 agent_communication:
   - agent: "main"
     message: |
