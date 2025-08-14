@@ -1093,7 +1093,7 @@ const blogPosts = [
       </table>
       
       <div class="cta-box">
-        <h3>🧮 Calculate Your Personal Buy vs Rent Scenario</h3>
+        <h3>Calculate Your Personal Buy vs Rent Scenario</h3>
         <p>Get customized calculations based on your income, preferred location, and property type. <a href="/rent-calculator" class="cta-link">Compare Options →</a></p>
       </div>
       
