@@ -1,1 +1,4070 @@
-REPLACE_FILE
+import React, { useState, useEffect, createContext, useContext, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, Link } from 'react-router-dom';
+import './App.css';
+import axios from 'axios';
+
+// Import cache utilities
+import { versionedStorage, handleCacheReload, addNoCacheMetaTags, initCacheControl } from './utils/cacheUtils';
+
+// Import new AdSense compliance pages
+import AboutUs from './components/AboutUs';
+import ContactUs from './components/ContactUs';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsAndConditions from './components/TermsAndConditions';
+import HowItWorks from './components/HowItWorks';
+import SafetySecurity from './components/SafetySecurity';
+import Blog, { BlogPost } from './components/Blog';
+import RentCalculator from './components/RentCalculator';
+// Import ad components
+import AdcashBanner from './components/AdcashBanner';
+import NativeAd from './components/NativeAd';
+
+// Import resource pages
+import RentalAgreementTemplates from './components/resources/RentalAgreementTemplates';
+import SecurityDepositGuidelines from './components/resources/SecurityDepositGuidelines';
+import TenantRightsChecklist from './components/resources/TenantRightsChecklist';
+import PropertyInspectionGuide from './components/resources/PropertyInspectionGuide';
+import PropertyListingOptimization from './components/resources/PropertyListingOptimization';
+
+// Import new city and sitemap components
+import CityPropertyPage from './components/CityPropertyPage';
+import PropertiesSitemap from './components/PropertiesSitemap';
+
+// SEO Context for Dynamic Meta Tags
+const SEOContext = createContext();
+
+const SEOProvider = ({ children }) => {
+  const updateSEO = (title, description, keywords) => {
+    // Update document title
+    document.title = title;
+    
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', description);
+    }
+    
+    // Update meta keywords
+    const metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (metaKeywords) {
+      metaKeywords.setAttribute('content', keywords);
+    }
+    
+    // Update Open Graph title
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute('content', title);
+    }
+    
+    // Update Open Graph description
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    if (ogDescription) {
+      ogDescription.setAttribute('content', description);
+    }
+    
+    // Update Twitter title
+    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twitterTitle) {
+      twitterTitle.setAttribute('content', title);
+    }
+    
+    // Update Twitter description
+    const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+    if (twitterDescription) {
+      twitterDescription.setAttribute('content', description);
+    }
+  };
+
+  return (
+    <SEOContext.Provider value={{ updateSEO }}>
+      {children}
+    </SEOContext.Provider>
+  );
+};
+
+const useSEO = () => {
+  const context = useContext(SEOContext);
+  if (!context) {
+    throw new Error('useSEO must be used within a SEOProvider');
+  }
+  return context;
+};
+
+// Export useSEO for use in other components
+export { useSEO };
+
+const RAW_BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
+const BACKEND_URL = RAW_BACKEND_URL.replace(/\/+$/, '');
+const API = `${BACKEND_URL}/api`;
+
+// Major Indian Cities List
+const MAJOR_INDIAN_CITIES = [
+  'Agartala, Tripura',
+  'Agra, Uttar Pradesh',
+  'Ahmedabad, Gujarat',
+  'Ajmer, Rajasthan',
+  'Akola, Maharashtra',
+  'Aligarh, Uttar Pradesh',
+  'Allahabad, Uttar Pradesh',
+  'Amravati, Maharashtra',
+  'Amritsar, Punjab',
+  'Asansol, West Bengal',
+  'Aurangabad, Maharashtra',
+  'Bangalore, Karnataka',
+  'Bareilly, Uttar Pradesh',
+  'Belgaum, Karnataka',
+  'Bhubaneswar, Odisha',
+  'Bhiwandi, Maharashtra',
+  'Bhilai, Chhattisgarh',
+  'Bhopal, Madhya Pradesh',
+  'Bikaner, Rajasthan',
+  'Chandigarh, Chandigarh',
+  'Chennai, Tamil Nadu',
+  'Coimbatore, Tamil Nadu',
+  'Cuttack, Odisha',
+  'Dehradun, Uttarakhand',
+  'Dhanbad, Jharkhand',
+  'Durgapur, West Bengal',
+  'Erode, Tamil Nadu',
+  'Faridabad, Haryana',
+  'Firozabad, Uttar Pradesh',
+  'Ghaziabad, Uttar Pradesh',
+  'Gorakhpur, Uttar Pradesh',
+  'Guntur, Andhra Pradesh',
+  'Gurgaon, Haryana',
+  'Gwalior, Madhya Pradesh',
+  'Guwahati, Assam',
+  'Hubballi-Dharwad, Karnataka',
+  'Howrah, West Bengal',
+  'Hyderabad, Telangana',
+  'Indore, Madhya Pradesh',
+  'Jabalpur, Madhya Pradesh',
+  'Jaipur, Rajasthan',
+  'Jalandhar, Punjab',
+  'Jammu, Jammu and Kashmir',
+  'Jamshedpur, Jharkhand',
+  'Jodhpur, Rajasthan',
+  'Kanpur, Uttar Pradesh',
+  'Kochi, Kerala',
+  'Kolkata, West Bengal',
+  'Kolhapur, Maharashtra',
+  'Kota, Rajasthan',
+  'Lucknow, Uttar Pradesh',
+  'Ludhiana, Punjab',
+  'Madurai, Tamil Nadu',
+  'Maheshtala, West Bengal',
+  'Malegaon, Maharashtra',
+  'Mangalore, Karnataka',
+  'Meerut, Uttar Pradesh',
+  'Moradabad, Uttar Pradesh',
+  'Mysore, Karnataka',
+  'Nagpur, Maharashtra',
+  'Nanded, Maharashtra',
+  'Nashik, Maharashtra',
+  'Nellore, Andhra Pradesh',
+  'Noida, Uttar Pradesh',
+  'Panaji, Goa',
+  'Patna, Bihar',
+  'Pimpri-Chinchwad, Maharashtra',
+  'Prayagraj, Uttar Pradesh',
+  'Pune, Maharashtra',
+  'Rajkot, Gujarat',
+  'Raipur, Chhattisgarh',
+  'Ranchi, Jharkhand',
+  'Rourkela, Odisha',
+  'Salem, Tamil Nadu',
+  'Sangli-Miraj & Kupwad, Maharashtra',
+  'Siliguri, West Bengal',
+  'Surat, Gujarat',
+  'Thane, Maharashtra',
+  'Thiruchirappalli, Tamil Nadu',
+  'Thiruvananthapuram, Kerala',
+  'Tirunelveli, Tamil Nadu',
+  'Tiruppur, Tamil Nadu',
+  'Udaipur, Rajasthan',
+  'Ujjain, Madhya Pradesh',
+  'Ulhasnagar, Maharashtra',
+  'Vadodara, Gujarat',
+  'Varanasi, Uttar Pradesh',
+  'Vasai-Virar, Maharashtra',
+  'Vijayawada, Andhra Pradesh',
+  'Visakhapatnam, Andhra Pradesh',
+  'Warangal, Telangana',
+  'Shillong, Meghalaya',
+  'Delhi',
+  'New Delhi',
+  'Old Delhi',
+  'Bengaluru, Karnataka',
+  'Shimla, Himachal Pradesh',
+  'Aizawl, Mizoram',  'Alappuzha, Kerala',  'Anantapur, Andhra Pradesh',  'Arrah, Bihar',  'Ambala, Haryana',
+'Baranagar, West Bengal',  'Bardhaman, West Bengal',  'Bathinda, Punjab',  'Begusarai, Bihar',  'Bhagalpur, Bihar',
+'Bharatpur, Rajasthan',  'Bhavnagar, Gujarat',  'Bhiwani, Haryana',  'Bidar, Karnataka',  'Bokaro, Jharkhand',
+'Chhapra, Bihar',  'Chhindwara, Madhya Pradesh',  'Darbhanga, Bihar',  'Dibrugarh, Assam',  'Dindigul, Tamil Nadu',
+'Durg, Chhattisgarh',  'Eluru, Andhra Pradesh',  'Fatehpur, Uttar Pradesh',  'Gandhinagar, Gujarat',  'Gaya, Bihar',
+'Ghazipur, Uttar Pradesh',  'Gondia, Maharashtra',  'Gopalganj, Bihar',  'Hajipur, Bihar',  'Haldwani, Uttarakhand',
+'Hansi, Haryana',  'Hisar, Haryana',  'Ichalkaranji, Maharashtra',  'Itanagar, Arunachal Pradesh',  'Jagdalpur, Chhattisgarh',
+'Jalgaon, Maharashtra',  'Jalna, Maharashtra',  'Jamnagar, Gujarat',  'Jhansi, Uttar Pradesh',  'Junagadh, Gujarat',
+'Kadapa, Andhra Pradesh',  'Kakinada, Andhra Pradesh',  'Kalyan-Dombivli, Maharashtra',  'Kamarhati, West Bengal',
+'Kanchipuram, Tamil Nadu',  'Karaikudi, Tamil Nadu',  'Karimnagar, Telangana',  'Karnal, Haryana',  'Katihar, Bihar',
+'Khammam, Telangana',  'Khandwa, Madhya Pradesh',  'Kharagpur, West Bengal',  'Korba, Chhattisgarh',  'Kottayam, Kerala',
+'Kozhikode, Kerala',  'Kurnool, Andhra Pradesh',  'Latur, Maharashtra',  'Machilipatnam, Andhra Pradesh',  'Malda, West Bengal',
+'Mandya, Karnataka',  'Mathura, Uttar Pradesh',  'Medininagar, Jharkhand',  'Mira-Bhayandar, Maharashtra',  'Nadiad, Gujarat',
+'Nalgonda, Telangana',  'Namakkal, Tamil Nadu',  'Narsinghpur, Madhya Pradesh',  'Navsari, Gujarat',  'Nizamabad, Telangana',
+'Ongole, Andhra Pradesh',  'Palakkad, Kerala',  'Palghar, Maharashtra',  'Parbhani, Maharashtra',  'Patan, Gujarat',
+'Phagwara, Punjab',  'Port Blair, Andaman and Nicobar Islands',  'Puducherry, Puducherry',  'Raichur, Karnataka',
+'Rewa, Madhya Pradesh',  'Rewari, Haryana',  'Rohtak, Haryana',  'Roorkee, Uttarakhand',  'Sagar, Madhya Pradesh',
+'Saharanpur, Uttar Pradesh',  'Sambalpur, Odisha',  'Satara, Maharashtra',  'Satna, Madhya Pradesh',  'Shahjahanpur, Uttar Pradesh',
+'Shimoga, Karnataka',  'Sikar, Rajasthan',  'Sirsa, Haryana',  'Solan, Himachal Pradesh',  'Solapur, Maharashtra',
+'Sonipat, Haryana',  'Sultanpur, Uttar Pradesh',  'Tenali, Andhra Pradesh',  'Thanjavur, Tamil Nadu',  'Tumkur, Karnataka',
+'Udupi, Karnataka',  'Unnao, Uttar Pradesh',  'Valsad, Gujarat',  'Vellore, Tamil Nadu',  'Yamunanagar, Haryana'
+].sort();
+
+// SEO Page Configurations
+const SEO_PAGES = {
+  home: {
+    title: "Rent Rooms, Flats, PGs & Apartments – Zero Brokerage + Free Property Listing | GetRentals",
+    description: "Discover and post rented rooms, PGs, flats & apartments on GetRentals. Zero brokerage rooms & flats for rent in Delhi, Mumbai, Bangalore, Pune, Chennai, Hyderabad. Use our advanced rent calculator for 180+ Indian cities. List free & find your perfect match.",
+    keywords: "GetRentals, room for rent, pg near me, flat for rent, shared accommodation, hostel, rent a room, roommate finder, co-living spaces, furnished room, rooms on rent delhi, mumbai rooms, bangalore pg, pune flats, zero brokerage, rent calculator, budget planning, property search"
+  },
+  properties: {
+    title: "Search Properties - Rooms, PG, Flats for Rent | GetRentals",
+    description: "Browse thousands of verified rooms, PG accommodations, and flats for rent across India. Filter by location, price, amenities and find your perfect home with zero brokerage.",
+    keywords: "search properties, browse rooms, find accommodation, pg listings, flat for rent, room search, property listings, rental properties, accommodation search"
+  },
+  post: {
+    title: "Post Your Property for Free - List Rooms, PG, Flats, Apartments & more | GetRentals",
+    description: "List your room, PG, or flat for rent on GetRentals for free. Reach thousands of verified tenants, students and working professionals. Zero listing fees, maximum visibility.",
+    keywords: "post property, post pg, post apartment for free, post apartment, post room, post room for free, post free, post property, property on rent, list room for rent, advertise pg, rent out flat, property listing, free listing, landlord, property owner, rent out room"
+  },
+  'my-properties': {
+    title: "My Properties - Manage Your Listings | GetRentals",
+    description: "Manage your property listings on GetRentals. Edit details, view inquiries, track performance and connect with potential tenants for your rooms, PG, and flats.",
+    keywords: "my properties, manage listings, property dashboard, landlord panel, edit listings, property management, rental management"
+  },
+  chat: {
+    title: "Messages & Chat - Connect with Property Owners | GetRentals",
+    description: "Chat directly with property owners and tenants on GetRentals. Get instant responses, schedule visits, negotiate rent and finalize your rental agreement seamlessly.",
+    keywords: "chat messages, contact property owner, rental inquiries, tenant communication, property chat, real-time messaging, rental communication"
+  },
+  'rent-calculator': {
+    title: "Rent Calculator India - Calculate Rental Costs for 180+ Cities | GetRentals",
+    description: "Advanced rent calculator for India covering 180+ cities. Calculate accurate rental costs for rooms, 1BHK, 2BHK, 3BHK, PGs & houses. Factor in rent, deposit, utilities & maintenance. Plan your rental budget with precision for Delhi, Mumbai, Bangalore, Pune, Chennai, Hyderabad and more Indian cities.",
+    keywords: "rent calculator india, rental cost calculator, budget planning tool, property rent estimator, rental budget calculator, rent estimation tool, apartment rent calculator, pg rent calculator, house rent calculator, rental affordability calculator, indian cities rent, delhi rent calculator, mumbai rent calculator, bangalore rent calculator, rental cost estimation, property budget planner"
+  },
+  login: {
+    title: "Login to GetRentals - Access Your Account",
+    description: "Login to your GetRentals account to post properties, search rooms, manage listings, chat with property owners and access all premium features.",
+    keywords: "GetRentals login, user login, account access, sign in, member login, rental platform login"
+  },
+  register: {
+    title: "Register on GetRentals - Create Free Account",
+    description: "Create your free GetRentals account to start posting properties, searching rooms, connecting with property owners and accessing all platform features.",
+    keywords: "GetRentals registration, create account, sign up, free registration, join GetRentals, new user registration"
+  },
+  profile: {
+    title: "My Profile - Account Settings | GetRentals",
+    description: "Manage your GetRentals profile, update personal information, change preferences and customize your rental experience.",
+    keywords: "user profile, account settings, profile management, personal information, account preferences"
+  },
+  blog: {
+    title: "Property Rental Tips, Real Estate Advice & Housing Insights - GetRentals Blog",
+    description: "Discover expert property rental tips, real estate insights, apartment hunting guides, and housing market trends on GetRentals blog. Your ultimate resource for rental property advice in India.",
+    keywords: "property rental blog, real estate tips, apartment hunting, housing market, rental advice, property investment, tenant tips, landlord advice, Indian real estate, property blog"
+  }
+};
+
+
+
+
+// Reusable City Selector Component
+const CitySelector = ({ value, onChange, placeholder = "Select City", className = "" }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isCustomCity, setIsCustomCity] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Filter cities based on search term with enhanced fuzzy matching
+  const filteredCities = MAJOR_INDIAN_CITIES.filter(city => {
+    const searchLower = searchTerm.toLowerCase().trim();
+    const cityLower = city.toLowerCase();
+    
+    // Return if empty search
+    if (!searchLower) return true;
+    
+    // Exact match or starts with
+    if (cityLower.includes(searchLower)) return true;
+    
+    // Check if search term matches any word in city name
+    const searchWords = searchLower.split(/\s+/);
+    const cityWords = cityLower.split(/[\s,]+/);
+    
+    return searchWords.some(searchWord => 
+      cityWords.some(cityWord => cityWord.startsWith(searchWord))
+    );
+  });
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleCitySelect = (city) => {
+    onChange(city);
+    setIsDropdownOpen(false);
+    setSearchTerm('');
+    setIsCustomCity(false);
+  };
+
+  const handleCustomCityToggle = () => {
+    setIsCustomCity(true);
+    setIsDropdownOpen(false);
+    if (!isCustomCity) {
+      onChange(''); // Clear current value when switching to custom
+    }
+  };
+
+  const handleCustomCityChange = (e) => {
+    onChange(e.target.value);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Check if current value is a custom city (not in the major cities list)
+  const isCurrentValueCustom = value && !MAJOR_INDIAN_CITIES.includes(value);
+
+  return (
+    <div className={`relative ${className}`} ref={dropdownRef}>
+      {isCustomCity || isCurrentValueCustom ? (
+        <div className="relative">
+          <input
+            type="text"
+            value={value}
+            onChange={handleCustomCityChange}
+            placeholder="Enter your city"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-20"
+          />
+          <button
+            type="button"
+            onClick={() => {
+              setIsCustomCity(false);
+              onChange('');
+            }}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-blue-600 hover:text-blue-800"
+          >
+            Use List
+          </button>
+        </div>
+      ) : (
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-left flex justify-between items-center"
+          >
+            <span className={value ? 'text-black' : 'text-gray-500'}>
+              {value || placeholder}
+            </span>
+            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {isDropdownOpen && (
+            <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+              {/* Search input */}
+              <div className="p-2 border-b">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  placeholder="Search cities..."
+                  className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Custom city option */}
+              <button
+                type="button"
+                onClick={handleCustomCityToggle}
+                className="w-full px-3 py-2 text-left hover:bg-blue-50 text-blue-600 border-b text-sm font-medium"
+              >
+                + Add Other City
+              </button>
+
+              {/* Cities list */}
+              <div className="max-h-40 overflow-y-auto">
+                {filteredCities.length > 0 ? (
+                  filteredCities.map((city) => (
+                    <button
+                      key={city}
+                      type="button"
+                      onClick={() => handleCitySelect(city)}
+                      className="w-full px-3 py-2 text-left hover:bg-gray-50 text-sm"
+                    >
+                      {city}
+                    </button>
+                  ))
+                ) : (
+                  <div className="px-3 py-2 text-sm text-gray-500">
+                    No cities found. Try different search terms.
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Context for authentication
+const AuthContext = createContext();
+
+// Context for city selection
+const CityContext = createContext();
+
+// Login/Register Popup Component
+const LoginRegisterPopup = ({ isOpen, onClose, defaultTab = 'login' }) => {
+  const [activeTab, setActiveTab] = useState(defaultTab);
+  const [formData, setFormData] = useState({ email: '', password: '', name: '', phone: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const { login, register } = useAuth();
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError('');
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    
+    const result = await login(formData.email, formData.password);
+    
+    if (result.success) {
+      onClose();
+      setFormData({ email: '', password: '', name: '', phone: '' });
+    } else {
+      setError(result.error);
+    }
+    setLoading(false);
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    
+    const result = await register(formData);
+    
+    if (result.success) {
+      onClose();
+      setFormData({ email: '', password: '', name: '', phone: '' });
+    } else {
+      setError(result.error);
+    }
+    setLoading(false);
+  };
+
+  const resetForm = () => {
+    setFormData({ email: '', password: '', name: '', phone: '' });
+    setError('');
+  };
+
+  const handleTabSwitch = (tab) => {
+    setActiveTab(tab);
+    resetForm();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-xl relative">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold"
+        >
+          ×
+        </button>
+
+        {/* Header */}
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            {activeTab === 'login' ? 'Login to Continue' : 'Create Account'}
+          </h2>
+          <p className="text-gray-600">
+            {activeTab === 'login' 
+              ? 'Please log in to access this feature' 
+              : 'Join GetRentals to get started'}
+          </p>
+        </div>
+
+        {/* Tab buttons */}
+        <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
+          <button
+            onClick={() => handleTabSwitch('login')}
+            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+              activeTab === 'login' 
+                ? 'bg-white text-blue-600 shadow-sm' 
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Login
+          </button>
+          <button
+            onClick={() => handleTabSwitch('register')}
+            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+              activeTab === 'register' 
+                ? 'bg-white text-blue-600 shadow-sm' 
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Register
+          </button>
+        </div>
+
+        {error && (
+          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+            {error}
+          </div>
+        )}
+
+        {/* Login Form */}
+        {activeTab === 'login' && (
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your email"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your password"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium disabled:opacity-50"
+            >
+              {loading ? 'Logging in...' : 'Login'}
+            </button>
+          </form>
+        )}
+
+        {/* Register Form */}
+        {activeTab === 'register' && (
+          <form onSubmit={handleRegister} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your full name"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your email"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your phone number"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your password"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-green-600 text-white px-4 py-3 rounded-md hover:bg-green-700 transition-colors font-medium disabled:opacity-50"
+            >
+              {loading ? 'Creating Account...' : 'Create Account'}
+            </button>
+          </form>
+        )}
+
+        <div className="mt-4 text-center text-sm text-gray-500">
+          {activeTab === 'login' ? (
+            <p>
+              Don't have an account?{' '}
+              <button 
+                onClick={() => handleTabSwitch('register')}
+                className="text-blue-600 hover:text-blue-800 font-medium"
+              >
+                Sign up
+              </button>
+            </p>
+          ) : (
+            <p>
+              Already have an account?{' '}
+              <button 
+                onClick={() => handleTabSwitch('login')}
+                className="text-blue-600 hover:text-blue-800 font-medium"
+              >
+                Log in
+              </button>
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CityProvider = ({ children }) => {
+  const [selectedCity, setSelectedCity] = useState(() => {
+    // Get city from versioned storage; if it was legacy string, migration in cacheUtils already handles it
+    const city = versionedStorage.getItem('selectedCity');
+    return typeof city === 'string' ? city : '';
+  });
+  const [showCityPopup, setShowCityPopup] = useState(() => {
+    // Show popup if no city is selected
+    return !versionedStorage.getItem('selectedCity');
+  });
+
+  const updateSelectedCity = (city) => {
+    setSelectedCity(city);
+    setShowCityPopup(false);
+    if (city) {
+      versionedStorage.setItem('selectedCity', city);
+    } else {
+      versionedStorage.removeItem('selectedCity');
+      setShowCityPopup(true);
+    }
+  };
+
+  const handleCityPopupSelect = (city) => {
+    updateSelectedCity(city);
+  };
+
+  return (
+    <CityContext.Provider value={{ selectedCity, setSelectedCity: updateSelectedCity }}>
+      {showCityPopup && (
+        <CitySelectionPopup onCitySelect={handleCityPopupSelect} />
+      )}
+      {children}
+    </CityContext.Provider>
+  );
+};
+
+const useCity = () => {
+  const context = useContext(CityContext);
+  if (!context) {
+    throw new Error('useCity must be used within a CityProvider');
+  }
+  return context;
+};
+
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Handle cache reload on component mount
+    handleCacheReload();
+    addNoCacheMetaTags();
+    
+    try { initCacheControl(BACKEND_URL); } catch (e) { console.debug('initCacheControl disabled due to environment:', e); }
+
+    const token = versionedStorage.getItem('token');
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      fetchUserInfo();
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchUserInfo = async () => {
+    try {
+      const response = await axios.get(`${API}/auth/me`);
+      setUser(response.data);
+      // Store user info with versioning
+      versionedStorage.setItem('user', response.data);
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+      versionedStorage.removeItem('token');
+      versionedStorage.removeItem('user');
+      delete axios.defaults.headers.common['Authorization'];
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const login = async (email, password) => {
+    try {
+      const response = await axios.post(`${API}/auth/login`, { email, password });
+      const { access_token, user } = response.data;
+      versionedStorage.setItem('token', access_token);
+      versionedStorage.setItem('user', user);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+      setUser(user);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.response?.data?.detail || 'Login failed' };
+    }
+  };
+
+  const register = async (userData) => {
+    try {
+      const response = await axios.post(`${API}/auth/register`, userData);
+      const { access_token, user } = response.data;
+      versionedStorage.setItem('token', access_token);
+      versionedStorage.setItem('user', user);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+      setUser(user);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.response?.data?.detail || 'Registration failed' };
+    }
+  };
+
+  const logout = () => {
+    versionedStorage.removeItem('token');
+    versionedStorage.removeItem('user');
+    delete axios.defaults.headers.common['Authorization'];
+    setUser(null);
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+// City Selection Popup Component
+const CitySelectionPopup = ({ onCitySelect }) => {
+  const [selectedCity, setSelectedCity] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!selectedCity.trim()) {
+      setError('Please select a city to continue');
+      return;
+    }
+    onCitySelect(selectedCity);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-xl">
+        <div className="text-center mb-6">
+          <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+            <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to GetRentals!</h2>
+          <p className="text-gray-600">Please select your city to find nearby properties and get the best experience.</p>
+        </div>
+
+        {error && (
+          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Select Your City <span className="text-red-500">*</span>
+            </label>
+            <CitySelector
+              value={selectedCity}
+              onChange={setSelectedCity}
+              placeholder="Choose your city"
+              className="w-full"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium"
+          >
+            Continue to GetRentals
+          </button>
+
+          <p className="mt-4 text-xs text-gray-500 text-center">
+            This helps us show you properties in your area and improves page loading performance.
+          </p>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// Components
+// Mobile Bottom Navigation Component
+const MobileBottomNavigation = () => {
+  const { user } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Load unread count when user is logged in
+  useEffect(() => {
+    if (user) {
+      loadUnreadCount();
+      
+      // Set up polling for unread count
+      const interval = setInterval(() => {
+        loadUnreadCount();
+      }, 5000); // Poll every 5 seconds
+      
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  const loadUnreadCount = async () => {
+    if (!user) return;
+    
+    try {
+      const url = `${BACKEND_URL}/api/chat/unread-count`;
+      console.log('Fetching unread count from URL:', url);
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${versionedStorage.getItem('token')}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setUnreadCount(data.unread_count);
+      }
+    } catch (error) {
+      console.error('Failed to load unread count:', error);
+    }
+  };
+  
+  const navItems = [
+    { 
+      id: 'home',
+      route: '/',
+      name: 'Home', 
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
+        </svg>
+      ),
+      requireAuth: false
+    },
+    { 
+      id: 'rent-calculator',
+      route: '/rent-calculator',
+      name: 'Calculator', 
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+      ),
+      requireAuth: false
+    },
+    { 
+      id: 'chat',
+      route: '/chat',
+      name: 'Chat', 
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+      ),
+      requireAuth: true
+    },
+    { 
+      id: 'profile',
+      route: '/profile',
+      name: 'Profile', 
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      ),
+      requireAuth: true
+    }
+  ];
+
+  const handleNavClick = (item) => {
+    if (item.requireAuth && !user) {
+      navigate('/login');
+    } else {
+      navigate(item.route);
+    }
+  };
+
+  // Determine if current route matches nav item
+  const isActiveRoute = (item) => {
+    if (item.route === '/' && location.pathname === '/') return true;
+    if (item.route !== '/' && location.pathname.startsWith(item.route)) return true;
+    return false;
+  };
+
+  return (
+    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg">
+      <div className="flex justify-around items-center py-2">
+        {navItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => handleNavClick(item)}
+            className={`flex flex-col items-center justify-center p-2 flex-1 relative ${
+              isActiveRoute(item)
+                ? 'text-blue-600' 
+                : 'text-gray-600 hover:text-blue-600'
+            }`}
+          >
+            <div className="mb-1 relative">
+              {item.icon}
+              {item.id === 'chat' && user && unreadCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </div>
+            <span className="text-xs font-medium">{item.name}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Profile Component
+const ProfilePage = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Please Login</h2>
+          <p className="text-gray-600 mb-6">You need to be logged in to access your profile</p>
+          <button
+            onClick={() => navigate('/login')}
+            className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
+            <button 
+              onClick={() => navigate('/')}
+              className="text-gray-500 hover:text-gray-700 md:hidden"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+            </button>
+          </div>
+          
+          <div className="space-y-6">
+            {/* User Info */}
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                  <p className="text-gray-900">{user.name}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <p className="text-gray-900">{user.email}</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">User ID</label>
+                  <p className="text-gray-500 text-sm">{user.id}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button
+                  onClick={() => navigate('/post-property')}
+                  className="flex items-center justify-center p-4 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Post New Property
+                </button>
+                <button
+                  onClick={() => navigate('/my-properties')}
+                  className="flex items-center justify-center p-4 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                  </svg>
+                  My Properties
+                </button>
+                <button
+                  onClick={() => navigate('/chat')}
+                  className="flex items-center justify-center p-4 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                  Chat Messages
+                </button>
+                <button
+                  onClick={() => navigate('/properties')}
+                  className="flex items-center justify-center p-4 bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  Search Properties
+                </button>
+              </div>
+            </div>
+
+            {/* Account Actions */}
+            <div className="border-t pt-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Account</h2>
+              <button
+                onClick={logout}
+                className="w-full bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Header = () => {
+  const { user, logout } = useAuth();
+  const { selectedCity, setSelectedCity } = useCity();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Load unread count when user is logged in
+  useEffect(() => {
+    if (user) {
+      loadUnreadCount();
+      
+      // Set up polling for unread count
+      const interval = setInterval(() => {
+        loadUnreadCount();
+      }, 5000); // Poll every 5 seconds
+      
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (moreDropdownOpen && !event.target.closest('.more-dropdown')) {
+        setMoreDropdownOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [moreDropdownOpen]);
+
+  const loadUnreadCount = async () => {
+    if (!user) return;
+    
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/chat/unread-count`, {
+        headers: {
+          'Authorization': `Bearer ${versionedStorage.getItem('token')}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setUnreadCount(data.unread_count);
+      }
+    } catch (error) {
+      console.error('Failed to load unread count:', error);
+    }
+  };
+
+  const handleChatClick = () => {
+    navigate('/chat');
+  };
+
+  return (
+    <header className="bg-white shadow-lg sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16"> 
+          {/* Logo and Brand Name */}
+          <div className="flex items-center space-x-3 flex-shrink-0">
+            <img className="w-16 h-16 lg:w-16 lg:h-16 cursor-pointer" src="/logo.png" alt="GetRentals" onClick={() => window.location.href = "/"} />
+            <h1 className="text-xl lg:text-2xl font-bold text-red-600 cursor-pointer font sarif" onClick={() => navigate('/')}>
+              GetRentals
+            </h1>
+          </div>
+          
+          {/* Desktop & Tablet Navigation */}
+          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+            {/* City Selector - Hide on smaller tablets */}
+            <div className="hidden xl:block flex-shrink-0">
+              <div className="flex items-center space-x-2">
+                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <CitySelector
+                  value={selectedCity}
+                  onChange={setSelectedCity}
+                  placeholder="Select your city"
+                  className="w-32"
+                />
+              </div>
+            </div>
+            
+            {/* Navigation Buttons */}
+            <button 
+              onClick={() => navigate('/')}
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
+            >
+              Home
+            </button>
+            <button 
+              onClick={() => navigate('/properties')}
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
+            >
+              Properties
+            </button>
+            <button 
+              onClick={() => navigate('/post-property')}
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
+            >
+              <span className="hidden lg:inline">Post Property</span>
+              <span className="lg:hidden">Post</span>
+            </button>
+            <button 
+              onClick={() => navigate('/my-properties')}
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
+            >
+              <span className="hidden lg:inline">My Properties</span>
+              <span className="lg:hidden">My Props</span>
+            </button>
+            <button 
+              onClick={handleChatClick}
+              className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium relative whitespace-nowrap"
+            >
+              Chat
+              {user && unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 lg:w-5 lg:h-5 flex items-center justify-center">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </button>
+
+            <button 
+              onClick={() => navigate('/rent-calculator')}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 lg:px-3 py-1 lg:py-2 rounded-md hover:from-blue-600 hover:to-purple-700 text-sm font-medium whitespace-nowrap transition-all"
+            >
+              <span className="hidden lg:inline">Rent Calculator</span>
+              <span className="lg:hidden">Calc</span>
+            </button>
+            
+            {/* More Dropdown */}
+            <div className="relative more-dropdown">
+              <button 
+                onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
+                className="text-gray-700 hover:text-blue-600 px-2 lg:px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap flex items-center"
+              >
+                More
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              {moreDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border">
+                  <button
+                    onClick={() => {
+                      navigate('/blog');
+                      setMoreDropdownOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    📝 Blog
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/about');
+                      setMoreDropdownOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    About Us
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/contact');
+                      setMoreDropdownOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Contact Us
+                  </button>
+                </div>
+              )}
+            </div>
+          </nav>
+
+          {/* Auth Buttons - Optimized Responsive Layout */}
+          <div className="hidden md:flex items-center flex-shrink-0">
+            {user ? (
+              <div className="flex items-center space-x-1 lg:space-x-2">
+                <span className="text-gray-700 text-xs lg:text-sm hidden lg:inline truncate max-w-24 xl:max-w-32">
+                  Welcome, {user.name}!
+                </span>
+                <span className="text-gray-700 text-xs lg:hidden truncate max-w-16">
+                  {user.name.split(' ')[0]}
+                </span>
+                <button 
+                  onClick={logout}
+                  className="bg-red-500 text-white px-2 lg:px-3 py-1 lg:py-2 rounded-md hover:bg-red-600 transition-colors text-xs lg:text-sm flex-shrink-0"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="flex space-x-1">
+                <button 
+                  onClick={() => navigate('/login')}
+                  className="bg-blue-500 text-white px-2 lg:px-3 py-1 lg:py-2 rounded-md hover:bg-blue-600 transition-colors text-xs lg:text-sm flex-shrink-0"
+                >
+                  Login
+                </button>
+                <button 
+                  onClick={() => navigate('/register')}
+                  className="bg-green-500 text-white px-2 lg:px-3 py-1 lg:py-2 rounded-md hover:bg-green-600 transition-colors text-xs lg:text-sm flex-shrink-0"
+                >
+                  Register
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+            >
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {mobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
+              {/* Mobile City Selector */}
+              <div className="px-3 py-2 border-b">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Select Your City</label>
+                <CitySelector
+                  value={selectedCity}
+                  onChange={setSelectedCity}
+                  placeholder="Select your city"
+                  className="w-full"
+                />
+              </div>
+              
+              <button 
+                onClick={() => { navigate('/'); setMobileMenuOpen(false); }}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
+              >
+                Home
+              </button>
+              <button 
+                onClick={() => { navigate('/properties'); setMobileMenuOpen(false); }}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
+              >
+                Properties
+              </button>
+              <button 
+                onClick={() => { navigate('/post-property'); setMobileMenuOpen(false); }}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
+              >
+                Post Property
+              </button>
+              <button 
+                onClick={() => { navigate('/my-properties'); setMobileMenuOpen(false); }}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
+              >
+                My Properties
+              </button>
+              <button 
+                onClick={() => { handleChatClick(); setMobileMenuOpen(false); }}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium relative"
+              >
+                Chat
+                {user && unreadCount > 0 && (
+                  <span className="absolute top-2 right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </button>
+              <button 
+                onClick={() => { navigate('/blog'); setMobileMenuOpen(false); }}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
+              >
+                Blog
+              </button>
+              <button 
+                onClick={() => { navigate('/rent-calculator'); setMobileMenuOpen(false); }}
+                className="block w-full text-left px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 rounded-md text-base font-medium transition-all"
+              >
+                Rent Calculator
+              </button>
+              <button 
+                onClick={() => { navigate('/about'); setMobileMenuOpen(false); }}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
+              >
+                About Us
+              </button>
+              <button 
+                onClick={() => { navigate('/contact'); setMobileMenuOpen(false); }}
+                className="block w-full text-left px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md text-base font-medium"
+              >
+                Contact Us
+              </button>
+              
+              {/* Mobile Auth Buttons */}
+              <div className="border-t pt-4">
+                {user ? (
+                  <div className="space-y-2">
+                    <div className="px-3 py-2 text-gray-700 text-sm">Welcome, {user.name}!</div>
+                    <button 
+                      onClick={() => { logout(); setMobileMenuOpen(false); }}
+                      className="block w-full text-left px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <button 
+                      onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}
+                      className="block w-full text-left px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                    >
+                      Login
+                    </button>
+                    <button 
+                      onClick={() => { navigate('/register'); setMobileMenuOpen(false); }}
+                      className="block w-full text-left px-3 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+                    >
+                      Register
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+};
+
+const HeroSection = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  
+  const scrollToSearch = () => {
+    const searchSection = document.getElementById('search-section');
+    if (searchSection) {
+      searchSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handlePostProperty = () => {
+    navigate('/post-property');
+  };
+
+  const handleRentCalculator = () => {
+    navigate('/rent-calculator');
+  };
+
+  return (
+    <div className="relative h-auto min-h-96 bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center py-8 md:py-0 md:h-96">
+      <div 
+        className="absolute inset-0 bg-cover bg-center opacity-20"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688')`
+        }}
+      />
+      <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4 pt-4 md:pt-0">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">Find Your Perfect Room or Flat</h1>
+        <p className="text-lg sm:text-xl md:text-2xl mb-6 leading-relaxed">Discover amazing rooms, houses, PGs, Flats and more in your city with zero brokerage</p>
+        
+    
+        
+        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center max-w-3xl mx-auto">
+          <button 
+            onClick={scrollToSearch}
+            className="w-full sm:w-auto bg-white text-blue-600 px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg text-sm md:text-base"
+          >
+            🔍 Start Searching
+          </button>
+          <button 
+            onClick={handleRentCalculator}
+            className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:from-purple-600 hover:to-pink-600 transition-colors shadow-lg border-2 border-purple-300 text-sm md:text-base"
+          >
+            Rent Calculator
+          </button>
+          <button 
+            onClick={handlePostProperty}
+            className="w-full sm:w-auto bg-green-500 text-white px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-green-600 transition-colors border-2 border-green-400 shadow-lg text-sm md:text-base"
+          >
+            ➕ Post Property
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Enhanced Chat Interface Component
+const EnhancedChatInterface = ({ selectedProperty = null, prefilledMessage = "" }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [conversations, setConversations] = useState([]);
+  const [selectedConversation, setSelectedConversation] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState(prefilledMessage);
+  const [loading, setLoading] = useState(false);
+  const [conversationsLoading, setConversationsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [lastConversationsUpdate, setLastConversationsUpdate] = useState(null);
+  const [showMobileChat, setShowMobileChat] = useState(false); // Mobile state management
+  const messagesEndRef = useRef(null);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+
+  // Handle selectedProperty prop - automatically set up conversation for mobile/desktop
+  useEffect(() => {
+    if (selectedProperty && user) {
+      // Find existing conversation for this property
+      const existingConversation = conversations.find(conv => 
+        conv.property_id === selectedProperty.id
+      );
+      
+      if (existingConversation) {
+        // Select existing conversation
+        setSelectedConversation(existingConversation);
+        // For mobile, show chat view when coming from selectedProperty
+        setShowMobileChat(true);
+        // Load messages for this conversation
+        loadChatMessages(existingConversation.property_id, existingConversation.other_user_id, true);
+      } else if (selectedProperty.user_id) {
+        // Create a new conversation object for the selected property
+        const newConversation = {
+          property_id: selectedProperty.id,
+          property_title: selectedProperty.title,
+          property_image: selectedProperty.images?.[0] || null,
+          other_user_id: selectedProperty.user_id, // Property owner
+          other_user_name: 'Property Owner', // Will be updated when we fetch user details
+          last_message: '',
+          last_message_time: new Date(),
+          unread_count: 0,
+          is_sender: false
+        };
+        
+        // Set conversation immediately and show mobile chat for property-initiated chats
+        setSelectedConversation(newConversation);
+        setShowMobileChat(true);
+        setMessages([]); // Clear messages as this is a new conversation
+        
+        // Fetch property owner details asynchronously
+        fetchPropertyOwnerDetails(selectedProperty.user_id).then(ownerName => {
+          newConversation.other_user_name = ownerName;
+          setSelectedConversation(prev => 
+            prev && prev.property_id === newConversation.property_id 
+              ? { ...prev, other_user_name: ownerName }
+              : prev
+          );
+        });
+      }
+    }
+  }, [selectedProperty, user, conversations]);
+
+  // Handle mobile navigation from chat - reset state when no selectedProperty
+  useEffect(() => {
+    if (!selectedProperty) {
+      setShowMobileChat(false);
+    }
+  }, [selectedProperty]);
+
+
+
+  // Helper function to fetch property owner details
+  const fetchPropertyOwnerDetails = async (userId) => {
+    try {
+      // We don't have a direct user details endpoint, so we'll use a placeholder
+      // In a real app, you'd have an endpoint to fetch user details by ID
+      return `Owner (ID: ${userId.substring(0, 8)}...)`;
+    } catch (error) {
+      console.error('Error fetching property owner details:', error);
+      return 'Property Owner';
+    }
+  };
+
+  // Poll for new messages and unread count with optimized intervals
+  useEffect(() => {
+    if (user) {
+      loadConversations();
+      loadUnreadCount();
+      
+      // Set up optimized polling for real-time updates
+      const unreadInterval = setInterval(() => {
+        loadUnreadCount(); // Poll unread count more frequently
+      }, 5000); // Poll every 5 seconds for unread count (reduced frequency)
+
+      const conversationInterval = setInterval(() => {
+        // Only check conversations if no conversation is currently selected
+        if (!selectedConversation) {
+          checkAndUpdateConversations();
+        }
+      }, 15000); // Poll conversations less frequently (every 15 seconds)
+
+      const messageInterval = setInterval(() => {
+        // Poll messages for selected conversation with reduced frequency
+        if (selectedConversation) {
+          loadChatMessages(selectedConversation.property_id, selectedConversation.other_user_id, true);
+        }
+      }, 8000); // Poll messages every 8 seconds (less frequent to reduce disruption)
+      
+      return () => {
+        clearInterval(unreadInterval);
+        clearInterval(conversationInterval);
+        clearInterval(messageInterval);
+      };
+    }
+  }, [user, selectedConversation?.property_id, selectedConversation?.other_user_id]);
+
+  // Load messages when conversation selection changes
+  useEffect(() => {
+    if (selectedConversation && selectedConversation.property_id && selectedConversation.other_user_id) {
+      loadChatMessages(selectedConversation.property_id, selectedConversation.other_user_id);
+    }
+  }, [selectedConversation?.property_id, selectedConversation?.other_user_id]);
+
+
+
+  // Update message when prefilledMessage changes
+  useEffect(() => {
+    if (prefilledMessage) {
+      setNewMessage(prefilledMessage);
+    }
+  }, [prefilledMessage]);
+
+  // Auto-scroll to bottom when messages change
+  // const scrollToBottom = () => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // };
+
+  // useEffect(() => {
+  //   scrollToBottom();
+  // }, [messages]);
+
+  // Check and update conversations only if there are actual changes
+  const checkAndUpdateConversations = async () => {
+    try {
+      const url = `${BACKEND_URL}/api/chat/conversations`;
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${versionedStorage.getItem('token')}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Sort conversations by last message time (newest first) for consistent ordering
+        const sortedData = data.sort((a, b) => 
+          new Date(b.last_message_time) - new Date(a.last_message_time)
+        );
+        
+        // Check if conversations have actually changed using a more reliable comparison
+        if (hasConversationsChanged(conversations, sortedData)) {
+          setConversations(sortedData);
+          // Preserve selected conversation across updates
+          preserveSelectedConversation(sortedData);
+          setLastConversationsUpdate(Date.now().toString());
+        }
+      }
+    } catch (error) {
+      console.error('Failed to check conversations:', error);
+    }
+  };
+
+  // Helper function to check if conversations have meaningfully changed
+  const hasConversationsChanged = (oldConversations, newConversations) => {
+    if (oldConversations.length !== newConversations.length) {
+      return true;
+    }
+    
+    // Compare conversations by creating stable identifiers
+    for (let i = 0; i < oldConversations.length; i++) {
+      const oldConv = oldConversations[i];
+      const newConv = newConversations[i];
+      
+      // Check key properties that would require a UI update
+      const oldSignature = `${oldConv.property_id}-${oldConv.other_user_id}-${oldConv.last_message}-${oldConv.unread_count}-${Math.floor(new Date(oldConv.last_message_time).getTime() / 1000)}`;
+      const newSignature = `${newConv.property_id}-${newConv.other_user_id}-${newConv.last_message}-${newConv.unread_count}-${Math.floor(new Date(newConv.last_message_time).getTime() / 1000)}`;
+      
+      if (oldSignature !== newSignature) {
+        return true;
+      }
+    }
+    
+    return false;
+  };
+
+  const loadConversations = async () => {
+    setConversationsLoading(true);
+    try {
+      const url = `${BACKEND_URL}/api/chat/conversations`;
+      console.log('Fetching conversations from URL:', url);
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${versionedStorage.getItem('token')}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Sort conversations by last message time (newest first) for consistent ordering
+        const sortedData = data.sort((a, b) => 
+          new Date(b.last_message_time) - new Date(a.last_message_time)
+        );
+        
+        setConversations(sortedData);
+        // Preserve selected conversation across updates
+        preserveSelectedConversation(sortedData);
+        setLastConversationsUpdate(Date.now().toString());
+      }
+    } catch (error) {
+      console.error('Failed to load conversations:', error);
+    } finally {
+      setConversationsLoading(false);
+    }
+  };
+
+  const loadUnreadCount = async () => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/chat/unread-count`, {
+        headers: {
+          'Authorization': `Bearer ${versionedStorage.getItem('token')}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setUnreadCount(data.unread_count);
+      }
+    } catch (error) {
+      console.error('Failed to load unread count:', error);
+    }
+  };
+
+  const loadChatMessages = async (propertyId, otherUserId, isPolling = false) => {
+    if (!propertyId || !otherUserId || !user) return;
+    
+    // Only show loading for user-initiated actions, not polling
+    if (!isPolling) {
+      setLoading(true);
+    }
+    
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/chat/${propertyId}?other_user_id=${otherUserId}`, {
+        headers: {
+          'Authorization': `Bearer ${versionedStorage.getItem('token')}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Only update messages if they've actually changed
+        const currentMessagesSignature = messages.map(msg => `${msg.id}-${msg.message}-${msg.is_read}`).join('|');
+        const newMessagesSignature = data.map(msg => `${msg.id}-${msg.message}-${msg.is_read}`).join('|');
+        
+        if (currentMessagesSignature !== newMessagesSignature) {
+          setMessages(data || []);
+        }
+        
+        // Mark messages as read
+        const unreadMessages = data.filter(msg => 
+          msg.receiver_id === user.id && !msg.is_read
+        );
+        if (unreadMessages.length > 0) {
+          markMessagesRead(unreadMessages.map(msg => msg.id));
+        }
+      }
+    } catch (error) {
+      if (!isPolling) {
+        setError('Failed to load messages');
+      }
+    } finally {
+      if (!isPolling) {
+        setLoading(false);
+      }
+    }
+  };
+
+  const markMessagesRead = async (messageIds) => {
+    try {
+      const url = `${BACKEND_URL}/api/chat/mark-read`;
+      console.log('Marking messages as read with URL:', url);
+      await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${versionedStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          message_ids: messageIds
+        })
+      });
+      
+      // Refresh unread count
+      loadUnreadCount();
+    } catch (error) {
+      console.error('Failed to mark messages as read:', error);
+    }
+  };
+
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      setShowLoginPopup(true);
+      return;
+    }
+    
+    if (!newMessage.trim() || !selectedConversation) return;
+    
+    setLoading(true);
+    try {
+      const url = `${BACKEND_URL}/api/chat`;
+      console.log('Sending message with URL:', url);
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${versionedStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          property_id: selectedConversation.property_id,
+          receiver_id: selectedConversation.other_user_id,
+          message: newMessage
+        }) 
+      });
+       
+      if (response.ok) {
+        const data = await response.json();
+        setMessages(prev => [...prev, data]);
+        setNewMessage('');
+        setError('');
+        
+        // Refresh conversations to update last message only when not in active conversation
+        if (!selectedConversation) {
+          checkAndUpdateConversations();
+        } else {
+          // If we're in a conversation, just refresh the conversation list after sending
+          setTimeout(() => {
+            checkAndUpdateConversations();
+          }, 1000); // Delay to ensure message is processed
+        }
+      } else {
+        setError('Failed to send message');
+      }
+    } catch (error) {
+      setError('Failed to send message');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleConversationSelect = (conversation) => {
+    if (!user) {
+      setShowLoginPopup(true);
+      return;
+    }
+    
+    setSelectedConversation(conversation);
+    setError('');
+    setShowMobileChat(true); // Show chat view on mobile when conversation is selected
+    
+    // Load messages immediately when conversation is selected
+    loadChatMessages(conversation.property_id, conversation.other_user_id);
+  };
+
+  // Mobile back to conversations handler
+  const handleMobileBackToConversations = () => {
+    setShowMobileChat(false);
+    setSelectedConversation(null);
+  };
+
+  // Stable conversation selection that preserves selection across updates
+  const preserveSelectedConversation = (newConversations) => {
+    if (selectedConversation && newConversations.length > 0) {
+      // Find the same conversation in the new list to preserve selection
+      const currentConversation = newConversations.find(conv => 
+        conv.property_id === selectedConversation.property_id && 
+        conv.other_user_id === selectedConversation.other_user_id
+      );
+      
+      if (currentConversation) {
+        // Update the selected conversation with new data to reflect latest changes
+        setSelectedConversation(currentConversation);
+      }
+    }
+  };
+
+  return (
+    <div className="flex h-screen bg-gray-50 relative">
+      {/* Login/Register Popup */}
+      <LoginRegisterPopup 
+        isOpen={showLoginPopup} 
+        onClose={() => setShowLoginPopup(false)} 
+      />
+      
+      {/* Conversations List - Mobile responsive */}
+      <div className={`${
+        showMobileChat ? 'hidden md:block' : 'block'
+      } w-full md:w-1/3 bg-white border-r border-gray-200 flex flex-col`}>
+        {/* Header - Fixed positioned */}
+        <div className="flex-shrink-0 bg-white border-b border-gray-200 p-4 shadow-sm">{/* Fixed header outside scroll */}
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">Conversations</h2>
+            <button
+              onClick={() => navigate('/')}
+              className="text-gray-500 hover:text-gray-700 md:hidden"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Conversations List */}
+        <div className="flex-1 overflow-y-auto">
+          {!user ? (
+            <div className="text-center py-8 text-gray-500 px-4">
+              <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Login to View Conversations</h3>
+              <p className="text-sm text-gray-500 mb-4">Please log in to see your chat history</p>
+              <button
+                onClick={() => setShowLoginPopup(true)}
+                className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
+              >
+                Login
+              </button>
+            </div>
+          ) : conversationsLoading ? (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            </div>
+          ) : conversations.length === 0 ? (
+            <div className="text-center py-8 text-gray-500 px-4">
+              <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No conversations yet</h3>
+              <p className="text-sm text-gray-500">Start chatting with property owners!</p>
+            </div>
+          ) : (
+            conversations.map((conversation) => (
+              <div
+                key={`${conversation.property_id}-${conversation.other_user_id}`}
+                onClick={() => handleConversationSelect(conversation)}
+                className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
+                  selectedConversation?.property_id === conversation.property_id ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+                }`}
+              >
+                
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-gray-200 rounded-lg flex-shrink-0">
+                    {conversation.property_image ? (
+                      <img 
+                        src={conversation.property_image.startsWith('data:') ? conversation.property_image : `data:image/jpeg;base64,${conversation.property_image}`}
+                        alt={conversation.property_title}
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
+                        <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="font-semibold text-gray-900 truncate text-sm md:text-base">{conversation.property_title}</h3>
+                      {conversation.unread_count > 0 && (
+                        <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] text-center ml-2 flex-shrink-0">
+                          {conversation.unread_count > 99 ? '99+' : conversation.unread_count}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-600 truncate">{conversation.other_user_name}</p>
+                    <p className="text-xs text-gray-500 truncate">
+                      {conversation.is_sender ? 'You: ' : ''}{conversation.last_message || 'No messages yet'}
+                    </p>
+                    {/* <p className="text-xs text-gray-400 mt-1">
+                      {new Date(conversation.last_message_time).toLocaleTimeString('en-IN', {
+  timeZone: 'Asia/Kolkata',
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: true,
+})}
+
+                      
+                    </p> */}
+                  </div>
+                  {/* Mobile chevron indicator */}
+                  <div className="md:hidden flex-shrink-0">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Chat Messages - Mobile responsive with proper mobile spacing */}
+      <div className={`${
+        showMobileChat ? 'block' : 'hidden md:block'
+      } flex-1 flex flex-col h-screen relative pb-16 md:pb-0`}> {/* Added mobile bottom padding */}
+        {selectedConversation ? (
+          <>
+            {/* Chat Header - Sticky at top */}
+            <div className="sticky top-0 z-10 bg-white border-b border-gray-200 p-4 shadow-sm">
+              <div className="flex items-center space-x-3">
+                {/* Mobile back button */}
+                <button
+                  onClick={handleMobileBackToConversations}
+                  className="md:hidden text-gray-500 hover:text-gray-700 mr-2"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                
+                <div className="w-10 h-10 bg-gray-200 rounded-lg flex-shrink-0">
+                  {selectedConversation.property_image ? (
+                    <img 
+                      src={selectedConversation.property_image.startsWith('data:') ? selectedConversation.property_image : `data:image/jpeg;base64,${selectedConversation.property_image}`}
+                      alt={selectedConversation.property_title}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
+                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-gray-900 truncate text-sm md:text-base">{selectedConversation.property_title}</h3>
+                  <p className="text-xs md:text-sm text-gray-600 truncate">{selectedConversation.other_user_name}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Messages Container - Scrollable middle section with proper mobile spacing */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-20 md:pb-4"> {/* Added bottom padding for mobile input space */}
+              {loading && messages.length === 0 ? (
+                <div className="flex justify-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                </div>
+              ) : messages.length === 0 ? (
+                <div className="text-center text-gray-500 py-8">
+                  <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                  </div>
+                  <p className="text-sm">No messages yet. Start the conversation!</p>
+                </div>
+              ) : (
+                messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`flex ${message.sender_id === user.id ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div
+                      className={`max-w-[85%] md:max-w-xs lg:max-w-md px-3 md:px-4 py-2 rounded-lg ${
+                        message.sender_id === user.id
+                          ? 'bg-blue-500 text-white rounded-br-sm'
+                          : 'bg-white text-gray-900 border rounded-bl-sm shadow-sm'
+                      }`}
+                    >
+                      <p className="text-sm break-words">{message.message}</p>
+                      <div className="flex items-center justify-between mt-1">
+                        <p className={`text-xs ${
+                          message.sender_id === user.id ? 'text-blue-100' : 'text-gray-500'
+                        }`}>
+                      {new Date(new Date(message.created_at).getTime() + (5.5 * 60 * 60 * 1000))
+  .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
+                        </p> 
+                        {message.sender_id === user.id && (
+                          <div className="flex items-center space-x-1">
+                            <svg className={`w-3 h-3 ${message.is_read ? 'text-blue-200' : 'text-blue-300'}`} fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                            {message.is_read && (
+                              <svg className="w-3 h-3 text-blue-200" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Message Input - Sticky at bottom, above mobile nav */}
+            <div className="sticky bottom-16 md:bottom-0 bg-white border-t border-gray-200 p-4">
+              {error && (
+                <div className="mb-3 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+                  {error}
+                </div>
+              )}
+              
+              {!user ? (
+                <div className="flex items-center justify-center py-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                  <div className="text-center">
+                    <p className="text-gray-600 mb-2">Login to send messages</p>
+                    <button
+                      onClick={() => setShowLoginPopup(true)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors text-sm"
+                    >
+                      Login
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={sendMessage} className="flex space-x-2">
+                  <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type a message..."
+                    className="flex-1 px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    disabled={loading}
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading || !newMessage.trim()}
+                    className="bg-blue-500 text-white px-4 md:px-6 py-2 rounded-full hover:bg-blue-600 transition-colors disabled:opacity-50 text-sm md:text-base"
+                  >
+                    {loading ? 'Sending...' : 'Send'}
+                  </button>
+                </form>
+              )}
+            </div>
+          </>
+        ) : (
+          <div className="flex-1 flex items-center justify-center p-4">
+            <div className="text-center text-gray-500 max-w-sm">
+              <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Select a conversation</h3>
+              <p className="text-sm text-gray-500">Choose a conversation from the list to start chatting</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const PropertyCard = ({ property, onViewDetails, setChatProperty }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  
+  const handleContactOwner = async () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    
+    // Check if user is the owner of this property
+    if (user.id === property.user_id) {
+      alert('You cannot contact yourself on your own property!');
+      return;
+    }
+    
+    // Open chat interface with this property
+    setChatProperty(property);
+    navigate('/chat');
+  };
+  
+  // Check if current user is the owner of this property
+  const isOwner = user && user.id === property.user_id;
+  
+  return (
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+      <div className="h-48 bg-gray-200 relative">
+        {property.images && property.images.length > 0 ? (
+          <img 
+            src={property.images[0].startsWith('data:') ? property.images[0] : `data:image/jpeg;base64,${property.images[0]}`}
+            alt={property.title}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+            <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+        )}
+        
+        <div className="absolute top-2 right-2">
+          <span className={`px-2 py-1 rounded text-xs font-medium ${
+            property.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+          }`}>
+            {property.available ? 'Available' : 'Not Available'}
+          </span>
+        </div>
+        
+        {isOwner && (
+          <div className="absolute top-2 left-2">
+            <span className="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">
+              Your Property
+            </span>
+          </div>
+        )}
+      </div>
+      
+      <div className="p-4">
+        <h3 className="font-semibold text-lg text-gray-900 mb-2">{property.title}</h3>
+        <p className="text-gray-600 text-sm mb-2">{property.location}</p>
+        <p className="text-gray-700 text-sm mb-3 line-clamp-2">{property.description}</p>
+        
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-2">
+            <span className="text-2xl font-bold text-green-600">₹{property.rent}</span>
+            <span className="text-gray-500">/month</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="text-sm text-gray-500">Deposit:</span>
+            <span className="text-sm font-semibold text-gray-900">₹{property.deposit}</span>
+          </div>
+        </div>
+        
+        {property.amenities && property.amenities.length > 0 && (
+          <div className="mb-3">
+            <div className="flex flex-wrap gap-1">
+              {property.amenities.slice(0, 3).map((amenity, index) => (
+                <span key={index} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                  {amenity}
+                </span>
+              ))}
+              {property.amenities.length > 3 && (
+                <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">
+                  +{property.amenities.length - 3} more
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+        
+        <div className="flex space-x-2">
+          <button 
+            onClick={() => onViewDetails(property)}
+            className="flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+          >
+            View Details
+          </button>
+          {isOwner ? (
+            <button 
+              className="flex-1 bg-gray-400 text-white py-2 rounded-md cursor-not-allowed"
+              disabled
+              title="You cannot contact yourself on your own property"
+            >
+              Your Property
+            </button>
+          ) : (
+            <button 
+              onClick={handleContactOwner}
+              className="flex-1 bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition-colors"
+            >
+              Contact Owner
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const SearchFilters = ({ onSearch }) => {
+  const { selectedCity, setSelectedCity } = useCity();
+  const [filters, setFilters] = useState({
+    city: '',
+    property_type: '',
+    min_rent: '',
+    max_rent: ''
+  });
+
+  // Update filters when selectedCity changes
+  useEffect(() => {
+    if (selectedCity) {
+      setFilters(prev => ({ ...prev, city: selectedCity }));
+    }
+  }, [selectedCity]);
+
+  const handleCityChange = (city) => {
+    // Update both local filters state and global city state to keep them in sync
+    setFilters({...filters, city});
+    setSelectedCity(city);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSearch(filters);
+  };
+
+  return (
+    <div id="search-section" className="bg-white p-6 rounded-lg shadow-md mb-8">
+      <h3 className="text-lg font-semibold mb-4">Search Properties</h3>
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <CitySelector
+          value={filters.city}
+          onChange={handleCityChange}
+          placeholder="Select City"
+          className=""
+        />
+        <select
+          value={filters.property_type}
+          onChange={(e) => setFilters({...filters, property_type: e.target.value})}
+          className="border rounded-md px-3 py-2"
+        >
+          <option value="">All Types</option>
+          <option value="room">Room</option>
+          <option value="house">House</option>
+          <option value="pg">PG</option>
+          <option value="flat">Flat</option>
+          <option value="apartment">Apartment</option>
+          <option value="studio">Studio</option>
+          <option value="villa">Villa</option>
+          <option value="duplex">Duplex</option>
+          <option value="shared">Shared Accommodation</option>
+          <option value="bungalow">Bungalow</option>
+          <option value="hostel">Hostel</option>
+          <option value="guesthouse">Guest House</option>
+          <option value="farmhouse">Farmhouse</option>
+
+        </select >
+        <input
+          type="number"
+          placeholder="Min Rent"
+          value={filters.min_rent}
+          onChange={(e) => setFilters({...filters, min_rent: e.target.value})}
+          className="border rounded-md px-3 py-2"
+        />
+        <input
+          type="number"
+          placeholder="Max Rent"
+          value={filters.max_rent}
+          onChange={(e) => setFilters({...filters, max_rent: e.target.value})}
+          className="border rounded-md px-3 py-2"
+        />
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
+        >
+          Search
+        </button>
+      </form>
+    </div>
+  );
+};
+
+const PropertyDetails = ({ property, onClose, setChatProperty }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleContactOwner = () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    
+    // Check if user is the owner of this property
+    if (user.id === property.user_id) {
+      alert('You cannot contact yourself on your own property!');
+      return;
+    }
+    
+    // Open chat interface with this property
+    setChatProperty(property);
+    navigate('/chat');
+    onClose(); // Close the modal
+  };
+
+  const handleScheduleVisit = () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    
+    // Check if user is the owner of this property
+    if (user.id === property.user_id) {
+      alert('You cannot schedule a visit to your own property!');
+      return;
+    }
+    
+    // Open chat interface with prefilled message
+    setChatProperty({
+      ...property,
+      prefilledMessage: "I am willing to visit your site"
+    });
+    navigate('/chat');
+    onClose(); // Close the modal
+  };
+
+  // Check if current user is the owner of this property
+  const isOwner = user && user.id === property.user_id;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg max-w-4xl max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h2 className="text-2xl font-bold">{property.title}</h2>
+              {isOwner && (
+                <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mt-2">
+                  Your Property
+                </span>
+              )}
+            </div>
+            <button 
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          
+          {property.images && property.images.length > 0 && (
+            <div className="mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {property.images.map((image, index) => (
+                  <img 
+                    key={index}
+                    src={image.startsWith('data:') ? image : `data:image/jpeg;base64,${image}`}
+                    alt={`Property ${index + 1}`}
+                    className="w-full h-64 object-cover rounded-lg"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Property Details</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Location:</span>
+                  <span className="font-medium">{property.location}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Rent:</span>
+                  <span className="font-medium text-green-600">₹{property.rent}/month</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Deposit:</span>
+                  <span className="font-medium">₹{property.deposit}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Property Type:</span>
+                  <span className="font-medium capitalize">{property.property_type}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Status:</span>
+                  <span className={`font-medium ${property.available ? 'text-green-600' : 'text-red-600'}`}>
+                    {property.available ? 'Available' : 'Not Available'}
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Amenities</h3>
+              <div className="space-y-2">
+                {property.amenities && property.amenities.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {property.amenities.map((amenity, index) => (
+                      <span key={index} className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded">
+                        {amenity}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500">No amenities listed</p>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-3">Description</h3>
+            <p className="text-gray-700">{property.description}</p>
+          </div>
+          
+          <div className="flex space-x-4">
+            {isOwner ? (
+              <div className="flex space-x-4 w-full">
+                <button 
+                  className="flex-1 bg-gray-400 text-white px-6 py-2 rounded-md cursor-not-allowed"
+                  disabled
+                  title="You cannot contact yourself on your own property"
+                >
+                  Your Property - Cannot Contact
+                </button>
+                <button 
+                  className="flex-1 bg-gray-400 text-white px-6 py-2 rounded-md cursor-not-allowed"
+                  disabled
+                  title="You cannot schedule a visit to your own property"
+                >
+                  Your Property - Cannot Schedule Visit
+                </button>
+              </div>
+            ) : (
+              <>
+                <button 
+                  onClick={handleContactOwner}
+                  className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition-colors"
+                >
+                  Contact Owner
+                </button>
+                <button 
+                  onClick={handleScheduleVisit}
+                  className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
+                >
+                  Schedule Visit
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const LoginForm = () => {
+  const { login } = useAuth();
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    
+    const result = await login(formData.email, formData.password);
+    
+    if (result.success) {
+      navigate('/');
+    } else {
+      setError(result.error);
+    }
+    
+    setLoading(false);
+  };
+
+  return (
+    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+      
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
+        </div>
+      )}
+      
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) => setFormData({...formData, email: e.target.value})}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
+          <input
+            type="password"
+            value={formData.password}
+            onChange={(e) => setFormData({...formData, password: e.target.value})}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50"
+        >
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
+      </form>
+    </div>
+  );
+};
+
+const RegisterForm = () => {
+  const { register } = useAuth();
+  const [formData, setFormData] = useState({
+    email: '',
+    name: '',
+    phone: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    
+    const result = await register(formData);
+    
+    if (result.success) {
+      navigate('/');
+    } else {
+      setError(result.error);
+    }
+    
+    setLoading(false);
+  };
+
+  return (
+    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
+      
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
+        </div>
+      )}
+      
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Name</label>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => setFormData({...formData, name: e.target.value})}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) => setFormData({...formData, email: e.target.value})}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Phone</label>
+          <input
+            type="tel"
+            value={formData.phone}
+            onChange={(e) => {
+              // Only allow digits
+              const value = e.target.value.replace(/\D/g, '');
+              if (value.length <= 15) {
+                setFormData({...formData, phone: value});
+              }
+            }}
+            onInput={(e) => {
+              // Remove any non-digit characters
+              e.target.value = e.target.value.replace(/\D/g, '');
+            }}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter 10 digit phone number"
+            minLength="10"
+            maxLength="10"
+            required
+          />
+        </div>
+        
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
+          <input
+            type="password"
+            value={formData.password}
+            onChange={(e) => setFormData({...formData, password: e.target.value})}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition-colors disabled:opacity-50"
+        >
+          {loading ? 'Registering...' : 'Register'}
+        </button>
+      </form>
+    </div>
+  );
+};
+
+const PostPropertyForm = () => {
+  const { user } = useAuth();
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    property_type: 'room',
+    rent: '',
+    deposit: '',
+    location: '',
+    city: '',
+    amenities: ''
+  });
+ const [images, setImages] = useState([]);
+const [loading, setLoading] = useState(false);
+const [success, setSuccess] = useState(false);
+const [imageError, setImageError] = useState(false);
+const navigate = useNavigate();
+const handleImageUpload = (e) => {
+  const files = Array.from(e.target.files);
+  setImageError(false);
+  
+  // Limit number of files
+  if (files.length > 5) {
+    setImageError('Maximum 5 images allowed');
+    return;
+  }
+  
+  // Check total existing images + new images
+  if (images.length + files.length > 5) {
+    setImageError('Maximum 5 images allowed in total');
+    return;
+  }
+
+  files.forEach((file) => {
+    // Check file size (10MB limit per file)
+    if (file.size > 10 * 1024 * 1024) {
+      setImageError(`File ${file.name} is too large (max 10MB per image)`);
+      return;
+    }
+    
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      setImageError(`File ${file.name} is not an image`);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        // Create canvas for image compression
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Calculate new dimensions (max 1200px width/height)
+        let { width, height } = img;
+        const maxDim = 1200;
+        
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = (height * maxDim) / width;
+            width = maxDim;
+          } else {
+            width = (width * maxDim) / height;
+            height = maxDim;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Draw and compress image
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Convert to base64 with compression (0.8 quality for JPEG)
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        
+        // Check final size (max 5MB per compressed image)
+        const compressedSize = (compressedDataUrl.length * 0.75) / 1024 / 1024; // Approximate MB
+        if (compressedSize > 5) {
+          setImageError(`Compressed image is still too large (${compressedSize.toFixed(1)}MB). Try a smaller image.`);
+          return;
+        }
+        
+        setImages((prevImages) => [...prevImages, compressedDataUrl]);
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
+const removeImage = (index) => {
+  setImages(prevImages => prevImages.filter((_, i) => i !== index));
+  setImageError(false); // Clear error when removing images
+};
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  // Check if user is authenticated before allowing form submission
+  if (!user) {
+    setShowLoginPopup(true);
+    return;
+  }
+  
+  setLoading(true);
+  setImageError(false); // Clear any previous errors
+
+  // Validate image presence
+  if (images.length === 0) {
+    setImageError('Please add at least one image');
+    setLoading(false);
+    return;
+  }
+
+  // Calculate approximate payload size
+  const totalImageSize = images.reduce((total, img) => total + (img.length * 0.75), 0) / (1024 * 1024); // MB
+  if (totalImageSize > 45) {
+    setImageError(`Total image size too large (${totalImageSize.toFixed(1)}MB). Please reduce image sizes or remove some images.`);
+    setLoading(false);
+    return;
+  }
+
+  try {
+    const propertyData = {
+      ...formData,
+      rent: parseInt(formData.rent),
+      deposit: parseInt(formData.deposit),
+      amenities: formData.amenities.split(',').map(a => a.trim()).filter(a => a),
+      images: images
+    };
+
+    await axios.post(`${API}/properties`, propertyData);
+    setSuccess(true);
+    setFormData({
+      title: '',
+      description: '',
+      property_type: 'room',
+      rent: '',
+      deposit: '',
+      location: '',
+      city: '',
+      amenities: ''
+    });
+    setImages([]);
+
+    // Redirect to home after successful post
+    setTimeout(() => {
+      navigate('/');
+    }, 2000);
+  } catch (error) {
+    console.error('Error creating property:', error);
+    
+    // Handle specific error types
+    if (error.response?.status === 413) {
+      setImageError('Request too large. Please reduce image sizes or remove some images.');
+    } else if (error.response?.status === 422) {
+      setImageError('Please check all required fields are filled correctly.');
+    } else if (error.response?.data?.detail) {
+      setImageError(error.response.data.detail);
+    } else {
+      setImageError('Failed to post property. Please try again.');
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+  return (
+    <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+      {/* Login/Register Popup */}
+      <LoginRegisterPopup 
+        isOpen={showLoginPopup} 
+        onClose={() => setShowLoginPopup(false)} 
+      />
+      
+      <h2 className="text-2xl font-bold mb-6">Post New Property</h2>
+      
+      {success && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          Property posted successfully!
+        </div>
+      )}
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Title</label>
+          <input
+            type="text"
+            placeholder="2 Room Set with Kitchen"
+            value={formData.title}
+            onChange={(e) => setFormData({...formData, title: e.target.value})}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Description</label>
+          <textarea
+          placeholder="Well-ventilated room with attached bathroom, kitchen setup, and 24x7 water supply. 5 mins walk to metro."
+            value={formData.description}
+            onChange={(e) => setFormData({...formData, description: e.target.value})}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows="4"
+            required
+          />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Property Type</label>
+            <select
+              value={formData.property_type}
+              onChange={(e) => setFormData({...formData, property_type: e.target.value})}
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              
+              <option value="room">Room</option>
+              <option value="house">House</option>
+              <option value="pg">PG</option>
+              <option value="flat">Flat</option>
+              <option value="apartment">Apartment</option>
+              <option value="studio">Studio</option>
+              <option value="villa">Villa</option>
+              <option value="duplex">Duplex</option>
+              <option value="shared">Shared Accommodation</option>
+              <option value="bungalow">Bungalow</option>
+              <option value="hostel">Hostel</option>
+              <option value="guesthouse">Guest House</option>
+              <option value="farmhouse">Farmhouse</option>
+
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-gray-700 text-sm font-bold mb-2">City</label>
+            <CitySelector
+              value={formData.city}
+              onChange={(city) => setFormData({...formData, city})}
+              placeholder="Select City"
+              className="w-full"
+            />
+          </div>
+        </div>
+        
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Location</label>
+          <input
+            placeholder="Malviya Nagar, South Delhi"
+            type="text"
+            value={formData.location}
+            onChange={(e) => setFormData({...formData, location: e.target.value})}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Rent (₹/month)</label>
+            <input
+              type="number"
+              value={formData.rent}
+              onChange={(e) => setFormData({...formData, rent: e.target.value})}
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          
+          <div>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Deposit (₹)</label>
+            <input
+              type="number"
+              value={formData.deposit}
+              onChange={(e) => setFormData({...formData, deposit: e.target.value})}
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+        </div>
+        
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Amenities (comma-separated)</label>
+          <input
+            type="text"
+            value={formData.amenities}
+            onChange={(e) => setFormData({...formData, amenities: e.target.value})}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="WiFi, AC, Furnished, Parking"
+          />
+        </div>
+        
+<div>
+  <label className="block text-gray-700 text-sm font-bold mb-2">Images</label>
+  <input
+    type="file"
+    onChange={handleImageUpload}
+    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+    multiple
+    accept="image/*"
+  />
+  {imageError && (
+    <p className="text-red-500 text-sm mt-1">{imageError}</p>
+  )}
+  {images.length > 0 && (
+    <div className="mt-2 grid grid-cols-3 gap-2">
+      {images.map((image, index) => (
+        <div key={index} className="relative">
+          <img src={image} alt={`Preview ${index}`} className="w-full h-20 object-cover rounded" />
+          <button
+            type="button"
+            onClick={() => removeImage(index)}
+            className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+            title="Remove image"
+          >
+            ×
+          </button>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
+        
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50"
+        >
+          {loading ? 'Posting...' : 'Post Property'}
+        </button>
+      </form>
+    </div>
+  );
+};
+
+const HomePage = ({ setChatProperty }) => {
+  const { selectedCity } = useCity();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState(null);
+
+  // Auto-scroll to search section when visiting /properties page
+  useEffect(() => {
+    if (location.pathname === '/properties') {
+      // Small delay to ensure the page is rendered
+      const timer = setTimeout(() => {
+        const searchSection = document.getElementById('search-section');
+        if (searchSection) {
+          searchSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname]);
+
+  // Only fetch properties when a city is selected (performance optimization)
+  useEffect(() => {
+    if (selectedCity) {
+      fetchProperties({ city: selectedCity });
+    } else {
+      // Clear properties when no city is selected
+      setProperties([]);
+      setLoading(false);
+    }
+  }, [selectedCity]);
+
+  const fetchProperties = async (filters = {}) => {
+    // Always ensure we have a city filter for performance
+    if (!filters.city && !selectedCity) {
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      
+      // Handle each filter parameter
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) {
+          // Special handling for city to ensure consistent search
+          if (key === 'city') {
+            params.append(key, value.trim());
+          } else {
+            params.append(key, value);
+          }
+        }
+      });
+      
+      // If no city in filters, use selectedCity
+      if (!filters.city && selectedCity) {
+        params.append('city', selectedCity.trim());
+      }
+      
+      const response = await axios.get(`${API}/properties?${params}`);
+      setProperties(response.data);
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePostProperty = () => {
+    navigate('/post-property');
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <HeroSection />
+      
+      {/* Rent Calculator Feature Section */}
+      <div className="bg-gradient-to-r from-purple-600 to-pink-600 border-b shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center text-white">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-center justify-center mb-6">
+                <div className="bg-white bg-opacity-20 rounded-full p-4">
+                  <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+              
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Advanced Rent Calculator</h2>
+              <p className="text-xl mb-6 opacity-95">
+                Plan your rental budget with precision! Calculate accurate rent estimates for 180+ Indian cities
+              </p>
+              
+              <div className="grid md:grid-cols-3 gap-6 mb-8">
+                <div className="bg-white bg-opacity-10 rounded-lg p-4 backdrop-blur-sm">
+                  <h3 className="font-semibold text-lg mb-2">🏙️ 180+ Cities</h3>
+                  <p className="text-sm opacity-90">From metros like Delhi, Mumbai to tier-2 cities like Indore, Coimbatore</p>
+                </div>
+                <div className="bg-white bg-opacity-10 rounded-lg p-4 backdrop-blur-sm">
+                  <h3 className="font-semibold text-lg mb-2">🏠 All Property Types</h3>
+                  <p className="text-sm opacity-90">Rooms, 1BHK, 2BHK, 3BHK, PGs, Houses with accurate rates</p>
+                </div>
+                <div className="bg-white bg-opacity-10 rounded-lg p-4 backdrop-blur-sm">
+                  <h3 className="font-semibold text-lg mb-2">💰 Budget Planning</h3>
+                  <p className="text-sm opacity-90">Factor in rent, deposit, utilities & maintenance costs</p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button 
+                  onClick={() => navigate('/rent-calculator')}
+                  className="bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg flex items-center space-x-2"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                  <span>Calculate Rent Now</span>
+                </button>
+                <div className="text-sm opacity-90 max-w-sm">
+                  <p>✨ New Feature: Find properties in your calculated budget range instantly!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Adcash Banner */}
+      <div className="bg-gray-100 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <AdcashBanner className="mx-auto" />
+        </div>
+      </div>
+
+      {/* Native Ad */}
+      <div className="bg-white py-8 border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <NativeAd borderColor="green" className="max-w-4xl mx-auto" />
+        </div>
+      </div>
+      
+      {/* Post Property CTA Section */}
+      <div className="bg-white border-b shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <div className="max-w-3xl mx-auto">
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                Own a Property? List it for Free!
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Reach thousands of potential tenants, students, and working professionals. 
+                Zero listing fees, maximum visibility.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button 
+                  onClick={handlePostProperty}
+                  className="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors flex items-center space-x-2 shadow-md"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>Post Your Property Now</span>
+                </button>
+                <div className="flex items-center space-x-4 text-sm text-gray-600">
+                  <div className="flex items-center space-x-1">
+                    <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>Free Listing</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>No Commission</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    <span>Direct Contact</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Publisher Content Section - Rental Guide */}
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-8 mb-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Your Complete Guide to Room & Property Rentals in India</h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Discover thousands of verified rooms, PGs, apartments, and houses across India's major cities. 
+              From budget-friendly accommodations to luxury properties, find your perfect match with zero brokerage.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Smart Search</h3>
+              <p className="text-gray-600 text-sm">Advanced filters for city, property type, rent range, and amenities to find properties that match your exact needs and budget.</p>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Zero Brokerage</h3>
+              <p className="text-gray-600 text-sm">Connect directly with property owners and save thousands on brokerage fees. All listings are free for both tenants and landlords.</p>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Verified Listings</h3>
+              <p className="text-gray-600 text-sm">All property listings are verified for authenticity. Direct chat with property owners ensures transparent communication and quick responses.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Property Types Guide */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Popular Property Types in India</h2>
+          <div className="grid md:grid-cols-4 gap-6">
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-200 transition-colors">
+                <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Single Rooms</h3>
+              <p className="text-sm text-gray-600">Perfect for students and young professionals. Budget-friendly with basic amenities.</p>
+            </div>
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-200 transition-colors">
+                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">PG Accommodations</h3>
+              <p className="text-sm text-gray-600">Shared facilities with meals included. Popular among working professionals and students.</p>
+            </div>
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 transition-colors">
+                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Apartments & Flats</h3>
+              <p className="text-sm text-gray-600">1BHK, 2BHK, and 3BHK apartments for individuals and families with modern amenities.</p>
+            </div>
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-purple-200 transition-colors">
+                <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Independent Houses</h3>
+              <p className="text-sm text-gray-600">Standalone houses with private entrances, gardens, and parking. Ideal for families.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* City-wise Rental Tips */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Rental Market Insights by City</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="border-l-4 border-red-500 pl-4">
+              <h3 className="font-semibold text-gray-900 mb-2">Delhi NCR</h3>
+              <p className="text-sm text-gray-600 mb-2">Average rent: ₹8,000 - ₹25,000</p>
+              <p className="text-sm text-gray-600">Popular areas: Gurgaon, Noida, Dwarka, Laxmi Nagar. High demand for PGs and shared accommodations near metro stations.</p>
+            </div>
+            <div className="border-l-4 border-blue-500 pl-4">
+              <h3 className="font-semibold text-gray-900 mb-2">Bangalore</h3>
+              <p className="text-sm text-gray-600 mb-2">Average rent: ₹10,000 - ₹30,000</p>
+              <p className="text-sm text-gray-600">Popular areas: Koramangala, BTM Layout, Electronic City, Whitefield. IT professionals prefer properties near tech corridors.</p>
+            </div>
+            <div className="border-l-4 border-green-500 pl-4">
+              <h3 className="font-semibold text-gray-900 mb-2">Mumbai</h3>
+              <p className="text-sm text-gray-600 mb-2">Average rent: ₹12,000 - ₹35,000</p>
+              <p className="text-gray-600 text-sm">Popular areas: Andheri, Bandra, Thane, Powai. Proximity to local train stations is crucial for daily commuting.</p>
+            </div>
+            <div className="border-l-4 border-yellow-500 pl-4">
+              <h3 className="font-semibold text-gray-900 mb-2">Pune</h3>
+              <p className="text-sm text-gray-600 mb-2">Average rent: ₹7,000 - ₹20,000</p>
+              <p className="text-sm text-gray-600">Popular areas: Kothrud, Wakad, Baner, Hadapsar. Student-friendly city with many affordable PG options.</p>
+            </div>
+            <div className="border-l-4 border-purple-500 pl-4">
+              <h3 className="font-semibold text-gray-900 mb-2">Chennai</h3>
+              <p className="text-sm text-gray-600 mb-2">Average rent: ₹6,000 - ₹18,000</p>
+              <p className="text-sm text-gray-600">Popular areas: OMR, Velachery, T. Nagar, Anna Nagar. IT corridor properties have higher demand.</p>
+            </div>
+            <div className="border-l-4 border-indigo-500 pl-4">
+              <h3 className="font-semibold text-gray-900 mb-2">Hyderabad</h3>
+              <p className="text-sm text-gray-600 mb-2">Average rent: ₹8,000 - ₹22,000</p>
+              <p className="text-sm text-gray-600">Popular areas: Gachibowli, Madhapur, Jubilee Hills, Banjara Hills. HITEC City proximity increases property value.</p>
+            </div>
+          </div>
+        </div>
+
+        <SearchFilters onSearch={fetchProperties} />
+        
+        {!selectedCity ? (
+          <div className="text-center py-12">
+            <div className="mx-auto w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+              <svg className="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Select Your City</h3>
+            <p className="text-gray-600 mb-6">Choose your city from the navigation bar to see nearby properties</p>
+            <p className="text-sm text-gray-500">This helps us show you relevant properties and improves loading performance</p>
+          </div>
+        ) : loading ? (
+          <div className="flex justify-center py-8">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          </div>
+        ) : (
+          <>
+            {properties.length > 0 && (
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  Properties in {selectedCity}
+                </h2>
+                <p className="text-gray-600">{properties.length} properties available</p>
+              </div>
+            )}
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {properties.map((property) => (
+                <PropertyCard
+                  key={property.id}
+                  property={property}
+                  onViewDetails={setSelectedProperty}
+                  setChatProperty={setChatProperty}
+                />
+              ))}
+
+
+                    
+            </div>
+          </>
+        )}
+        
+        {!loading && selectedCity && properties.length === 0 && (
+          <div className="text-center py-8">
+            <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.467-.881-6.065-2.328.147-.146.319-.264.485-.38C7.773 11.404 9.77 11 12 11c2.23 0 4.227.404 5.58 1.292.166.116.338.234.485.38A7.962 7.962 0 0115 15c-2.34 0-4.467-.881-6.065-2.328M15 9a6 6 0 11-12 0 6 6 0 0112 0z" />
+              </svg>
+            </div>
+            <p className="text-gray-500 mb-2">No properties found in "{selectedCity}"</p>
+            <p className="text-sm text-gray-400">Try adjusting your search filters or search for nearby areas.</p>
+            <div className="mt-4">
+              <p className="text-xs text-gray-400 mb-2">Suggestions:</p>
+              <div className="flex flex-wrap gap-2 justify-center">
+                <span className="text-xs bg-gray-100 px-2 py-1 rounded">Check spelling</span>
+                <span className="text-xs bg-gray-100 px-2 py-1 rounded">Try broader search terms</span>
+                <span className="text-xs bg-gray-100 px-2 py-1 rounded">Search nearby cities</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      {selectedProperty && (
+        <PropertyDetails
+          property={selectedProperty}
+          onClose={() => setSelectedProperty(null)}
+          setChatProperty={setChatProperty}
+        />
+      )}
+      
+      {/* Floating Post Property Button for Mobile */}
+      <div className="md:hidden fixed bottom-20 right-4 z-40">
+        <button
+          onClick={handlePostProperty}
+          className="bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-colors flex items-center justify-center"
+          aria-label="Post Property"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const MyPropertiesPage = () => {
+  const { user } = useAuth();
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      fetchMyProperties();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
+
+  const fetchMyProperties = async () => {
+    try {
+      const response = await axios.get(`${API}/my-properties`);
+      setProperties(response.data);
+    } catch (error) {
+      console.error('Error fetching my properties:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (propertyId) => {
+    if (!user) {
+      setShowLoginPopup(true);
+      return;
+    }
+    
+    if (window.confirm('Are you sure you want to delete this property?')) {
+      try {
+        await axios.delete(`${API}/properties/${propertyId}`);
+        setProperties(properties.filter(p => p.id !== propertyId));
+      } catch (error) {
+        console.error('Error deleting property:', error);
+      }
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Login/Register Popup */}
+      <LoginRegisterPopup 
+        isOpen={showLoginPopup} 
+        onClose={() => setShowLoginPopup(false)} 
+      />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 className="text-3xl font-bold mb-8">My Properties</h1>
+        
+        {!user ? (
+          <div className="text-center py-16">
+            <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Login to View Your Properties</h2>
+            <p className="text-gray-600 mb-6">Please log in to see and manage your property listings</p>
+            <button
+              onClick={() => setShowLoginPopup(true)}
+              className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
+            >
+              Login
+            </button>
+          </div>
+        ) : loading ? (
+          <div className="flex justify-center py-8">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          </div>
+        ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {properties.map((property) => (
+    <div key={property.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="h-48 bg-gray-200 relative">
+        {property.images && property.images.length > 0 ? (
+          <img 
+            src={
+              property.images[0].startsWith('data:')
+                ? property.images[0]
+                : `data:image/jpeg;base64,${property.images[0]}`
+            }
+            alt={property.title}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+            <span className="text-gray-500">No Image</span>
+          </div>
+        )}
+      </div>
+
+      <div className="p-6">
+        <h3 className="text-xl font-semibold mb-2">{property.title}</h3>
+        <p className="text-gray-600 mb-3">{property.description}</p>
+
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <span className="text-2xl font-bold text-green-600">₹{property.rent}</span>
+            <span className="text-gray-500">/month</span>
+          </div>
+          <span
+            className={`px-2 py-1 rounded text-sm ${
+              property.available
+                ? 'bg-green-100 text-green-800'
+                : 'bg-red-100 text-red-800'
+            }`}
+          >
+            {property.available ? 'Available' : 'Not Available'}
+          </span>
+        </div>
+
+        {/* Only Delete Button */}
+        <button
+          onClick={() => handleDelete(property.id)}
+          className="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition-colors"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
+        )}
+        
+        {user && !loading && properties.length === 0 && (
+          <div className="text-center py-8">
+            <p className="text-gray-500">You haven't posted any properties yet.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const App = () => {
+  return (
+    <SEOProvider>
+      <AuthProvider>
+        <CityProvider>
+          <Router>
+            <div className="App">
+              <MainContent />
+            </div>
+          </Router>
+        </CityProvider>
+      </AuthProvider>
+    </SEOProvider>
+  );
+};
+
+const MainContent = () => {
+  const { user, loading } = useAuth();
+  const { updateSEO } = useSEO();
+  const [chatProperty, setChatProperty] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Scroll to top functionality when route changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, [location.pathname]);
+
+  // Update SEO based on current route
+  useEffect(() => {
+    const routeToSEOMap = {
+      '/': 'home',
+      '/properties': 'properties',
+      '/login': 'login', 
+      '/register': 'register',
+      '/post-property': 'post',
+      '/my-properties': 'my-properties',
+      '/chat': 'chat',
+      '/profile': 'profile',
+      '/blog': 'blog',
+      '/about': 'home',
+      '/contact': 'home',
+      '/privacy-policy': 'home',
+      '/terms-and-conditions': 'home'
+    };
+    
+    const seoKey = routeToSEOMap[location.pathname] || 'home';
+    const seoConfig = SEO_PAGES[seoKey] || SEO_PAGES.home;
+    updateSEO(seoConfig.title, seoConfig.description, seoConfig.keywords);
+  }, [location.pathname, updateSEO]);
+
+  // Clear chatProperty when leaving chat route
+  useEffect(() => {
+    if (location.pathname !== '/chat') {
+      setChatProperty(null);
+    }
+  }, [location.pathname]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="pb-16 md:pb-0">
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage setChatProperty={setChatProperty} />} />
+        <Route path="/properties" element={<PropertiesSitemap />} />
+        <Route path="/properties/:cityName" element={<CityPropertyPage />} />
+        <Route path="/login" element={!user ? <LoginForm /> : <HomePage setChatProperty={setChatProperty} />} />
+        <Route path="/register" element={!user ? <RegisterForm /> : <HomePage setChatProperty={setChatProperty} />} />
+        <Route path="/post-property" element={<PostPropertyForm />} />
+        <Route path="/my-properties" element={<MyPropertiesPage />} />
+        <Route path="/chat" element={<EnhancedChatInterface selectedProperty={chatProperty} prefilledMessage={chatProperty?.prefilledMessage || ""} />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact" element={<ContactUs />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/rent-calculator" element={<RentCalculator />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+        
+        {/* Resource Pages */}
+        <Route path="/resources/rental-agreement-templates" element={<RentalAgreementTemplates />} />
+        <Route path="/resources/security-deposit-guidelines" element={<SecurityDepositGuidelines />} />
+        <Route path="/resources/tenant-rights-checklist" element={<TenantRightsChecklist />} />
+        <Route path="/resources/property-inspection-guide" element={<PropertyInspectionGuide />} />
+        <Route path="/resources/property-listing-optimization" element={<PropertyListingOptimization />} />
+      </Routes>
+      <Footer />
+      <MobileBottomNavigation />
+    </div>
+  );
+};
+
+// SEO-Friendly Footer Component
+const Footer = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const currentYear = new Date().getFullYear();
+  
+  // Function to scroll to top and navigate
+  const handleNavigation = (route) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate(route);
+  };
+  
+  // Function for city navigation with scroll to top
+  const handleCityNavigation = (city) => {
+    const citySlug = city.toLowerCase();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate(`/properties/${citySlug}`);
+  };
+  
+  const popularCities = [
+    'Delhi', 'Mumbai', 'Bangalore', 'Pune', 'Chennai', 'Hyderabad',
+    'Kolkata', 'Ahmedabad', 'Gurgaon', 'Noida', 'Faridabad', 'Ghaziabad'
+  ];
+
+  const propertyTypes = [
+    'Single Rooms', 'Shared Rooms', '1 BHK', '2 BHK', '3 BHK', 
+    'PG for Boys', 'PG for Girls', 'Co-living Spaces', 'Flatmate'
+  ];
+
+  const popularSearches = [
+    'Rooms near me', 'PG near me', 'Flatmate finder', 'Roommate matching',
+    'Affordable rooms', 'Furnished rooms', 'Single occupancy rooms', 'Shared accommodation'
+  ];
+
+  return (
+    <footer className="bg-gray-900 text-gray-300 mt-8 md:mt-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+          
+          {/* Company Info & About */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <img className="w-8 h-8" src="/logo.png" alt="GetRentals Logo" />
+              <h3 className="text-xl font-bold text-white">GetRentals</h3>
+            </div>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              India's premier platform for finding rental rooms, roommates, flatmates, and PG accommodations. 
+              Discover perfect shared living spaces, single rooms, and paying guest facilities across major Indian cities. 
+              Connect with verified roommates and property owners for hassle-free room rentals.
+            </p>
+            <div className="flex space-x-4">
+              <a href="https://www.facebook.com/share/1EzkE8pGV7/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors" aria-label="Facebook">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+              <a href="https://www.instagram.com/getrentals" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors" aria-label="Instagram">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          {/* Important Quick Links */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-white">Quick Access</h4>
+            <div className="space-y-2">
+              <button 
+                onClick={() => handleNavigation('/')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                🏠 Home
+              </button>
+              <button 
+                onClick={() => handleNavigation('/about')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                ℹ️ About Us
+              </button>
+              <button 
+                onClick={() => handleNavigation('/properties')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                🔍 Browse Properties
+              </button>
+              <button 
+                onClick={() => handleNavigation('/post-property')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                ➕ Post Your Property
+              </button>
+              <button 
+                onClick={() => handleNavigation('/my-properties')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                🏘️ My Properties
+              </button>
+              <button 
+                onClick={() => handleNavigation('/chat')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                💬 Chat & Messages
+              </button>
+              <button 
+                onClick={() => user ? handleNavigation('/profile') : handleNavigation('/login')}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                👤 My Profile
+              </button>
+              <button 
+                onClick={() => !user ? handleNavigation('/login') : null}
+                className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+              >
+                {user ? '✅ Logged In' : '🔐 Login / Register'}
+              </button>
+            </div>
+          </div>
+
+          {/* Popular Cities & Locations */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-white">Popular Cities</h4>
+            <div className="space-y-2">
+              {popularCities.map((city, index) => (
+                <button 
+                  key={index}
+                  onClick={() => handleCityNavigation(city)}
+                  className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+                >
+                  Rooms in {city}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Popular Searches & Quick Links */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold text-white">Popular Searches</h4>
+            <div className="space-y-2">
+              {popularSearches.map((search, index) => (
+                <button 
+                  key={index}
+                  onClick={() => handleNavigation('/properties')}
+                  className="block text-gray-400 hover:text-white text-sm transition-colors text-left"
+                >
+                  {search}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Property Types & Accommodation - New Section */}
+  
+
+        {/* Secondary Links Section */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6 border-t border-gray-800">
+          
+          {/* For Renters */}
+          <div className="space-y-3">
+            <h5 className="text-white font-medium">For Room Seekers</h5>
+            <div className="space-y-2 text-sm">
+              <button 
+                onClick={() => handleNavigation('properties')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Find Rooms
+              </button>
+              <button 
+                onClick={() => handleNavigation('properties')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Find Roommates
+              </button>
+              <button 
+                onClick={() => handleNavigation('properties')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                PG Finder
+              </button>
+              <button 
+                onClick={() => handleNavigation('properties')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Flatmate Matching
+              </button>
+              <button 
+                onClick={() => handleNavigation('properties')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Room Sharing
+              </button>
+            </div>
+          </div>
+
+          {/* For Property Owners */}
+          <div className="space-y-3">
+            <h5 className="text-white font-medium">For Property Owners</h5>
+            <div className="space-y-2 text-sm">
+              <button 
+                onClick={() => user ? handleNavigation('/post-property') : handleNavigation('/login')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Post Your Property
+              </button>
+              <button 
+                onClick={() => handleNavigation('/my-properties')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Manage Listings
+              </button>
+              <button 
+                onClick={() => handleNavigation('properties')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Tenant Verification
+              </button>
+              <button 
+                onClick={() => handleNavigation('/resources/rental-agreement-templates')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Rental Agreements
+              </button>
+              <button 
+                onClick={() => user ? handleNavigation('/post-property') : handleNavigation('/login')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Promote Property
+              </button>
+            </div>
+          </div>
+
+          {/* Support & Legal */}
+          <div className="space-y-3">
+            <h5 className="text-white font-medium">Support & Legal</h5>
+            <div className="space-y-2 text-sm">
+              <button 
+                onClick={() => handleNavigation('/about')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                About Us
+              </button>
+              <button 
+                onClick={() => handleNavigation('/contact')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Contact Us
+              </button>
+              <button 
+                onClick={() => handleNavigation('/privacy-policy')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Privacy Policy
+              </button>
+              <button 
+                onClick={() => handleNavigation('/terms-and-conditions')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Terms & Conditions
+              </button>
+              <button 
+                onClick={() => handleNavigation('/resources/tenant-rights-checklist')}
+                className="block text-gray-400 hover:text-white transition-colors text-left"
+              >
+                Safety Tips
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* SEO Rich Description */}
+        <div className="py-6 border-t border-gray-800">
+          <div className="text-sm text-gray-500 leading-relaxed">
+            <p className="mb-3">
+              <strong className="text-gray-300">GetRentals</strong> - Your trusted partner for finding rental accommodations across India. 
+              Whether you're searching for a single room for rent, looking for compatible roommates, seeking affordable PG accommodation, 
+              or need a flatmate to share expenses, we connect you with verified property owners and genuine tenants.
+            </p>
+            <p className="mb-3">
+              Our platform specializes in helping students, working professionals, and families find perfect living spaces including 
+              furnished rooms, shared apartments, paying guest facilities, co-living spaces, and traditional rental properties. 
+              From budget-friendly PG for boys and girls to premium 1 BHK, 2 BHK, and 3 BHK apartments, discover your ideal home today.
+            </p>
+            <p>
+              Available in major cities: Delhi NCR (Gurgaon, Noida, Faridabad), Mumbai, Bangalore, Pune, Chennai, Hyderabad, Kolkata, 
+              Ahmedabad and 100+ other cities. Start your room hunting journey with verified listings, instant chat with property owners, 
+              and hassle-free roommate matching services.
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom Footer */}
+        <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-gray-800 text-sm text-gray-500">
+          <div className="mb-4 md:mb-0">
+            <p>&copy; {currentYear} GetRentals. All rights reserved. Made with ❤️ in India</p>
+          </div>
+          <div className="flex flex-wrap gap-4">
+            <button 
+              onClick={() => handleNavigation('/about')}
+              className="hover:text-white transition-colors"
+            >
+              Accessibility
+            </button>
+            {/* <button 
+              onClick={() => handleNavigation('properties')}
+              className="hover:text-white transition-colors"
+            >
+              Sitemap
+            </button> */}
+            <a href="https://getrentals.online/sitemap.xml" className="hover:text-white transition-colors">Sitemap</a>
+            <button 
+              onClick={() => handleNavigation('/privacy-policy')}
+              className="hover:text-white transition-colors"
+            >
+              Privacy Policy
+            </button>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+
+export default App;
