@@ -4509,7 +4509,7 @@ const Blog = () => {
                   </button>
                 </li>
                 <li className="flex items-center text-blue-600 font-semibold cursor-pointer">
-                  <span className="mr-2">🧮</span> 
+                  <span className="mr-2">📊</span> 
                   <button onClick={() => navigate('/rent-calculator')}>Rent Calculator Tool</button>
                 </li>
               </ul>
