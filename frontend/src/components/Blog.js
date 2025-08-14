@@ -4451,7 +4451,9 @@ const Blog = () => {
                {/* Native Ad */}
         <section className="mb-16 text-center">
           <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-500">
-            <NativeAd borderColor="blue" className="max-w-4xl mx-auto" />
+            <ErrorBoundary componentName="NativeAd">
+              <NativeAd borderColor="blue" className="max-w-4xl mx-auto" />
+            </ErrorBoundary>
           </div>
         </section>
               {/* Insert Banner Ad after every 6 articles */}
