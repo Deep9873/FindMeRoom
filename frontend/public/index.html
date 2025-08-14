@@ -6,6 +6,31 @@
         <meta http-equiv="Pragma" content="no-cache">
         <meta http-equiv="Expires" content="0">
         
+        <!-- Dev-only global error silencer for generic cross-origin vendor "Script error." -->
+        <script>
+          (function(){
+            var isDevHost = /localhost|127\.0\.0\.1|preview\.emergentagent\.com/.test(location.hostname);
+            if(!isDevHost) return;
+            var prevOnError = window.onerror;
+            window.onerror = function(message, source, lineno, colno, error){
+              try{
+                var msg = (message||'').toString().toLowerCase();
+                var generic = msg.indexOf('script error') > -1;
+                var thirdParty = !source || /google-analytics\.com|googletagmanager\.com|gstatic\.com|recaptcha|adtrafficquality\.google|highperformanceformat\.com|profitableratecpm\.com|gatekeeperconsent\.com|the\.gatekeeperconsent\.com/i.test(source);
+                if(generic && thirdParty){ return true; }
+              }catch(_){}
+              if(typeof prevOnError === 'function') return prevOnError.apply(this, arguments);
+              return false;
+            };
+            window.onunhandledrejection = function(e){
+              try{
+                var r = e && e.reason; var s = r && (r.message || r.toString()) || '';
+                if(typeof s === 'string' && s.toLowerCase().indexOf('script error')>-1){ e.preventDefault && e.preventDefault(); return true; }
+              }catch(_){}
+              return false;
+            };
+          })();
+        </script>
         <!-- GPP stub to prevent race-condition errors if other scripts call __gpp before CMP initializes -->
         <script>
           window.__gpp = window.__gpp || function() {
