@@ -16,7 +16,8 @@ export default function BannerAd() {
     // Create and append the script
     const script = document.createElement("script");
     script.type = "text/javascript";
-    script.src = "//www.highperformanceformat.com/b7d32cc67e74ff67735ed16f9ea69688/invoke.js";
+    script.src =
+      "//www.highperformanceformat.com/b7d32cc67e74ff67735ed16f9ea69688/invoke.js";
     script.async = true;
 
     script.onload = () => {
@@ -27,12 +28,21 @@ export default function BannerAd() {
 
     return () => {
       // Cleanup on unmount
-      document.getElementById("banner-ad-slot").innerHTML = "";
+      const container = document.getElementById("banner-ad-slot");
+      if (container) container.innerHTML = "";
     };
   }, []);
 
   return (
     <div>
-      <div id="banner-ad-slot" style={{ width: 300, height: 250, background: "#f0f0f0" }}>
-        {!adLoaded && <p style={{ textAlign: "center", lineHeight: "250px" }}>Loading ad...</p>}
+      <div
+        id="banner-ad-slot"
+        style={{ width: 300, height: 250, background: "#f0f0f0" }}
+      >
+        {!adLoaded && (
+          <p style={{ textAlign: "center", lineHeight: "250px" }}>Loading ad...</p>
+        )}
       </div>
+    </div>
+  );
+}
