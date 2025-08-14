@@ -4004,7 +4004,7 @@ const Footer = () => {
                 Terms & Conditions
               </button>
               <button 
-                onClick={() => handleNavigation('home')}
+                onClick={() => handleNavigation('/resources/safety-security')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Safety Tips
