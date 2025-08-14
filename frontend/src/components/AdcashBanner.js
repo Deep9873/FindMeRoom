@@ -35,4 +35,4 @@ export default function BannerAd() {
     <div>
       <div id="banner-ad-slot" style={{ width: 300, height: 250, background: "#f0f0f0" }}>
         {!adLoaded && <p style={{ textAlign: "center", lineHeight: "250px" }}>Loading ad...</p>}
-      </div
+      </div>
