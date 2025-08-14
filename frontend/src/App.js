@@ -3961,7 +3961,7 @@ const Footer = () => {
                 Tenant Verification
               </button>
               <button 
-                onClick={() => handleNavigation('home')}
+                onClick={() => handleNavigation('/resources/rental-agreement-templates')}
                 className="block text-gray-400 hover:text-white transition-colors text-left"
               >
                 Rental Agreements
