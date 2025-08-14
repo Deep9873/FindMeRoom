@@ -4463,7 +4463,7 @@ const Blog = () => {
 
         {/* Rent Calculator CTA Section */}
         <section className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-8 mb-12 text-white text-center">
-          <h3 className="text-3xl font-bold mb-4">🧮 Calculate Your Ideal Rent</h3>
+          <h3 className="text-3xl font-bold mb-4">Calculate Your Ideal Rent</h3>
           <p className="text-xl mb-6 text-white/90">
             Get accurate rent estimates based on location, property type, amenities, and market trends
           </p>
