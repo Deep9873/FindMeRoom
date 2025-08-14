@@ -6,11 +6,8 @@
         <meta http-equiv="Pragma" content="no-cache">
         <meta http-equiv="Expires" content="0">
         
-        <!-- Adcash Script with enhanced error handling -->
-        <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js" onerror="console.warn('Adcash library failed to load')"></script>
-
         <script src="https://cmp.gatekeeperconsent.com/min.js" data-cfasync="false"></script>
-<script src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
+        <script src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#dc2626" />
@@ -235,31 +232,7 @@
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3708796769447102"
      crossorigin="anonymous"></script>
         <!-- Global error handling for ads and scripts -->
-        <script>
-          // Global error handler to catch and suppress ad-related errors
-          window.addEventListener('error', function(e) {
-            // Check if error is from ad-related scripts
-            if (e.filename && (
-              e.filename.includes('acscdn.com') ||
-              e.filename.includes('onclickalgo.com') ||
-              e.filename.includes('superonclick.com') ||
-              e.filename.includes('geniusonclick.com') ||
-              e.filename.includes('pagead2.googlesyndication.com')
-            )) {
-              console.warn('Ad script error suppressed:', e.message);
-              e.preventDefault();
-              return true;
-            }
-          });
-          
-          // Handle unhandled promise rejections from ad scripts
-          window.addEventListener('unhandledrejection', function(e) {
-            if (e.reason && e.reason.toString && e.reason.toString().includes('adcash')) {
-              console.warn('Ad promise rejection suppressed:', e.reason);
-              e.preventDefault();
-            }
-          });
-        </script>
+      
         
         <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-434420550"></script>
