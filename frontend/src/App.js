@@ -3190,7 +3190,7 @@ const HomePage = ({ setChatProperty }) => {
                 </div>
               </div>
               
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">🧮 Advanced Rent Calculator</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Advanced Rent Calculator</h2>
               <p className="text-xl mb-6 opacity-95">
                 Plan your rental budget with precision! Calculate accurate rent estimates for 180+ Indian cities
               </p>
