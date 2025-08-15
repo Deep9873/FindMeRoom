@@ -32,12 +32,19 @@ export default function BannerAd() {
   }, []);
 
   return (
-    <div className="inline-block">
+    <div className="flex flex-col items-center justify-center">
       <AdFrame
         title="adcash-banner-sandbox"
         width={300}
         height={250}
         onReady={handleReady}
+        style={{ 
+          minWidth: '300px', 
+          minHeight: '250px',
+          maxWidth: '300px',
+          maxHeight: '250px',
+          display: 'block'
+        }}
       />
       {!adLoaded && (
         <p style={{ textAlign: "center", lineHeight: "24px", marginTop: 8, color: "#666" }}>
