@@ -2,10 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 
 export default function BannerAd() {
   const [adLoaded, setAdLoaded] = useState(false);
+  const [showFallback, setShowFallback] = useState(false);
   const adContainerRef = useRef(null);
 
   useEffect(() => {
     if (!adContainerRef.current) return;
+
+    let adLoadTimeout;
 
     try {
       // Clear any existing content
@@ -29,11 +32,19 @@ export default function BannerAd() {
       script.onload = () => {
         console.log("Adcash script loaded successfully");
         setAdLoaded(true);
+        
+        // Set a timeout to show fallback if ad doesn't load
+        adLoadTimeout = setTimeout(() => {
+          if (adContainerRef.current && adContainerRef.current.children.length <= 1) {
+            console.log("Ad didn't load, showing fallback");
+            setShowFallback(true);
+          }
+        }, 3000);
       };
       
       script.onerror = (e) => {
         console.error("Adcash banner script failed to load:", e);
-        setAdLoaded(false);
+        setShowFallback(true);
       };
       
       // Append the script to the ad container
@@ -41,10 +52,14 @@ export default function BannerAd() {
       
     } catch (e) {
       console.error("Adcash banner injection error:", e);
+      setShowFallback(true);
     }
 
     // Cleanup function
     return () => {
+      if (adLoadTimeout) {
+        clearTimeout(adLoadTimeout);
+      }
       // Clean up global atOptions when component unmounts
       if (window.atOptions) {
         delete window.atOptions;
@@ -57,18 +72,34 @@ export default function BannerAd() {
       <div 
         ref={adContainerRef}
         style={{ 
-          minWidth: '300px', 
-          minHeight: '250px',
-          maxWidth: '300px',
-          maxHeight: '250px',
-          display: 'block',
-          border: '1px dashed #ccc',
-          backgroundColor: '#f9f9f9'
+          width: '300px', 
+          height: '250px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: '1px solid #e0e0e0',
+          backgroundColor: '#f8f9fa',
+          borderRadius: '4px',
+          position: 'relative'
         }}
-      />
-      {!adLoaded && (
-        <p style={{ textAlign: "center", lineHeight: "24px", marginTop: 8, color: "#666" }}>
-          Loading ad...
+      >
+        {showFallback && (
+          <div style={{
+            textAlign: 'center',
+            padding: '20px',
+            color: '#666',
+            fontSize: '14px',
+            lineHeight: '1.4'
+          }}>
+            <div style={{ marginBottom: '10px', fontSize: '16px' }}>📢</div>
+            <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>Advertisement</div>
+            <div>Supporting GetRentals</div>
+          </div>
+        )}
+      </div>
+      {!adLoaded && !showFallback && (
+        <p style={{ textAlign: "center", lineHeight: "24px", marginTop: 8, color: "#666", fontSize: '12px' }}>
+          Loading advertisement...
         </p>
       )}
     </div>
