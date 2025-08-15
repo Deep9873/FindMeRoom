@@ -65,7 +65,14 @@ export default function AdFrame({
       ref={iframeRef}
       title={title}
       className={className}
-      style={{ border: 0, width, height, overflow: "hidden", ...style }}
+      style={{ 
+        border: 0, 
+        width, 
+        height, 
+        overflow: "visible",
+        display: "block",
+        ...style 
+      }}
       sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
     />
   );
