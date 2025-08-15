@@ -85,7 +85,7 @@ export default function AdFrame({
         display: "block",
         ...style 
       }}
-      sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+      sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms allow-top-navigation"
     />
   );
 }
