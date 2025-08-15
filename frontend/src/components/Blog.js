@@ -4449,10 +4449,10 @@ const Blog = () => {
                 </div>
               </article>
                {/* Native Ad */}
-        <section className="mb-16 text-center">
-          <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-500">
+        <section className="mb-16">
+          <div className="bg-gray-50 rounded-lg p-6 border-l-4 border-blue-500 w-full">
             <ErrorBoundary componentName="NativeAd">
-              <NativeAd borderColor="blue" className="max-w-4xl mx-auto" />
+              <NativeAd className="w-full" />
             </ErrorBoundary>
           </div>
         </section>
