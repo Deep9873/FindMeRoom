@@ -19,15 +19,45 @@ export default function BannerAd() {
       script.type = "text/javascript";
       script.async = true;
       script.src = "//www.highperformanceformat.com/b7d32cc67e74ff67735ed16f9ea69688/invoke.js";
-      script.onload = () => setAdLoaded(true);
-      script.onerror = () => {
-        // eslint-disable-next-line no-console
+      
+      script.onload = () => {
+        console.log("Adcash script loaded successfully");
+        setAdLoaded(true);
+        
+        // Try to trigger ad loading after a delay
+        setTimeout(() => {
+          if (win.atOptions && typeof win.atInit === 'function') {
+            console.log("Calling atInit");
+            win.atInit();
+          }
+        }, 1000);
+      };
+      
+      script.onerror = (e) => {
+        console.error("Adcash banner script failed to load:", e);
         console.warn("Adcash banner (iframe) script failed to load.");
       };
+      
       doc.body.appendChild(script);
+      
+      // Add some debug styling to make sure iframe is working
+      doc.body.style.background = 'rgba(255, 0, 0, 0.1)';
+      doc.body.style.border = '1px dashed blue';
+      doc.body.style.minHeight = '250px';
+      doc.body.style.display = 'flex';
+      doc.body.style.alignItems = 'center';
+      doc.body.style.justifyContent = 'center';
+      
+      // Add a fallback message
+      const fallback = doc.createElement('div');
+      fallback.innerHTML = 'Loading Advertisement...';
+      fallback.style.color = '#666';
+      fallback.style.fontSize = '14px';
+      fallback.style.textAlign = 'center';
+      doc.body.appendChild(fallback);
+      
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.warn("Adcash banner (iframe) injection error", e);
+      console.error("Adcash banner injection error:", e);
     }
   }, []);
 
