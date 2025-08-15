@@ -28,7 +28,19 @@ export default function AdFrame({
       doc.write(`<!doctype html><html><head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <style>html,body{margin:0;padding:0;background:transparent;}</style>
+        <style>
+          html, body { 
+            margin: 0; 
+            padding: 0; 
+            background: transparent; 
+            overflow: visible !important;
+            height: auto !important;
+            width: auto !important;
+          }
+          body { 
+            display: block !important; 
+          }
+        </style>
       </head><body></body></html>`);
       doc.close();
     } catch (e) {
