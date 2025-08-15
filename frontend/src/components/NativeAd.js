@@ -30,11 +30,20 @@ export default function NativeBannerAd() {
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center w-full">
       <AdFrame
         title="native-ad-sandbox"
-        height={120}
+        width="100%"
+        height={300}
         onReady={handleReady}
+        style={{ 
+          minWidth: '100%', 
+          minHeight: '300px',
+          width: '100%',
+          height: '300px',
+          display: 'block',
+          overflow: 'visible'
+        }}
       />
       {!adLoaded && (
         <p style={{ textAlign: "center", lineHeight: "24px", marginTop: 8, color: "#666" }}>
