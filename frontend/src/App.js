@@ -3232,19 +3232,23 @@ const HomePage = ({ setChatProperty }) => {
       
       {/* Adcash Banner */}
       <div className="bg-gray-100 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <ErrorBoundary componentName="AdcashBanner">
-            <AdcashBanner className="mx-auto" />
-          </ErrorBoundary>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-center items-center">
+            <ErrorBoundary componentName="AdcashBanner">
+              <AdcashBanner />
+            </ErrorBoundary>
+          </div>
         </div>
       </div>
 
       {/* Native Ad */}
       <div className="bg-white py-8 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <ErrorBoundary componentName="NativeAd">
-            <NativeAd borderColor="green" className="max-w-4xl mx-auto" />
-          </ErrorBoundary>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="w-full flex justify-center items-center">
+            <ErrorBoundary componentName="NativeAd">
+              <NativeAd className="w-full" />
+            </ErrorBoundary>
+          </div>
         </div>
       </div>
       
