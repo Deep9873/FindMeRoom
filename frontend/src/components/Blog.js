@@ -4353,11 +4353,11 @@ const Blog = () => {
         </section>
 
         {/* Adcash Banner */}
-        <section className="mb-16 text-center">
-          <div className="flex justify-center items-center bg-[#f3f8fe]">
-          <ErrorBoundary componentName="AdcashBanner">
-            <AdcashBanner className="mx-auto" />
-          </ErrorBoundary>
+        <section className="mb-16">
+          <div className="flex justify-center items-center bg-[#f3f8fe] py-6">
+            <ErrorBoundary componentName="AdcashBanner">
+              <AdcashBanner />
+            </ErrorBoundary>
           </div>
         </section>
 
