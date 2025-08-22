@@ -863,7 +863,7 @@ async def submit_support_message(support_data: SupportMessageCreate):
     
     return {"message": "Support message submitted successfully", "ticket_id": support_obj.id}
 
-@api_router.get("/admin/support")
+@api_router.get("/adminpanel/support")
 async def get_support_messages(
     skip: int = 0,
     limit: int = 50,
