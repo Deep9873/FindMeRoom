@@ -840,6 +840,160 @@ async def get_chat_messages(property_id: str, other_user_id: str, current_user: 
     
     return [Chat(**msg) for msg in messages]
 
+# Customer Support System
+@api_router.post("/support/submit")
+async def submit_support_message(support_data: SupportMessageCreate):
+    # Validate email format
+    if "@" not in support_data.email or "." not in support_data.email:
+        raise HTTPException(status_code=400, detail="Invalid email format")
+    
+    # Validate screenshot sizes (max 5MB per file)
+    if support_data.screenshots:
+        for i, screenshot in enumerate(support_data.screenshots):
+            # Estimate size (base64 adds ~33% overhead)
+            image_size = len(screenshot) * 0.75
+            if image_size > 5 * 1024 * 1024:  # 5MB
+                raise HTTPException(
+                    status_code=413,
+                    detail=f"Screenshot {i+1} is too large. Maximum size per image is 5MB."
+                )
+    
+    support_obj = SupportMessage(**support_data.dict())
+    await db.support_messages.insert_one(support_obj.dict())
+    
+    return {"message": "Support message submitted successfully", "ticket_id": support_obj.id}
+
+@api_router.get("/admin/support")
+async def get_support_messages(
+    skip: int = 0,
+    limit: int = 50,
+    status: Optional[str] = None,
+    search: Optional[str] = None,
+    current_admin: dict = Depends(get_current_admin)
+):
+    query = {}
+    
+    if status:
+        query["status"] = status
+    
+    if search:
+        query["$or"] = [
+            {"name": {"$regex": search, "$options": "i"}},
+            {"email": {"$regex": search, "$options": "i"}},
+            {"subject": {"$regex": search, "$options": "i"}},
+            {"message": {"$regex": search, "$options": "i"}}
+        ]
+    
+    messages = await db.support_messages.find(query).sort("created_at", -1).skip(skip).limit(limit).to_list(length=limit)
+    total_count = await db.support_messages.count_documents(query)
+    
+    return {
+        "messages": messages,
+        "total": total_count,
+        "skip": skip,
+        "limit": limit
+    }
+
+@api_router.get("/admin/support/{message_id}")
+async def get_support_message(message_id: str, current_admin: dict = Depends(get_current_admin)):
+    message = await db.support_messages.find_one({"id": message_id})
+    if not message:
+        raise HTTPException(status_code=404, detail="Support message not found")
+    return message
+
+@api_router.put("/admin/support/{message_id}")
+async def update_support_message(message_id: str, update_data: SupportMessageUpdate, current_admin: dict = Depends(get_current_admin)):
+    message = await db.support_messages.find_one({"id": message_id})
+    if not message:
+        raise HTTPException(status_code=404, detail="Support message not found")
+    
+    update_fields = {}
+    for field, value in update_data.dict().items():
+        if value is not None:
+            update_fields[field] = value
+    
+    if update_fields:
+        update_fields["updated_at"] = datetime.utcnow()
+        if "admin_response" in update_fields:
+            update_fields["responded_at"] = datetime.utcnow()
+        
+        await db.support_messages.update_one({"id": message_id}, {"$set": update_fields})
+    
+    updated_message = await db.support_messages.find_one({"id": message_id})
+    return updated_message
+
+# Admin Dashboard Routes
+@api_router.get("/admin/dashboard/stats")
+async def get_dashboard_stats(current_admin: dict = Depends(get_current_admin)):
+    # Get basic counts
+    total_users = await db.users.count_documents({})
+    total_properties = await db.properties.count_documents({})
+    available_properties = await db.properties.count_documents({"available": True})
+    total_chats = await db.chats.count_documents({})
+    total_support_messages = await db.support_messages.count_documents({})
+    open_support_messages = await db.support_messages.count_documents({"status": "open"})
+    
+    # Get recent activity (last 7 days)
+    last_7_days = datetime.utcnow() - timedelta(days=7)
+    
+    new_users_last_7_days = await db.users.count_documents({"created_at": {"$gte": last_7_days}})
+    new_properties_last_7_days = await db.properties.count_documents({"created_at": {"$gte": last_7_days}})
+    new_messages_last_7_days = await db.chats.count_documents({"created_at": {"$gte": last_7_days}})
+    new_support_messages_last_7_days = await db.support_messages.count_documents({"created_at": {"$gte": last_7_days}})
+    
+    # Get property type distribution
+    property_types = await db.properties.aggregate([
+        {"$group": {"_id": "$property_type", "count": {"$sum": 1}}}
+    ]).to_list(length=10)
+    
+    # Get top cities
+    top_cities = await db.properties.aggregate([
+        {"$group": {"_id": "$city", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+        {"$limit": 10}
+    ]).to_list(length=10)
+    
+    return {
+        "total_users": total_users,
+        "total_properties": total_properties,
+        "available_properties": available_properties,
+        "total_chats": total_chats,
+        "total_support_messages": total_support_messages,
+        "open_support_messages": open_support_messages,
+        "recent_activity": {
+            "new_users_last_7_days": new_users_last_7_days,
+            "new_properties_last_7_days": new_properties_last_7_days,
+            "new_messages_last_7_days": new_messages_last_7_days,
+            "new_support_messages_last_7_days": new_support_messages_last_7_days
+        },
+        "property_types": property_types,
+        "top_cities": top_cities
+    }
+
+@api_router.get("/admin/dashboard/recent-activity")
+async def get_recent_activity(
+    limit: int = 20,
+    current_admin: dict = Depends(get_current_admin)
+):
+    # Get recent users
+    recent_users = await db.users.find({}).sort("created_at", -1).limit(limit).to_list(length=limit)
+    
+    # Get recent properties
+    recent_properties = await db.properties.find({}).sort("created_at", -1).limit(limit).to_list(length=limit)
+    
+    # Get recent support messages
+    recent_support = await db.support_messages.find({}).sort("created_at", -1).limit(limit).to_list(length=limit)
+    
+    # Remove sensitive data
+    for user in recent_users:
+        user.pop("password_hash", None)
+    
+    return {
+        "recent_users": recent_users,
+        "recent_properties": recent_properties,
+        "recent_support": recent_support
+    }
+
 # Basic test route
 @api_router.get("/")
 async def root():
