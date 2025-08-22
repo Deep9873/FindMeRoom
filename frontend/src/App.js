@@ -677,11 +677,7 @@ const CityProvider = ({ children }) => {
     const city = versionedStorage.getItem('selectedCity');
     return typeof city === 'string' ? city : '';
   });
-  const [showCityPopup, setShowCityPopup] = useState(() => {
-    // Show popup if no city is selected AND user is on home page
-    const isHomePage = location.pathname === '/';
-    return !versionedStorage.getItem('selectedCity') && isHomePage;
-  });
+  const [showCityPopup, setShowCityPopup] = useState(false);
 
   // Update popup visibility when location changes
   useEffect(() => {
