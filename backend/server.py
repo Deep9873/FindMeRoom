@@ -370,7 +370,7 @@ async def admin_login(admin_credentials: AdminLogin):
         user={"id": admin["id"], "email": admin["email"], "type": "admin"}
     )
 
-@api_router.get("/admin/auth/me")
+@api_router.get("/adminpanel/auth/me")
 async def get_current_admin_info(current_admin: dict = Depends(get_current_admin)):
     return {"id": current_admin["id"], "email": current_admin["email"], "type": "admin"}
 
