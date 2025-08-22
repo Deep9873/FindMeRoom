@@ -89,7 +89,7 @@ const PropertyManagement = () => {
 
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/admin/properties/${propertyId}`, {
+      const response = await fetch(`${API}/adminpanel/properties/${propertyId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
