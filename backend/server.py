@@ -270,6 +270,37 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     except jwt.PyJWTError:
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
 
+async def get_current_admin(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    try:   
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        admin_id: str = payload.get("sub")
+        admin_type: str = payload.get("type")
+        
+        if admin_id is None or admin_type != "admin":
+            raise HTTPException(status_code=401, detail="Invalid admin credentials")
+            
+        admin = await db.admins.find_one({"id": admin_id})
+        if admin is None:
+            raise HTTPException(status_code=401, detail="Admin not found")
+        return admin
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=401, detail="Invalid admin credentials")
+
+# Initialize default admin if not exists
+async def init_admin():
+    try:
+        existing_admin = await db.admins.find_one({"email": "admin@getrentals.online"})
+        if not existing_admin:
+            admin_obj = Admin(
+                email="admin@getrentals.online",
+                password_hash=get_password_hash("admin123")
+            )
+            await db.admins.insert_one(admin_obj.dict())
+            print("Default admin created: admin@getrentals.online / admin123")
+    except Exception as e:
+        print(f"Error creating default admin: {e}")
+
 # Authentication routes
 @api_router.post("/auth/register", response_model=TokenResponse)
 async def register(user_data: UserCreate):
