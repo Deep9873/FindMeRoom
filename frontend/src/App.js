@@ -3768,9 +3768,6 @@ const MainContent = () => {
           <Route path="support" element={<CustomerSupport />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
-
-        {/* Other Routes */}
-        <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/rent-calculator" element={<RentCalculator />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
