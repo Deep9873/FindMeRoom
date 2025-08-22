@@ -894,7 +894,7 @@ async def get_support_messages(
         "limit": limit
     }
 
-@api_router.get("/admin/support/{message_id}")
+@api_router.get("/adminpanel/support/{message_id}")
 async def get_support_message(message_id: str, current_admin: dict = Depends(get_current_admin)):
     message = await db.support_messages.find_one({"id": message_id})
     if not message:
