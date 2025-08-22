@@ -671,14 +671,16 @@ const LoginRegisterPopup = ({ isOpen, onClose, defaultTab = 'login' }) => {
 };
 
 const CityProvider = ({ children }) => {
+  const location = useLocation();
   const [selectedCity, setSelectedCity] = useState(() => {
     // Get city from versioned storage; if it was legacy string, migration in cacheUtils already handles it
     const city = versionedStorage.getItem('selectedCity');
     return typeof city === 'string' ? city : '';
   });
   const [showCityPopup, setShowCityPopup] = useState(() => {
-    // Show popup if no city is selected
-    return !versionedStorage.getItem('selectedCity');
+    // Show popup if no city is selected AND user is on home page
+    const isHomePage = location.pathname === '/';
+    return !versionedStorage.getItem('selectedCity') && isHomePage;
   });
 
   const updateSelectedCity = (city) => {
