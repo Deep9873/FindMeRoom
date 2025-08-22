@@ -110,7 +110,7 @@ const UserManagement = () => {
 
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/admin/users/${userId}`, {
+      const response = await fetch(`${API}/adminpanel/users/${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
