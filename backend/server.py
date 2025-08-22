@@ -392,6 +392,193 @@ async def admin_change_password(password_data: AdminChangePassword, current_admi
     
     return {"message": "Password changed successfully"}
 
+# Admin User Management Routes
+@api_router.get("/admin/users")
+async def get_all_users(
+    skip: int = 0,
+    limit: int = 50,
+    search: Optional[str] = None,
+    current_admin: dict = Depends(get_current_admin)
+):
+    query = {}
+    if search:
+        query["$or"] = [
+            {"name": {"$regex": search, "$options": "i"}},
+            {"email": {"$regex": search, "$options": "i"}},
+            {"phone": {"$regex": search, "$options": "i"}}
+        ]
+    
+    users = await db.users.find(query).skip(skip).limit(limit).to_list(length=limit)
+    total_count = await db.users.count_documents(query)
+    
+    # Remove password hash from response
+    for user in users:
+        user.pop("password_hash", None)
+    
+    return {
+        "users": users,
+        "total": total_count,
+        "skip": skip,
+        "limit": limit
+    }
+
+@api_router.get("/admin/users/{user_id}")
+async def get_user_by_id(user_id: str, current_admin: dict = Depends(get_current_admin)):
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Remove password hash
+    user.pop("password_hash", None)
+    return user
+
+@api_router.post("/admin/users", response_model=User)
+async def create_user_by_admin(user_data: UserCreateAdmin, current_admin: dict = Depends(get_current_admin)):
+    # Check if user already exists
+    existing_user = await db.users.find_one({"email": user_data.email})
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    # Check phone number
+    phone_digits = ''.join(filter(str.isdigit, user_data.phone))
+    if len(phone_digits) < 10 or len(phone_digits) > 15:
+        raise HTTPException(status_code=400, detail="Phone number must be between 10-15 digits")
+    
+    existing_phone = await db.users.find_one({"phone": phone_digits})
+    if existing_phone:
+        raise HTTPException(status_code=400, detail="Phone number already registered")
+    
+    # Create user
+    user_dict = user_data.dict()
+    user_dict["password_hash"] = get_password_hash(user_data.password)
+    user_dict["phone"] = phone_digits
+    del user_dict["password"]
+    
+    user_obj = User(**user_dict)
+    await db.users.insert_one(user_obj.dict())
+    
+    return user_obj
+
+@api_router.put("/admin/users/{user_id}")
+async def update_user_by_admin(user_id: str, user_data: UserUpdate, current_admin: dict = Depends(get_current_admin)):
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    update_data = {}
+    for field, value in user_data.dict().items():
+        if value is not None:
+            if field == "password":
+                update_data["password_hash"] = get_password_hash(value)
+            elif field == "phone":
+                phone_digits = ''.join(filter(str.isdigit, value))
+                if len(phone_digits) < 10 or len(phone_digits) > 15:
+                    raise HTTPException(status_code=400, detail="Phone number must be between 10-15 digits")
+                update_data["phone"] = phone_digits
+            elif field == "email":
+                # Check if email already exists (excluding current user)
+                existing_user = await db.users.find_one({"email": value, "id": {"$ne": user_id}})
+                if existing_user:
+                    raise HTTPException(status_code=400, detail="Email already registered")
+                update_data["email"] = value
+            else:
+                update_data[field] = value
+    
+    if update_data:
+        await db.users.update_one({"id": user_id}, {"$set": update_data})
+    
+    updated_user = await db.users.find_one({"id": user_id})
+    updated_user.pop("password_hash", None)
+    return updated_user
+
+@api_router.delete("/admin/users/{user_id}")
+async def delete_user_by_admin(user_id: str, current_admin: dict = Depends(get_current_admin)):
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Delete user's properties and chats
+    await db.properties.delete_many({"user_id": user_id})
+    await db.chats.delete_many({"$or": [{"sender_id": user_id}, {"receiver_id": user_id}]})
+    
+    # Delete user
+    await db.users.delete_one({"id": user_id})
+    
+    return {"message": "User and all associated data deleted successfully"}
+
+# Admin Property Management Routes
+@api_router.get("/admin/properties")
+async def get_all_properties(
+    skip: int = 0,
+    limit: int = 50,
+    search: Optional[str] = None,
+    city: Optional[str] = None,
+    property_type: Optional[str] = None,
+    available: Optional[bool] = None,
+    current_admin: dict = Depends(get_current_admin)
+):
+    query = {}
+    
+    if search:
+        query["$or"] = [
+            {"title": {"$regex": search, "$options": "i"}},
+            {"description": {"$regex": search, "$options": "i"}},
+            {"location": {"$regex": search, "$options": "i"}}
+        ]
+    
+    if city:
+        query["city"] = {"$regex": city, "$options": "i"}
+    
+    if property_type:
+        query["property_type"] = property_type
+        
+    if available is not None:
+        query["available"] = available
+    
+    properties = await db.properties.find(query).skip(skip).limit(limit).to_list(length=limit)
+    total_count = await db.properties.count_documents(query)
+    
+    # Get user info for each property
+    for prop in properties:
+        user = await db.users.find_one({"id": prop["user_id"]})
+        if user:
+            prop["owner_name"] = user["name"]
+            prop["owner_email"] = user["email"]
+    
+    return {
+        "properties": properties,
+        "total": total_count,
+        "skip": skip,
+        "limit": limit
+    }
+
+@api_router.put("/admin/properties/{property_id}")
+async def update_property_by_admin(property_id: str, property_data: PropertyUpdate, current_admin: dict = Depends(get_current_admin)):
+    property_doc = await db.properties.find_one({"id": property_id})
+    if not property_doc:
+        raise HTTPException(status_code=404, detail="Property not found")
+    
+    update_data = {k: v for k, v in property_data.dict().items() if v is not None}
+    update_data["updated_at"] = datetime.utcnow()
+    
+    await db.properties.update_one({"id": property_id}, {"$set": update_data})
+    
+    updated_property = await db.properties.find_one({"id": property_id})
+    return Property(**updated_property)
+
+@api_router.delete("/admin/properties/{property_id}")
+async def delete_property_by_admin(property_id: str, current_admin: dict = Depends(get_current_admin)):
+    property_doc = await db.properties.find_one({"id": property_id})
+    if not property_doc:
+        raise HTTPException(status_code=404, detail="Property not found")
+    
+    # Delete associated chats
+    await db.chats.delete_many({"property_id": property_id})
+    
+    # Delete property
+    await db.properties.delete_one({"id": property_id})
+    return {"message": "Property deleted successfully"}
+
 # Property routes
 @api_router.get("/properties", response_model=List[Property])
 async def get_properties(
