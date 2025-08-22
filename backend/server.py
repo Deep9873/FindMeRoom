@@ -491,7 +491,7 @@ async def update_user_by_admin(user_id: str, user_data: UserUpdate, current_admi
     updated_user.pop("password_hash", None)
     return updated_user
 
-@api_router.delete("/admin/users/{user_id}")
+@api_router.delete("/adminpanel/users/{user_id}")
 async def delete_user_by_admin(user_id: str, current_admin: dict = Depends(get_current_admin)):
     user = await db.users.find_one({"id": user_id})
     if not user:
