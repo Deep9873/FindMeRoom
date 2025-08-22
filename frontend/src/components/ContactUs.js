@@ -378,16 +378,18 @@ const ContactUs = () => {
 
         {/* Contact CTA */}
         <div className="text-center mt-12">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Still Have Questions?</h2>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Need Immediate Help?</h2>
           <p className="text-gray-600 mb-6">
-            Don't hesitate to reach out to our support team. We're here to help!
+            Use the contact form above to send us a message with screenshots. 
+            We'll respond within 24 hours to help resolve your issue.
           </p>
-          <a
-            href="mailto:admin@getrentals.online"
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-          >
-            Email Support
-          </a>
+          <div className="bg-blue-50 rounded-lg p-6 max-w-2xl mx-auto">
+            <h3 className="text-lg font-medium text-blue-900 mb-2">📞 Emergency Support</h3>
+            <p className="text-blue-800">
+              For urgent account or security issues, please use our contact form above 
+              and mark your subject as "URGENT" for priority handling.
+            </p>
+          </div>
         </div>
       </div>
     </div>
