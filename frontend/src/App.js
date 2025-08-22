@@ -3742,6 +3742,7 @@ const MainContent = () => {
 
   return (
     <div className="pb-16 md:pb-0">
+      <CityChecker />
       <Header />
       <Routes>
         <Route path="/" element={<HomePage setChatProperty={setChatProperty} />} />
