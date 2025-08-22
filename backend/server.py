@@ -1000,7 +1000,7 @@ async def root():
     return {"message": "GetRentals API is running", "version": APP_VERSION}
 
 # Include the router in the main app
-app.include_router(api_router) 
+app.include_router(api_router, prefix="/api") 
 @app.middleware("http")
 async def log_cors_headers(request, call_next):
     response = await call_next(request)
