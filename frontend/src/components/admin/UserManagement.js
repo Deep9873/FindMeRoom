@@ -82,7 +82,7 @@ const UserManagement = () => {
   const handleCreateUser = async (userData) => {
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/admin/users`, {
+      const response = await fetch(`${API}/adminpanel/users`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
