@@ -102,7 +102,10 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "i made changes in my github repository and updated them on nginx server also but still it is not updating on website, it only updates if we switch to another page on site and than reload than it gets update but if go back to mainpage and again reloads than it get back to previous version i tried caching methods but they aren't working as those features also not gets implement in the site due to this issue, and in your preview the site loads to its updated version"
+user_problem_statement: "fix the admin panel login issue it is showing this on console: 
+ POST https://getrentals.online/api/auth/login net::ERR_FAILED             frame_ant.js:2 
+window.fetch	@	frame_ant.js:2
+handleSubmit	@	AdminLogin.js:33"
 |
 10269814
 Settings
