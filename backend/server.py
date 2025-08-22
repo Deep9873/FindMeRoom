@@ -393,7 +393,7 @@ async def admin_change_password(password_data: AdminChangePassword, current_admi
     return {"message": "Password changed successfully"}
 
 # Admin User Management Routes
-@api_router.get("/admin/users")
+@api_router.get("/adminpanel/users")
 async def get_all_users(
     skip: int = 0,
     limit: int = 50,
