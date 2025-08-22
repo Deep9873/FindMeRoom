@@ -356,7 +356,7 @@ async def get_current_user_info(current_user: dict = Depends(get_current_user)):
     return {"id": current_user["id"], "email": current_user["email"], "name": current_user["name"]}
 
 # Admin Authentication Routes
-@api_router.post("/admin/auth/login", response_model=TokenResponse)
+@api_router.post("/adminpanel/auth/login", response_model=TokenResponse)
 async def admin_login(admin_credentials: AdminLogin):
     admin = await db.admins.find_one({"email": admin_credentials.email})
     if not admin or not verify_password(admin_credentials.password, admin["password_hash"]):
