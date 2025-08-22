@@ -699,7 +699,9 @@ const CityProvider = ({ children }) => {
       versionedStorage.setItem('selectedCity', city);
     } else {
       versionedStorage.removeItem('selectedCity');
-      setShowCityPopup(true);
+      // Only show popup again if on home page
+      const isHomePage = location.pathname === '/';
+      setShowCityPopup(isHomePage);
     }
   };
 
