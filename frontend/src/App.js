@@ -711,6 +711,32 @@ const useCity = () => {
   return context;
 };
 
+// Component to handle location-based city popup logic (must be inside Router)
+const CityChecker = () => {
+  const location = useLocation();
+  const { showCityPopup, setShowCityPopup } = useCity();
+
+  useEffect(() => {
+    const isHomePage = location.pathname === '/';
+    const hasSelectedCity = !!versionedStorage.getItem('selectedCity');
+    
+    console.log('CityChecker Debug:', { 
+      pathname: location.pathname, 
+      isHomePage, 
+      hasSelectedCity,
+      currentShowCityPopup: showCityPopup
+    });
+    
+    // Only show popup on home page when no city is selected
+    const shouldShowPopup = !hasSelectedCity && isHomePage;
+    setShowCityPopup(shouldShowPopup);
+    
+    console.log('Setting showCityPopup to:', shouldShowPopup);
+  }, [location.pathname, showCityPopup, setShowCityPopup]);
+
+  return null; // This component doesn't render anything
+};
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
