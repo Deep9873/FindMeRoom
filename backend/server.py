@@ -422,7 +422,7 @@ async def get_all_users(
         "limit": limit
     }
 
-@api_router.get("/admin/users/{user_id}")
+@api_router.get("/adminpanel/users/{user_id}")
 async def get_user_by_id(user_id: str, current_admin: dict = Depends(get_current_admin)):
     user = await db.users.find_one({"id": user_id})
     if not user:
