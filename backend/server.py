@@ -187,6 +187,58 @@ class TokenResponse(BaseModel):
     token_type: str
     user: dict
 
+# Admin Models
+class Admin(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    email: str
+    password_hash: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class AdminLogin(BaseModel):
+    email: str
+    password: str
+
+class AdminChangePassword(BaseModel):
+    current_password: str
+    new_password: str
+
+class SupportMessage(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    email: str
+    subject: str
+    message: str
+    screenshots: List[str] = []  # base64 encoded images
+    status: str = "open"  # open, in_progress, resolved
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    admin_response: Optional[str] = None
+    responded_at: Optional[datetime] = None
+
+class SupportMessageCreate(BaseModel):
+    name: str
+    email: str
+    subject: str
+    message: str
+    screenshots: List[str] = []
+
+class SupportMessageUpdate(BaseModel):
+    status: Optional[str] = None
+    admin_response: Optional[str] = None
+
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    password: Optional[str] = None
+
+class UserCreateAdmin(BaseModel):
+    name: str
+    email: str
+    phone: str
+    password: str
+
 # Utility functions
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
