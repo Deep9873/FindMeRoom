@@ -29,8 +29,13 @@ const AdminLogin = () => {
     setLoading(true);
     setError('');
 
+    const loginUrl = `${API}/auth/login`;
+    console.log('Admin login URL:', loginUrl);
+    console.log('BACKEND_URL:', BACKEND_URL);
+    console.log('API:', API);
+
     try {
-      const response = await fetch(`${API}/auth/login`, {
+      const response = await fetch(loginUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
