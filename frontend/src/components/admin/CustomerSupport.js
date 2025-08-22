@@ -33,7 +33,7 @@ const CustomerSupport = () => {
       if (filterStatus) params.append('status', filterStatus);
       if (searchTerm) params.append('search', searchTerm);
 
-      const response = await fetch(`${API}/system/support?${params}`, {
+      const response = await fetch(`${API}/panel/support?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -56,7 +56,7 @@ const CustomerSupport = () => {
   const handleUpdateMessage = async (messageId, updateData) => {
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/system/support/${messageId}`, {
+      const response = await fetch(`${API}/panel/support/${messageId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

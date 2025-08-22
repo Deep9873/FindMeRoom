@@ -34,7 +34,7 @@ const UserManagement = () => {
         params.append('search', searchTerm);
       }
 
-      const response = await fetch(`${API}/system/users?${params}`, {
+      const response = await fetch(`${API}/panel/users?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -57,7 +57,7 @@ const UserManagement = () => {
   const handleEditUser = async (userId, userData) => {
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/system/users/${userId}`, {
+      const response = await fetch(`${API}/panel/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -82,7 +82,7 @@ const UserManagement = () => {
   const handleCreateUser = async (userData) => {
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/system/users`, {
+      const response = await fetch(`${API}/panel/users`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -110,7 +110,7 @@ const UserManagement = () => {
 
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/system/users/${userId}`, {
+      const response = await fetch(`${API}/panel/users/${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

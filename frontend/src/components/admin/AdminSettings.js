@@ -35,7 +35,7 @@ const AdminSettings = () => {
 
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/system/auth/change-password`, {
+      const response = await fetch(`${API}/panel/auth/change-password`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -204,7 +204,7 @@ const AdminSettings = () => {
               </div>
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-gray-900">Role-Based Access</h3>
-                <p className="text-sm text-gray-600">Admin-only access with comprehensive permission system</p>
+                <p className="text-sm text-gray-600">Admin-only access with comprehensive permission panel</p>
               </div>
             </div>
           </div>
@@ -231,7 +231,7 @@ const AdminSettings = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <button
-            onClick={() => window.location.href = '/system/users'}
+            onClick={() => window.location.href = '/panel/users'}
             className="flex items-center justify-center p-4 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -241,7 +241,7 @@ const AdminSettings = () => {
           </button>
           
           <button
-            onClick={() => window.location.href = '/system/properties'}
+            onClick={() => window.location.href = '/panel/properties'}
             className="flex items-center justify-center p-4 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -251,7 +251,7 @@ const AdminSettings = () => {
           </button>
           
           <button
-            onClick={() => window.location.href = '/system/support'}
+            onClick={() => window.location.href = '/panel/support'}
             className="flex items-center justify-center p-4 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -261,7 +261,7 @@ const AdminSettings = () => {
           </button>
           
           <button
-            onClick={() => window.location.href = '/system/dashboard'}
+            onClick={() => window.location.href = '/panel/dashboard'}
             className="flex items-center justify-center p-4 bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 transition-colors"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
