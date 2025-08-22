@@ -356,7 +356,7 @@ async def get_current_user_info(current_user: dict = Depends(get_current_user)):
     return {"id": current_user["id"], "email": current_user["email"], "name": current_user["name"]}
 
 # Admin Authentication Routes
-@api_router.post("/manage/auth/login", response_model=TokenResponse)
+@api_router.post("/system/auth/login", response_model=TokenResponse)
 async def admin_login(admin_credentials: AdminLogin):
     admin = await db.admins.find_one({"email": admin_credentials.email})
     if not admin or not verify_password(admin_credentials.password, admin["password_hash"]):
@@ -370,11 +370,11 @@ async def admin_login(admin_credentials: AdminLogin):
         user={"id": admin["id"], "email": admin["email"], "type": "admin"}
     )
 
-@api_router.get("/manage/auth/me")
+@api_router.get("/system/auth/me")
 async def get_current_admin_info(current_admin: dict = Depends(get_current_admin)):
     return {"id": current_admin["id"], "email": current_admin["email"], "type": "admin"}
 
-@api_router.post("/manage/auth/change-password")
+@api_router.post("/system/auth/change-password")
 async def admin_change_password(password_data: AdminChangePassword, current_admin: dict = Depends(get_current_admin)):
     # Verify current password
     if not verify_password(password_data.current_password, current_admin["password_hash"]):
@@ -393,7 +393,7 @@ async def admin_change_password(password_data: AdminChangePassword, current_admi
     return {"message": "Password changed successfully"}
 
 # Admin User Management Routes
-@api_router.get("/manage/users")
+@api_router.get("/system/users")
 async def get_all_users(
     skip: int = 0,
     limit: int = 50,
@@ -422,7 +422,7 @@ async def get_all_users(
         "limit": limit
     }
 
-@api_router.get("/manage/users/{user_id}")
+@api_router.get("/system/users/{user_id}")
 async def get_user_by_id(user_id: str, current_admin: dict = Depends(get_current_admin)):
     user = await db.users.find_one({"id": user_id})
     if not user:
@@ -432,7 +432,7 @@ async def get_user_by_id(user_id: str, current_admin: dict = Depends(get_current
     user.pop("password_hash", None)
     return user
 
-@api_router.post("/manage/users", response_model=User)
+@api_router.post("/system/users", response_model=User)
 async def create_user_by_admin(user_data: UserCreateAdmin, current_admin: dict = Depends(get_current_admin)):
     # Check if user already exists
     existing_user = await db.users.find_one({"email": user_data.email})
@@ -459,7 +459,7 @@ async def create_user_by_admin(user_data: UserCreateAdmin, current_admin: dict =
     
     return user_obj
 
-@api_router.put("/manage/users/{user_id}")
+@api_router.put("/system/users/{user_id}")
 async def update_user_by_admin(user_id: str, user_data: UserUpdate, current_admin: dict = Depends(get_current_admin)):
     user = await db.users.find_one({"id": user_id})
     if not user:
@@ -491,7 +491,7 @@ async def update_user_by_admin(user_id: str, user_data: UserUpdate, current_admi
     updated_user.pop("password_hash", None)
     return updated_user
 
-@api_router.delete("/manage/users/{user_id}")
+@api_router.delete("/system/users/{user_id}")
 async def delete_user_by_admin(user_id: str, current_admin: dict = Depends(get_current_admin)):
     user = await db.users.find_one({"id": user_id})
     if not user:
@@ -507,7 +507,7 @@ async def delete_user_by_admin(user_id: str, current_admin: dict = Depends(get_c
     return {"message": "User and all associated data deleted successfully"}
 
 # Admin Property Management Routes
-@api_router.get("/manage/properties")
+@api_router.get("/system/properties")
 async def get_all_properties(
     skip: int = 0,
     limit: int = 50,
@@ -552,7 +552,7 @@ async def get_all_properties(
         "limit": limit
     }
 
-@api_router.put("/manage/properties/{property_id}")
+@api_router.put("/system/properties/{property_id}")
 async def update_property_by_admin(property_id: str, property_data: PropertyUpdate, current_admin: dict = Depends(get_current_admin)):
     property_doc = await db.properties.find_one({"id": property_id})
     if not property_doc:
@@ -566,7 +566,7 @@ async def update_property_by_admin(property_id: str, property_data: PropertyUpda
     updated_property = await db.properties.find_one({"id": property_id})
     return Property(**updated_property)
 
-@api_router.delete("/manage/properties/{property_id}")
+@api_router.delete("/system/properties/{property_id}")
 async def delete_property_by_admin(property_id: str, current_admin: dict = Depends(get_current_admin)):
     property_doc = await db.properties.find_one({"id": property_id})
     if not property_doc:
@@ -863,7 +863,7 @@ async def submit_support_message(support_data: SupportMessageCreate):
     
     return {"message": "Support message submitted successfully", "ticket_id": support_obj.id}
 
-@api_router.get("/manage/support")
+@api_router.get("/system/support")
 async def get_support_messages(
     skip: int = 0,
     limit: int = 50,
@@ -894,14 +894,14 @@ async def get_support_messages(
         "limit": limit
     }
 
-@api_router.get("/manage/support/{message_id}")
+@api_router.get("/system/support/{message_id}")
 async def get_support_message(message_id: str, current_admin: dict = Depends(get_current_admin)):
     message = await db.support_messages.find_one({"id": message_id})
     if not message:
         raise HTTPException(status_code=404, detail="Support message not found")
     return message
 
-@api_router.put("/manage/support/{message_id}")
+@api_router.put("/system/support/{message_id}")
 async def update_support_message(message_id: str, update_data: SupportMessageUpdate, current_admin: dict = Depends(get_current_admin)):
     message = await db.support_messages.find_one({"id": message_id})
     if not message:
@@ -923,7 +923,7 @@ async def update_support_message(message_id: str, update_data: SupportMessageUpd
     return updated_message
 
 # Admin Dashboard Routes
-@api_router.get("/manage/dashboard/stats")
+@api_router.get("/system/dashboard/stats")
 async def get_dashboard_stats(current_admin: dict = Depends(get_current_admin)):
     # Get basic counts
     total_users = await db.users.count_documents({})
@@ -970,7 +970,7 @@ async def get_dashboard_stats(current_admin: dict = Depends(get_current_admin)):
         "top_cities": top_cities
     }
 
-@api_router.get("/manage/dashboard/recent-activity")
+@api_router.get("/system/dashboard/recent-activity")
 async def get_recent_activity(
     limit: int = 20,
     current_admin: dict = Depends(get_current_admin)
