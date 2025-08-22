@@ -15,7 +15,7 @@ const AdminLogin = () => {
     // Check if admin is already logged in
     const token = versionedStorage.getItem('adminToken');
     if (token) {
-      navigate('/manage/dashboard');
+      navigate('/system/dashboard');
     }
   }, [navigate]);
 
@@ -30,7 +30,7 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      const response = await fetch(`${API}/manage/auth/login`, {
+      const response = await fetch(`${API}/system/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const AdminLogin = () => {
         const data = await response.json();
         versionedStorage.setItem('adminToken', data.access_token);
         versionedStorage.setItem('adminUser', data.user);
-        navigate('/manage/dashboard');
+        navigate('/system/dashboard');
       } else {
         const errorData = await response.json();
         setError(errorData.detail || 'Login failed');
