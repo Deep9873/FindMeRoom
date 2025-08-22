@@ -38,10 +38,9 @@ const AdminLogin = () => {
     setLoading(true);
     setError('');
 
-    const loginUrl = `${API}/auth/login`;
-    console.log('Admin login URL:', loginUrl);
-    console.log('BACKEND_URL:', BACKEND_URL);
-    console.log('API:', API);
+    // Hardcode the login URL to bypass the rewriting issue
+    const loginUrl = 'https://getrentals.online/api/auth/login';
+    console.log('Using hardcoded URL:', loginUrl);
 
     try {
       const response = await fetch(loginUrl, {
