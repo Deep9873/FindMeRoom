@@ -24,8 +24,8 @@ const AdminDashboard = () => {
 
       // Load stats and recent activity in parallel
       const [statsResponse, activityResponse] = await Promise.all([
-        fetch(`${API}/admin/dashboard/stats`, { headers }),
-        fetch(`${API}/admin/dashboard/recent-activity`, { headers }),
+        fetch(`${API}/adminpanel/dashboard/stats`, { headers }),
+        fetch(`${API}/adminpanel/dashboard/recent-activity`, { headers }),
       ]);
 
       if (statsResponse.ok && activityResponse.ok) {
