@@ -56,7 +56,7 @@ const CustomerSupport = () => {
   const handleUpdateMessage = async (messageId, updateData) => {
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/admin/support/${messageId}`, {
+      const response = await fetch(`${API}/adminpanel/support/${messageId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
