@@ -11,6 +11,15 @@ const AdminLogin = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // Debug: Log URLs on component mount
+  useEffect(() => {
+    console.log('=== AdminLogin Debug ===');
+    console.log('BACKEND_URL:', BACKEND_URL);
+    console.log('API:', API);
+    console.log('Expected login URL:', `${API}/auth/login`);
+    console.log('Current pathname:', window.location.pathname);
+  }, []);
+
   useEffect(() => {
     // Check if admin is already logged in
     const token = versionedStorage.getItem('adminToken');
