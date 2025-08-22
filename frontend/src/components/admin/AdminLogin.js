@@ -40,9 +40,15 @@ const AdminLogin = () => {
 
       if (response.ok) {
         const data = await response.json();
-        versionedStorage.setItem('adminToken', data.access_token);
-        versionedStorage.setItem('adminUser', data.user);
-        navigate('/panel/dashboard');
+        
+        // Check if the user is an admin
+        if (data.user && data.user.type === 'admin') {
+          versionedStorage.setItem('adminToken', data.access_token);
+          versionedStorage.setItem('adminUser', data.user);
+          navigate('/panel/dashboard');
+        } else {
+          setError('Invalid admin credentials. Please use admin email and password.');
+        }
       } else {
         const errorData = await response.json();
         setError(errorData.detail || 'Login failed');
