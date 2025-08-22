@@ -901,7 +901,7 @@ async def get_support_message(message_id: str, current_admin: dict = Depends(get
         raise HTTPException(status_code=404, detail="Support message not found")
     return message
 
-@api_router.put("/admin/support/{message_id}")
+@api_router.put("/adminpanel/support/{message_id}")
 async def update_support_message(message_id: str, update_data: SupportMessageUpdate, current_admin: dict = Depends(get_current_admin)):
     message = await db.support_messages.find_one({"id": message_id})
     if not message:
