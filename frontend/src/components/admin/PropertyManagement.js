@@ -60,7 +60,7 @@ const PropertyManagement = () => {
   const handleUpdateProperty = async (propertyId, updateData) => {
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/admin/properties/${propertyId}`, {
+      const response = await fetch(`${API}/adminpanel/properties/${propertyId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
