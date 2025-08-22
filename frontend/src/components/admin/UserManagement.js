@@ -57,7 +57,7 @@ const UserManagement = () => {
   const handleEditUser = async (userId, userData) => {
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/admin/users/${userId}`, {
+      const response = await fetch(`${API}/adminpanel/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
