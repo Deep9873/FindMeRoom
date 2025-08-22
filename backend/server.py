@@ -374,7 +374,7 @@ async def admin_login(admin_credentials: AdminLogin):
 async def get_current_admin_info(current_admin: dict = Depends(get_current_admin)):
     return {"id": current_admin["id"], "email": current_admin["email"], "type": "admin"}
 
-@api_router.post("/admin/auth/change-password")
+@api_router.post("/adminpanel/auth/change-password")
 async def admin_change_password(password_data: AdminChangePassword, current_admin: dict = Depends(get_current_admin)):
     # Verify current password
     if not verify_password(password_data.current_password, current_admin["password_hash"]):
