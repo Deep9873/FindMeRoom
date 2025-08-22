@@ -27,6 +27,15 @@ import TenantRightsChecklist from './components/resources/TenantRightsChecklist'
 import PropertyInspectionGuide from './components/resources/PropertyInspectionGuide';
 import PropertyListingOptimization from './components/resources/PropertyListingOptimization';
 
+// Import admin components
+import AdminLogin from './components/admin/AdminLogin';
+import AdminLayout from './components/admin/AdminLayout';
+import AdminDashboard from './components/admin/AdminDashboard';
+import UserManagement from './components/admin/UserManagement';
+import PropertyManagement from './components/admin/PropertyManagement';
+import CustomerSupport from './components/admin/CustomerSupport';
+import AdminSettings from './components/admin/AdminSettings';
+
 // Import new city and sitemap components
 import CityPropertyPage from './components/CityPropertyPage';
 import PropertiesSitemap from './components/PropertiesSitemap';
