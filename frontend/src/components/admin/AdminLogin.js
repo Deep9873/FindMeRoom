@@ -45,7 +45,7 @@ const AdminLogin = () => {
         if (data.user && data.user.type === 'admin') {
           versionedStorage.setItem('adminToken', data.access_token);
           versionedStorage.setItem('adminUser', data.user);
-          navigate('/panel/dashboard');
+          navigate('/secureadmin/dashboard');
         } else {
           setError('Invalid admin credentials. Please use admin email and password.');
         }
