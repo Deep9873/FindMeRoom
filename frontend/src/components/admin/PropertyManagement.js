@@ -37,7 +37,7 @@ const PropertyManagement = () => {
       if (filterType) params.append('property_type', filterType);
       if (filterAvailable !== '') params.append('available', filterAvailable);
 
-      const response = await fetch(`${API}/admin/properties?${params}`, {
+      const response = await fetch(`${API}/adminpanel/properties?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
