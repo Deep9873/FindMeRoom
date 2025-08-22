@@ -552,7 +552,7 @@ async def get_all_properties(
         "limit": limit
     }
 
-@api_router.put("/admin/properties/{property_id}")
+@api_router.put("/adminpanel/properties/{property_id}")
 async def update_property_by_admin(property_id: str, property_data: PropertyUpdate, current_admin: dict = Depends(get_current_admin)):
     property_doc = await db.properties.find_one({"id": property_id})
     if not property_doc:
