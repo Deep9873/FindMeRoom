@@ -566,7 +566,7 @@ async def update_property_by_admin(property_id: str, property_data: PropertyUpda
     updated_property = await db.properties.find_one({"id": property_id})
     return Property(**updated_property)
 
-@api_router.delete("/admin/properties/{property_id}")
+@api_router.delete("/adminpanel/properties/{property_id}")
 async def delete_property_by_admin(property_id: str, current_admin: dict = Depends(get_current_admin)):
     property_doc = await db.properties.find_one({"id": property_id})
     if not property_doc:
