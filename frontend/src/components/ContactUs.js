@@ -25,6 +25,100 @@ const ContactUs = () => {
     );
   }, [updateSEO]);
 
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError('');
+  };
+
+  const handleFileUpload = (e) => {
+    const files = Array.from(e.target.files);
+    const maxFiles = 5;
+    const maxSize = 5 * 1024 * 1024; // 5MB per file
+
+    if (files.length > maxFiles) {
+      setError(`Maximum ${maxFiles} screenshots allowed`);
+      return;
+    }
+
+    const processFiles = async () => {
+      const base64Files = [];
+      
+      for (const file of files) {
+        if (!file.type.startsWith('image/')) {
+          setError('Only image files are allowed');
+          return;
+        }
+        
+        if (file.size > maxSize) {
+          setError('Each image must be less than 5MB');
+          return;
+        }
+
+        try {
+          const base64 = await fileToBase64(file);
+          base64Files.push(base64);
+        } catch (error) {
+          setError('Error processing images');
+          return;
+        }
+      }
+      
+      setScreenshots(base64Files);
+    };
+
+    processFiles();
+  };
+
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch(`${API}/support/submit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          screenshots: screenshots,
+        }),
+      });
+
+      if (response.ok) {
+        setSuccess(true);
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+        });
+        setScreenshots([]);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.detail || 'Failed to submit message');
+      }
+    } catch (error) {
+      setError('Connection error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const removeScreenshot = (index) => {
+    setScreenshots(screenshots.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
