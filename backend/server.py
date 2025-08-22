@@ -970,7 +970,7 @@ async def get_dashboard_stats(current_admin: dict = Depends(get_current_admin)):
         "top_cities": top_cities
     }
 
-@api_router.get("/admin/dashboard/recent-activity")
+@api_router.get("/adminpanel/dashboard/recent-activity")
 async def get_recent_activity(
     limit: int = 20,
     current_admin: dict = Depends(get_current_admin)
