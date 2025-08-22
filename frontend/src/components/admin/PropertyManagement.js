@@ -37,7 +37,7 @@ const PropertyManagement = () => {
       if (filterType) params.append('property_type', filterType);
       if (filterAvailable !== '') params.append('available', filterAvailable);
 
-      const response = await fetch(`${API}/adminpanel/properties?${params}`, {
+      const response = await fetch(`${API}/secureadmin/properties?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -60,7 +60,7 @@ const PropertyManagement = () => {
   const handleUpdateProperty = async (propertyId, updateData) => {
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/adminpanel/properties/${propertyId}`, {
+      const response = await fetch(`${API}/secureadmin/properties/${propertyId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -89,7 +89,7 @@ const PropertyManagement = () => {
 
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/adminpanel/properties/${propertyId}`, {
+      const response = await fetch(`${API}/secureadmin/properties/${propertyId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
