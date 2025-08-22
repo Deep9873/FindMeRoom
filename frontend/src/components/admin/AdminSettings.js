@@ -35,7 +35,7 @@ const AdminSettings = () => {
 
     try {
       const token = versionedStorage.getItem('adminToken');
-      const response = await fetch(`${API}/admin/auth/change-password`, {
+      const response = await fetch(`${API}/adminpanel/auth/change-password`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
