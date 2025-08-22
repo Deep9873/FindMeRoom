@@ -683,6 +683,15 @@ const CityProvider = ({ children }) => {
     return !versionedStorage.getItem('selectedCity') && isHomePage;
   });
 
+  // Update popup visibility when location changes
+  useEffect(() => {
+    const isHomePage = location.pathname === '/';
+    const hasSelectedCity = !!versionedStorage.getItem('selectedCity');
+    
+    // Only show popup on home page when no city is selected
+    setShowCityPopup(!hasSelectedCity && isHomePage);
+  }, [location.pathname]);
+
   const updateSelectedCity = (city) => {
     setSelectedCity(city);
     setShowCityPopup(false);
