@@ -164,6 +164,38 @@ User needs to:
 🎯 **IMPACT**: Once DNS changes propagate, this will resolve the caching issue completely since Ezoic was overriding backend no-cache headers with aggressive 30-day caching headers. The website will then serve content directly with proper no-cache headers."
 
 backend:
+  - task: "Fix Admin Panel Login Issue - URL Rewriting Problem"
+    implemented: true
+    working: false
+    file: "server.py, components/admin/AdminLogin.js"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "🔍 **CRITICAL ADMIN LOGIN ISSUE IDENTIFIED**: Diagnosed a complex URL rewriting problem preventing admin panel login.
+
+🎯 **ROOT CAUSE ANALYSIS**:
+- Original error: `POST https://getrentals.online/api/auth/login net::ERR_FAILED`
+- AdminLogin component is correctly configured to call `/api/auth/login`
+- Backend `/api/auth/login` endpoint works correctly (tested with localhost:8001)
+- Admin user exists in database with correct credentials (admin@getrentals.online/admin123)
+
+❌ **CRITICAL DISCOVERY**: URL is being mysteriously rewritten from `/api/auth/login` to `/api/admin/auth/login`
+- Even with hardcoded URL `https://getrentals.online/api/auth/login`, browser requests `/api/admin/auth/login`
+- This suggests proxy/nginx rewriting, service worker interference, or build-time substitution
+- Backend endpoint `/api/admin/auth/login` does NOT exist, causing 404 errors
+
+✅ **SUCCESSFUL VERIFICATIONS**:
+1. Backend admin login logic is correct (handles admin check in /api/auth/login endpoint)
+2. Admin user created successfully in database
+3. Local backend testing confirms admin login works: `curl localhost:8001/api/auth/login` returns valid admin token
+4. Frontend code is correct - using proper URL construction
+
+⚠️ **INFRASTRUCTURE ISSUE**: The problem appears to be in the production routing/proxy layer that's rewriting URLs, not in the application code itself."
+
+  - task: "Remove Ezoic Integration and Clean Up Privacy Policy"
   - task: "CRITICAL FIX: Website Caching Problem - Inconsistent Content Updates"
     implemented: true
     working: true
