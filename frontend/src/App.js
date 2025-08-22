@@ -671,32 +671,12 @@ const LoginRegisterPopup = ({ isOpen, onClose, defaultTab = 'login' }) => {
 };
 
 const CityProvider = ({ children }) => {
-  const location = useLocation();
   const [selectedCity, setSelectedCity] = useState(() => {
     // Get city from versioned storage; if it was legacy string, migration in cacheUtils already handles it
     const city = versionedStorage.getItem('selectedCity');
     return typeof city === 'string' ? city : '';
   });
   const [showCityPopup, setShowCityPopup] = useState(false);
-
-  // Update popup visibility when location changes
-  useEffect(() => {
-    const isHomePage = location.pathname === '/';
-    const hasSelectedCity = !!versionedStorage.getItem('selectedCity');
-    
-    console.log('CityProvider Debug:', { 
-      pathname: location.pathname, 
-      isHomePage, 
-      hasSelectedCity,
-      currentShowCityPopup: showCityPopup
-    });
-    
-    // Only show popup on home page when no city is selected
-    const shouldShowPopup = !hasSelectedCity && isHomePage;
-    setShowCityPopup(shouldShowPopup);
-    
-    console.log('Setting showCityPopup to:', shouldShowPopup);
-  }, [location.pathname]);
 
   const updateSelectedCity = (city) => {
     setSelectedCity(city);
@@ -705,9 +685,7 @@ const CityProvider = ({ children }) => {
       versionedStorage.setItem('selectedCity', city);
     } else {
       versionedStorage.removeItem('selectedCity');
-      // Only show popup again if on home page
-      const isHomePage = location.pathname === '/';
-      setShowCityPopup(isHomePage);
+      setShowCityPopup(false); // Will be handled by CityChecker component
     }
   };
 
@@ -716,7 +694,7 @@ const CityProvider = ({ children }) => {
   };
 
   return (
-    <CityContext.Provider value={{ selectedCity, setSelectedCity: updateSelectedCity }}>
+    <CityContext.Provider value={{ selectedCity, setSelectedCity: updateSelectedCity, showCityPopup, setShowCityPopup }}>
       {showCityPopup && (
         <CitySelectionPopup onCitySelect={handleCityPopupSelect} />
       )}
