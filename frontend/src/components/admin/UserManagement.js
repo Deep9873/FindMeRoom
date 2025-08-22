@@ -34,7 +34,7 @@ const UserManagement = () => {
         params.append('search', searchTerm);
       }
 
-      const response = await fetch(`${API}/admin/users?${params}`, {
+      const response = await fetch(`${API}/adminpanel/users?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
