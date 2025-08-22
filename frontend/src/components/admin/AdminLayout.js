@@ -24,7 +24,7 @@ const AdminLayout = () => {
     }
 
     try {
-      const response = await fetch(`${API}/admin/auth/me`, {
+      const response = await fetch(`${API}/adminpanel/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
