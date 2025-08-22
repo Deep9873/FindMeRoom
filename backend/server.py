@@ -507,7 +507,7 @@ async def delete_user_by_admin(user_id: str, current_admin: dict = Depends(get_c
     return {"message": "User and all associated data deleted successfully"}
 
 # Admin Property Management Routes
-@api_router.get("/admin/properties")
+@api_router.get("/adminpanel/properties")
 async def get_all_properties(
     skip: int = 0,
     limit: int = 50,
