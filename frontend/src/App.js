@@ -3758,6 +3758,19 @@ const MainContent = () => {
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
+
+        {/* Admin Routes */}
+        <Route path="/secureadmin" element={<AdminLogin />} />
+        <Route path="/secureadmin/*" element={<AdminLayout />}>
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="properties" element={<PropertyManagement />} />
+          <Route path="support" element={<CustomerSupport />} />
+          <Route path="settings" element={<AdminSettings />} />
+        </Route>
+
+        {/* Other Routes */}
+        <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/rent-calculator" element={<RentCalculator />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
