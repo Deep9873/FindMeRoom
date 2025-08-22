@@ -459,7 +459,7 @@ async def create_user_by_admin(user_data: UserCreateAdmin, current_admin: dict =
     
     return user_obj
 
-@api_router.put("/admin/users/{user_id}")
+@api_router.put("/adminpanel/users/{user_id}")
 async def update_user_by_admin(user_id: str, user_data: UserUpdate, current_admin: dict = Depends(get_current_admin)):
     user = await db.users.find_one({"id": user_id})
     if not user:
