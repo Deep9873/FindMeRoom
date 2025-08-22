@@ -432,7 +432,7 @@ async def get_user_by_id(user_id: str, current_admin: dict = Depends(get_current
     user.pop("password_hash", None)
     return user
 
-@api_router.post("/admin/users", response_model=User)
+@api_router.post("/adminpanel/users", response_model=User)
 async def create_user_by_admin(user_data: UserCreateAdmin, current_admin: dict = Depends(get_current_admin)):
     # Check if user already exists
     existing_user = await db.users.find_one({"email": user_data.email})
