@@ -355,6 +355,43 @@ async def login(user_credentials: UserLogin):
 async def get_current_user_info(current_user: dict = Depends(get_current_user)):
     return {"id": current_user["id"], "email": current_user["email"], "name": current_user["name"]}
 
+# Admin Authentication Routes
+@api_router.post("/admin/auth/login", response_model=TokenResponse)
+async def admin_login(admin_credentials: AdminLogin):
+    admin = await db.admins.find_one({"email": admin_credentials.email})
+    if not admin or not verify_password(admin_credentials.password, admin["password_hash"]):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    access_token = create_access_token(data={"sub": admin["id"], "type": "admin"})
+    
+    return TokenResponse(
+        access_token=access_token,
+        token_type="bearer",
+        user={"id": admin["id"], "email": admin["email"], "type": "admin"}
+    )
+
+@api_router.get("/admin/auth/me")
+async def get_current_admin_info(current_admin: dict = Depends(get_current_admin)):
+    return {"id": current_admin["id"], "email": current_admin["email"], "type": "admin"}
+
+@api_router.post("/admin/auth/change-password")
+async def admin_change_password(password_data: AdminChangePassword, current_admin: dict = Depends(get_current_admin)):
+    # Verify current password
+    if not verify_password(password_data.current_password, current_admin["password_hash"]):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    
+    # Update password
+    new_password_hash = get_password_hash(password_data.new_password)
+    await db.admins.update_one(
+        {"id": current_admin["id"]},
+        {"$set": {
+            "password_hash": new_password_hash,
+            "updated_at": datetime.utcnow()
+        }}
+    )
+    
+    return {"message": "Password changed successfully"}
+
 # Property routes
 @api_router.get("/properties", response_model=List[Property])
 async def get_properties(
