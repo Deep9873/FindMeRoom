@@ -33,7 +33,7 @@ const CustomerSupport = () => {
       if (filterStatus) params.append('status', filterStatus);
       if (searchTerm) params.append('search', searchTerm);
 
-      const response = await fetch(`${API}/admin/support?${params}`, {
+      const response = await fetch(`${API}/adminpanel/support?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
