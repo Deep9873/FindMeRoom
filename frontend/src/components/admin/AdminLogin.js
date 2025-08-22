@@ -30,7 +30,7 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      const response = await fetch(`${API}/auth/login`, {
+      const response = await fetch(`${API}/panel/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,20 +41,17 @@ const AdminLogin = () => {
       if (response.ok) {
         const data = await response.json();
         
-        // Check if the user is an admin
-        if (data.user && data.user.type === 'admin') {
-          versionedStorage.setItem('adminToken', data.access_token);
-          versionedStorage.setItem('adminUser', data.user);
-          navigate('/secureadmin/dashboard');
-        } else {
-          setError('Invalid admin credentials. Please use admin email and password.');
-        }
+        // Admin login successful - the endpoint already validates admin credentials
+        versionedStorage.setItem('adminToken', data.access_token);
+        versionedStorage.setItem('adminUser', data.user);
+        navigate('/secureadmin/dashboard');
       } else {
         const errorData = await response.json();
-        setError(errorData.detail || 'Login failed');
+        setError(errorData.detail || 'Invalid admin credentials');
       }
     } catch (error) {
-      setError('Connection error. Please try again.');
+      console.error('Admin login error:', error);
+      setError('Connection error. Please check your internet connection and try again.');
     } finally {
       setLoading(false);
     }
