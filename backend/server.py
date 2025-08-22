@@ -923,7 +923,7 @@ async def update_support_message(message_id: str, update_data: SupportMessageUpd
     return updated_message
 
 # Admin Dashboard Routes
-@api_router.get("/admin/dashboard/stats")
+@api_router.get("/adminpanel/dashboard/stats")
 async def get_dashboard_stats(current_admin: dict = Depends(get_current_admin)):
     # Get basic counts
     total_users = await db.users.count_documents({})
