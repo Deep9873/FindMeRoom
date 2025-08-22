@@ -339,6 +339,17 @@ async def register(user_data: UserCreate):
 
 @api_router.post("/auth/login", response_model=TokenResponse)
 async def login(user_credentials: UserLogin):
+    # First, check if this is an admin login
+    admin = await db.admins.find_one({"email": user_credentials.email})
+    if admin and verify_password(user_credentials.password, admin["password_hash"]):
+        access_token = create_access_token(data={"sub": admin["id"], "type": "admin"})
+        return TokenResponse(
+            access_token=access_token,
+            token_type="bearer",
+            user={"id": admin["id"], "email": admin["email"], "type": "admin"}
+        )
+    
+    # If not admin, check regular user
     user = await db.users.find_one({"email": user_credentials.email})
     if not user or not verify_password(user_credentials.password, user["password_hash"]):
         raise HTTPException(status_code=401, detail="Invalid email or password")
